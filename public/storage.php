@@ -22,6 +22,7 @@
     function updateMachine($pdo, $id, $data) {
         $stmt = $pdo->prepare("UPDATE machines SET data = ? WHERE id = ?");
         $stmt->execute([$data, $id]);
+        return $id;
     }
 
     function deleteMachine($pdo, $id) {
@@ -61,19 +62,15 @@
 
         case 'POST':
             $data = $_POST['data'];
+            $id = $_POST['id'];
             if (!empty($data)) {
-                $machineId = addMachine($pdo, $data);
+                if (!isset($id)) {
+                    $machineId = addMachine($pdo, $data);
+                } else {
+                    $machineId = updateMachine($pdo, $id, $data);
+                }
+                
                 sendJsonResponse(["id" => $machineId]);
-            } else {
-                sendJsonResponse(["error" => "Invalid data"], 400);
-            }
-            break;
-
-        case 'PUT':
-            parse_str(file_get_contents('php://input'), $data);
-            if (isset($data['id']) && isset($data['data'])) {
-                updateMachine($pdo, $data['id'], $data['data']);
-                sendJsonResponse(["status" => "success"]);
             } else {
                 sendJsonResponse(["error" => "Invalid data"], 400);
             }
