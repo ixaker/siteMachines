@@ -40,84 +40,57 @@
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Обработка запросов
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['action'])) {
-            $action = $_POST['action'];
-
-            if ($action === 'add') {
-                $data = $_POST['data'];
-                $machineId = addMachine($pdo, $data);
-
-            } elseif ($action === 'update') {
-                $id = $_POST['id'];
-                $data = $_POST['data'];
-                updateMachine($pdo, $id, $data);
-
-            } elseif ($action === 'delete') {
-                $id = $_POST['id'];
-                deleteMachine($pdo, $id);
-
-            } elseif ($action === 'get') {
-                $id = $_POST['id'];
-                getMachine($pdo, $id);
-
-            } elseif ($action === 'getAll') {
-                getMachines($pdo);
-            }
-
-            header("Location: {$_SERVER['PHP_SELF']}");
-            exit;
-        }
+    // Функция для возврата JSON ответа
+    function sendJsonResponse($data, $statusCode = 200) {
+        header('Content-Type: application/json');
+        http_response_code($statusCode);
+        echo json_encode($data);
+        exit;
     }
 
-    $machines = getMachines($pdo);
+    // Обработка запросов
+    switch ($_SERVER['REQUEST_METHOD']) {
+        case 'GET':
+            if (isset($_GET['id'])) {
+                $response = getMachine($pdo, $_GET['id']);
+            } else {
+                $response = getMachines($pdo);
+            }
+            sendJsonResponse($response);
+            break;
 
+        case 'POST':
+            $data = $_POST['data'];
+            if (!empty($data)) {
+                $machineId = addMachine($pdo, $data);
+                sendJsonResponse(["id" => $machineId]);
+            } else {
+                sendJsonResponse(["error" => "Invalid data"], 400);
+            }
+            break;
+
+        case 'PUT':
+            parse_str(file_get_contents('php://input'), $data);
+            if (isset($data['id']) && isset($data['data'])) {
+                updateMachine($pdo, $data['id'], $data['data']);
+                sendJsonResponse(["status" => "success"]);
+            } else {
+                sendJsonResponse(["error" => "Invalid data"], 400);
+            }
+            break;
+
+        case 'DELETE':
+            parse_str(file_get_contents('php://input'), $data);
+            if (!empty($data['id'])) {
+                deleteMachine($pdo, $data['id']);
+                sendJsonResponse(null, 204); // Успешное удаление
+            } else {
+                sendJsonResponse(["error" => "Invalid data"], 400); // Некорректные данные
+            }
+            break;
+
+        default:
+            sendJsonResponse(["error" => "Method not allowed"], 405);
+            break;
+    }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Управление машинами</title>
-</head>
-<body>
-    <h1>Список машин</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Данные</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($machines as $machine): ?>
-                <tr>
-                    <td><?= htmlspecialchars($machine['id']) ?></td>
-                    <td><?= htmlspecialchars($machine['data']) ?></td>
-                    <td>
-                        <form method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="<?= $machine['id'] ?>">
-                            <input type="hidden" name="action" value="delete">
-                            <button type="submit">Удалить</button>
-                        </form>
-                        <form method="post" action="update.php" style="display:inline;">
-                            <input type="hidden" name="id" value="<?= $machine['id'] ?>">
-                            <button type="submit">Изменить</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-
-    <h2>Добавить машину</h2>
-    <form method="post">
-        <input type="hidden" name="action" value="add">
-        <label>Данные: <textarea name="data" required></textarea></label><br>
-        <button type="submit">Добавить</button>
-    </form>
-</body>
-</html>
