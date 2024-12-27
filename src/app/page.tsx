@@ -20,8 +20,6 @@ export default function Home() {
     },
   });
 
-  console.log("data", data);
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -38,6 +36,27 @@ export default function Home() {
     width: 1,
   });
 
+  const sendData = async () => {
+    const response = await fetch("https://site.qpart.com.ua/storage.php", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: data.title,
+        description: data.description,
+      }),
+    });
+
+    if (!response.ok) {
+      // Handle error
+      console.error("Failed to send data");
+    } else {
+      const result = await response.json();
+      console.log("Data sent successfully", result);
+    }
+  };
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -138,7 +157,7 @@ export default function Home() {
             />
           </Button>
 
-          <Button variant="contained" endIcon={<SendIcon />}>
+          <Button onClick={sendData} variant="contained" endIcon={<SendIcon />}>
             Send
           </Button>
         </Box>
