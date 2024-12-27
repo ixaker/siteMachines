@@ -54,17 +54,21 @@ export default function Home() {
     }
   };
 
+  const requestData = {
+    data: JSON.stringify({
+      name: data.title,
+      status: data.description,
+    }),
+  };
+
   const sendData = async () => {
     const response = await fetch("https://site.qpart.com.ua/storage.php", {
       method: "POST",
 
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        title: data.title,
-        description: data.description,
-      }),
+      body: new URLSearchParams(requestData).toString(),
     });
 
     if (!response.ok) {

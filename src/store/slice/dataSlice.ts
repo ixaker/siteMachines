@@ -2,24 +2,6 @@ import { firestore } from "@/firebase-config";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, getDocs } from "firebase/firestore";
 
-// Асинхронный thunk для получения данных из Firestore
-// export const fetchData = createAsyncThunk("data/fetchData", async () => {
-//   const querySnapshot = await getDocs(collection(firestore, "machines"));
-
-//   return querySnapshot.docs.map((doc) => {
-//     const data = doc.data();
-//     return {
-//       id: doc.id,
-//       title: data.title || "",
-//       description: data.description || "",
-//       fullDescription: data.fullDescription || "",
-//       image: data.image || "",
-//       price: data.price || 0,
-//       characteristics: data.characteristics || [],
-//     };
-//   });
-// });
-
 export const fetchData = createAsyncThunk<
   DataItem[],
   void,
