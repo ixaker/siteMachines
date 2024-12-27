@@ -1,11 +1,7 @@
 "use client";
-
-import { fetchData } from "@/store/slice/dataSlice";
-import { AppDispatch } from "@/store/store";
 import { Box, Button, Modal, styled, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useDispatch } from "react-redux";
 import SendIcon from "@mui/icons-material/Send";
 
 export default function Home() {
@@ -36,6 +32,28 @@ export default function Home() {
     width: 1,
   });
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch("https://site.qpart.com.ua/storage.php", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        // Handle error
+        console.error("Failed to fetch data");
+      } else {
+        const result = await response.json();
+        console.log("Data fetched successfully", result);
+        // Update your state with the fetched data
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const sendData = async () => {
     const response = await fetch("https://site.qpart.com.ua/storage.php", {
       method: "POST",
@@ -57,11 +75,6 @@ export default function Home() {
       console.log("Data sent successfully", result);
     }
   };
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    dispatch(fetchData());
-  }, [dispatch]);
 
   return (
     <div>
@@ -69,6 +82,10 @@ export default function Home() {
       <div className="absolute top-10 right-10">
         <Button onClick={handleOpen} variant="contained">
           Add Post
+        </Button>
+
+        <Button onClick={fetchData} variant="contained">
+          GET POST
         </Button>
       </div>
 
