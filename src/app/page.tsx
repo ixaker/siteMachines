@@ -1,11 +1,7 @@
 "use client";
-
-import { fetchData } from "@/store/slice/dataSlice";
-import { AppDispatch } from "@/store/store";
 import { Box, Button, Modal, styled, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useDispatch } from "react-redux";
 import SendIcon from "@mui/icons-material/Send";
 
 export default function Home() {
@@ -19,8 +15,6 @@ export default function Home() {
       value: "",
     },
   });
-
-  console.log("data", data);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -38,11 +32,49 @@ export default function Home() {
     width: 1,
   });
 
-  const dispatch = useDispatch<AppDispatch>();
+  const fetchData = async () => {
+    try {
+      const response = await fetch("https://site.qpart.com.ua/storage.php", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  useEffect(() => {
-    dispatch(fetchData());
-  }, [dispatch]);
+      if (!response.ok) {
+        // Handle error
+        console.error("Failed to fetch data");
+      } else {
+        const result = await response.json();
+        console.log("Data fetched successfully", result);
+        // Update your state with the fetched data
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const sendData = async () => {
+    const response = await fetch("https://site.qpart.com.ua/storage.php", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: data.title,
+        description: data.description,
+      }),
+    });
+
+    if (!response.ok) {
+      // Handle error
+      console.error("Failed to send data");
+    } else {
+      const result = await response.json();
+      console.log("Data sent successfully", result);
+    }
+  };
 
   return (
     <div>
@@ -50,6 +82,10 @@ export default function Home() {
       <div className="absolute top-10 right-10">
         <Button onClick={handleOpen} variant="contained">
           Add Post
+        </Button>
+
+        <Button onClick={fetchData} variant="contained">
+          GET POST
         </Button>
       </div>
 
@@ -138,7 +174,7 @@ export default function Home() {
             />
           </Button>
 
-          <Button variant="contained" endIcon={<SendIcon />}>
+          <Button onClick={sendData} variant="contained" endIcon={<SendIcon />}>
             Send
           </Button>
         </Box>
