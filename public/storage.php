@@ -5,6 +5,12 @@
     $user = 'os284542_machines';
     $password = 't@&bZ8H5s4';
 
+    // Параметры для работы с хранилищем
+    $storageHost = 'a7b85a942d4082eb.cdn.express';
+    $storageUsername = 'machines';
+    $storagePassword = 'SJts24y24K';
+    $storageToken = null; // Глобальный токен
+
     try {
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -12,6 +18,74 @@
         die("Ошибка подключения к базе данных: " . $e->getMessage());
     }
 
+    // Функция для выполнения базового CURL-запроса
+    function performCurlRequest($endpoint, $headers, $params, $isMultipart = false) {
+        global $storageHost; // Используем глобальную переменную $storageHost
+        $apiUrl = 'https://' . $storageHost . $endpoint;
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $apiUrl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $isMultipart ? $params : http_build_query($params));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return json_decode($response, true);
+    }
+
+    // Функция для выполнения запросов к хранилищу
+    function executeCurlRequest($endpoint, $headers, $params, $isMultipart = false) {
+        global $storageToken; // Используем глобальные переменные
+
+        if (empty($storageToken)) {
+            // Получаем токен, если он ещё не установлен
+            $storageToken = getStorageToken();
+            if (empty($storageToken)) {
+                die("Ошибка авторизации: невозможно получить токен.");
+            }
+        }
+
+        $authHeader = "Authorization: Bearer $storageToken";
+        $headers = array_merge([$authHeader], $headers);
+
+        return performCurlRequest($endpoint, $headers, $params, $isMultipart);
+    }
+
+    // Авторизация в хранилище
+    function getStorageToken() {
+        global $storageUsername, $storagePassword; // Используем глобальные переменные
+        $endpoint = '/~/action/storage/auth/login/';
+        $headers = ['Content-Type: application/json'];
+        $params = ['username' => $storageUsername, 'password' => $storagePassword];
+
+        // Выполняем запрос без токена
+        return performCurlRequest($endpoint, $headers, json_encode($params), true)['callback']['token'] ?? null;
+    }
+
+    function createStorageFolder($path) {
+        $endpoint = '/~/action/storage/folder/create';
+        $headers = ["Content-Type: application/x-www-form-urlencoded"];
+        $params = ['path' => $path, 'public' => false];
+
+        $response = executeCurlRequest($endpoint, $headers, $params);
+        return isset($response['success']) && $response['success'] === true;
+    }
+
+    function uploadToStorage($path, $localFilePath) {
+        $endpoint = '/~/action/storage/upload';
+        $headers = ["Content-Type: multipart/form-data"];
+        $params = [
+            'path' => $path,
+            'file' => new CURLFile($localFilePath)
+        ];
+
+        $response = executeCurlRequest($endpoint, $headers, $params, true);
+        return isset($response['success']) && $response['success'] === true;
+    }
+            
     // Функции для работы с машинами
     function addMachine($pdo, $data) {
         $stmt = $pdo->prepare("INSERT INTO machines (data) VALUES (?)");
