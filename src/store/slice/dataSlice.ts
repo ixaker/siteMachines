@@ -1,58 +1,52 @@
-import { firestore } from "@/firebase-config";
+import { DataItem } from "@/types/types";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { collection, getDocs } from "firebase/firestore";
+import axios from "axios";
 
-export const fetchData = createAsyncThunk<
-  DataItem[],
-  void,
-  { rejectValue: string }
->("data/fetchData", async (_, { rejectWithValue }) => {
-  try {
-    const querySnapshot = await getDocs(collection(firestore, "machines"));
-
-    const data = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        title: data.title || "",
-        description: data.description || "",
-        fullDescription: data.fullDescription || "",
-        image: data.image || "",
-        price: data.price || 0,
-        characteristics: data.characteristics || [],
-      };
-    });
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching data: ", error);
-    return rejectWithValue("Failed to fetch data"); // Отправляем ошибку, если что-то пошло не так
-  }
-});
-
-// Тип данных для одного элемента
-interface DataItem {
-  id: string;
-  title: string;
-  description: string;
-  fullDescription: string;
-  image: string;
-  price: number;
-  characteristics: { name: string; value: string }[];
-}
-
+const API_URL = 'https://machines.qpart.com.ua/storage.php';
 // Тип состояния
 interface DataState {
-  items: DataItem[];
+  data: DataItem[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: DataState = {
-  items: [],
+  data: [],
   loading: false,
   error: null,
 };
+
+
+export const fetchMachine = createAsyncThunk<DataItem[]>("data/fetchMachine", async()=> {
+  const response = await axios.get<DataItem[]>(API_URL);
+  return response.data;
+})
+
+export const addMachine = createAsyncThunk<DataItem, DataItem>(
+  "data/addMachine",
+  async (newMachine) => {
+    try {
+      const requestData = new URLSearchParams({
+        data: JSON.stringify(newMachine),
+      }).toString();
+
+      const response = await axios.post<DataItem>(
+        "https://site.qpart.com.ua/storage.php",
+        requestData,
+        {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error adding machine:");
+      throw error;
+    }
+  }
+);
+
+
 
 const dataSlice = createSlice({
   name: "data",
@@ -60,23 +54,27 @@ const dataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchData.pending, (state) => {
+      .addCase(fetchMachine.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchData.fulfilled, (state, action) => {
+      .addCase(fetchMachine.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.data = action.payload;
       })
-      .addCase(fetchData.rejected, (state, action) => {
+      .addCase(fetchMachine.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";
-      });
+      })
+      .addCase(addMachine.fulfilled, (state) => {
+        state.loading = false;
+      })
   },
-});
+  },
+);
 
 // Селекторы для доступа к данным
-export const selectData = (state: { data: DataState }) => state.data.items;
+export const selectData = (state: { data: DataState }) => state.data.data;
 export const selectLoading = (state: { data: DataState }) => state.data.loading;
 
 export default dataSlice.reducer;

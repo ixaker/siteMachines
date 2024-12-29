@@ -1,22 +1,30 @@
 "use client";
 import { Box, Button, Modal, styled, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import SendIcon from "@mui/icons-material/Send";
+import SendIcon from '@mui/icons-material/Send';
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { addMachine, fetchMachine } from "@/store/slice/dataSlice";
+import { DataItem } from "@/types/types";
 
 export default function Home() {
-  const [data, setData] = useState({
-    title: "",
-    description: "",
-    price: 0,
-    fullDescription: "",
-    characteristic: {
-      name: "",
-      value: "",
-    },
-  });
-
   const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState<Omit<DataItem, 'id'>>({
+    title: '',
+    description: ''
+  })
+
+  const dispatch: AppDispatch = useDispatch();
+  const data = useSelector((state: RootState) => state.data.data);
+
+  useEffect(() => {
+    dispatch(fetchMachine());
+  },[dispatch]);
+
+  console.log("data", data);
+  
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -32,53 +40,13 @@ export default function Home() {
     width: 1,
   });
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch("https://site.qpart.com.ua/storage.php", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
 
-      if (!response.ok) {
-        // Handle error
-        console.error("Failed to fetch data");
-      } else {
-        const result = await response.json();
-        console.log("Data fetched successfully", result);
-        // Update your state with the fetched data
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+
+  const handleSubmit = () => {
+      dispatch(addMachine(formData));
+      setFormData({ title: '', description: ""});
   };
 
-  const requestData = {
-    data: JSON.stringify({
-      name: data.title,
-      status: data.description,
-    }),
-  };
-
-  const sendData = async () => {
-    const response = await fetch("https://site.qpart.com.ua/storage.php", {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams(requestData).toString(),
-    });
-
-    if (!response.ok) {
-      // Handle error
-      console.error("Failed to send data");
-    } else {
-      const result = await response.json();
-      console.log("Data sent successfully", result);
-    }
-  };
 
   return (
     <div>
@@ -88,9 +56,18 @@ export default function Home() {
           Add Post
         </Button>
 
-        <Button onClick={fetchData} variant="contained">
+        <Button variant="contained">
           GET POST
         </Button>
+      </div>
+
+      <div>
+        {data.map((item, index) => (
+          <div key={index}>
+            <h1>{item.title}</h1>
+            <p>{item.description}</p>
+          </div>
+        ))}
       </div>
 
       <Modal
@@ -104,65 +81,16 @@ export default function Home() {
             id="outlined-basic"
             label="Название станка"
             variant="outlined"
-            value={data.title}
-            onChange={(e) =>
-              setData((prev) => ({ ...prev, title: e.target.value }))
-            }
+            value={formData.title}
+            onChange={(e) => setFormData({...formData, title: e.target.value})}
           />
           <TextField
             id="outlined-basic"
             label="Описание"
             variant="outlined"
-            onChange={(e) =>
-              setData((prev) => ({ ...prev, description: e.target.value }))
-            }
+            value={formData.description}
+            onChange={(e) => setFormData({...formData, description: e.target.value})}
           />
-          <TextField
-            id="outlined-basic"
-            type="number"
-            label="Стоимость"
-            variant="outlined"
-            onChange={(e) =>
-              setData((prev) => ({ ...prev, price: Number(e.target.value) }))
-            }
-          />
-          <TextField
-            id="outlined-basic"
-            label="Полное описание"
-            variant="outlined"
-            onChange={(e) =>
-              setData((prev) => ({ ...prev, fullDescription: e.target.value }))
-            }
-          />
-          <TextField
-            id="outlined-basic"
-            label="Имя характеристики"
-            variant="outlined"
-            onChange={(e) =>
-              setData((prev) => ({
-                ...prev,
-                characteristic: {
-                  ...prev.characteristic,
-                  name: e.target.value,
-                },
-              }))
-            }
-          />
-          <TextField
-            onChange={(e) =>
-              setData((prev) => ({
-                ...prev,
-                characteristic: {
-                  ...prev.characteristic,
-                  name: e.target.value,
-                },
-              }))
-            }
-            id="outlined-basic"
-            label="Описание характеристики"
-            variant="outlined"
-          />
-
           <Button
             component="label"
             role={undefined}
@@ -178,7 +106,7 @@ export default function Home() {
             />
           </Button>
 
-          <Button onClick={sendData} variant="contained" endIcon={<SendIcon />}>
+          <Button onClick={handleSubmit} variant="contained" endIcon={<SendIcon />}>
             Send
           </Button>
         </Box>
