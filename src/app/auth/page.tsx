@@ -7,6 +7,8 @@ const Auth = () => {
   const [password, setPassword] = useState("");
 
   const logIn = async () => {
+    console.log("window.auth", auth);
+
     try {
       const response = await axios.get(
         `https://machines.qpart.com.ua/auth.php?password=${password}`

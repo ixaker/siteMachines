@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Стилизация полосы прокрутки */ /* Ширина вертикальной полосы прокрутки */
+
+::-webkit-scrollbar {
+  width: 2px; /* Ширина вертикальной полосы прокрутки */
+  height: 12px; /* Высота горизонтальной полосы прокрутки */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a7a7a7a4; /* Цвет ползунка полосы прокрутки */
+  border-radius: 6px; /* Закругленные углы ползунка */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Цвет ползунка при наведении */
+}
+
+/* Пример класса для скрытия полосы прокрутки */
+/* ::-webkit-scrollbar {
+  display: none; 
+} */

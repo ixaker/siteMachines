@@ -1,5 +1,6 @@
 "use client";
 
+import ItemGallery from "@/components/item-gallery/ItemGallery";
 import { getMachine } from "@/shared/storage";
 import { DataItem } from "@/types/types";
 
@@ -33,8 +34,22 @@ const MachinePage = () => {
   }, [id]);
 
   return (
-    <section className="w-full max-w-[1200px] my-10 mx-auto px-4 ">
-      <h1>{machine?.data.name}</h1>
+    <section className="w-full max-w-[1500px] my-10 mx-auto px-4 ">
+      {/* <h1>{machine?.data.name}</h1> */}
+      <div className="flex gap-10">
+        <ItemGallery gallery={machine?.data.gallery || []} />
+        <div className="flex flex-1 flex-col gap-10">
+          <h1 className="text-3xl font-bold text-center">
+            {machine?.data.name}
+          </h1>
+          <div className="flex justify-between items-center">
+            <span className="text-3xl font-bold">
+              1000000 ₴{machine?.data.price}
+            </span>
+            <span className="">Код: {machine?.data.article}</span>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
