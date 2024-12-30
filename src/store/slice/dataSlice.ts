@@ -1,8 +1,8 @@
 import { DataItem } from "@/types/types";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = 'https://machines.qpart.com.ua/storage.php';
+const API_URL = "https://machines.qpart.com.ua/storage.php";
 // Тип состояния
 interface DataState {
   data: DataItem[];
@@ -11,16 +11,24 @@ interface DataState {
 }
 
 const initialState: DataState = {
-  data: [],
+  data: [] as DataItem[],
   loading: false,
   error: null,
 };
 
+export const fetchMachines = createAsyncThunk<DataItem[]>(
+  "data/fetchMachines",
+  async () => {
+    const response = await axios.get(API_URL);
+    const list = response.data.list;
 
-export const fetchMachine = createAsyncThunk<DataItem[]>("data/fetchMachine", async()=> {
-  const response = await axios.get<DataItem[]>(API_URL);
-  return response.data;
-})
+    list.forEach((element: { id: string; data: string }) => {
+      element.data = JSON.parse(element.data);
+    });
+
+    return list;
+  }
+);
 
 export const addMachine = createAsyncThunk<DataItem, DataItem>(
   "data/addMachine",
@@ -46,7 +54,20 @@ export const addMachine = createAsyncThunk<DataItem, DataItem>(
   }
 );
 
+// export const getMachine = async (id: string | null): Promise<DataItem> => {
+//   const response = await axios.get(
+//     `https://machines.qpart.com.ua/storage.php?id=${id}`
+//   );
 
+//   const machine = response.data;
+//   if (!machine) {
+//     throw new Error("Machine not found");
+//   }
+//   machine.data = JSON.parse(machine.data);
+
+//   const result: DataItem = machine;
+//   return result;
+// };
 
 const dataSlice = createSlice({
   name: "data",
@@ -54,24 +75,27 @@ const dataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMachine.pending, (state) => {
+      .addCase(fetchMachines.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchMachine.fulfilled, (state, action) => {
+      .addCase(fetchMachines.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(fetchMachine.rejected, (state, action) => {
+      .addCase(fetchMachines.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch data";
       })
-      .addCase(addMachine.fulfilled, (state) => {
-        state.loading = false;
-      })
+      .addCase(
+        addMachine.fulfilled,
+        (state, action: PayloadAction<DataItem>) => {
+          state.loading = false;
+          state.data.push(action.payload);
+        }
+      );
   },
-  },
-);
+});
 
 // Селекторы для доступа к данным
 export const selectData = (state: { data: DataState }) => state.data.data;
