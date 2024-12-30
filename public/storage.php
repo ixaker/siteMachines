@@ -1,14 +1,30 @@
 <?php
+    // Загружаем настройки из secret.php
+    define('SECURE_ACCESS', true); // Определяем ключ для доступа к secret.php
+    $config = require __DIR__ . '/secret.php';
+
+    // Проверяем наличие ключа безопасности (защита от несанкционированного доступа)
+    $secretKey = $config['secretKey'];
+
+    // Получаем все заголовки запроса
+    $headers = getallheaders();
+
+    // Проверяем, есть ли токен в заголовках и совпадает ли он с секретным ключом
+    if (!isset($headers['Authorization']) || $headers['Authorization'] !== "Bearer $secretKey") {
+        http_response_code(403); // Доступ запрещен
+        exit(json_encode(['success' => false, 'error' => 'Forbidden: Invalid token']));
+    }
+
     // Подключение к базе данных
-    $host = 'os284542.mysql.tools'; // Измените на хост вашего хостинга
-    $dbname = 'os284542_machines';
-    $user = 'os284542_machines';
-    $password = 't@&bZ8H5s4';
+    $host = $config['db_host']; // Измените на хост вашего хостинга
+    $dbname = $config['db_name'];
+    $user = $config['db_user'];
+    $password = $config['db_pass'];
 
     // Параметры для работы с хранилищем
-    $storageHost = 'a7b85a942d4082eb.cdn.express';
-    $storageUsername = 'machines';
-    $storagePassword = 'SJts24y24K';
+    $storageHost = $config['storage_host'];
+    $storageUsername = $config['storage_user'];
+    $storagePassword = $config['storage_pass'];
     $storageToken = null; // Глобальный токен
 
     try {
@@ -159,6 +175,23 @@
         http_response_code($statusCode);
         echo json_encode($data);
         exit;
+    }
+
+    // Проверка токена
+    function validateToken($expectedToken) {
+        // Получаем все заголовки запроса
+        $headers = getallheaders();
+
+        // Проверяем наличие заголовка Authorization
+        if (!isset($headers['Authorization'])) {
+            return false;
+        }
+
+        // Извлекаем токен из заголовка
+        list($type, $token) = explode(' ', $headers['Authorization'], 2);
+
+        // Проверяем, что заголовок соответствует ожидаемому формату и значению токена
+        return $type === 'Bearer' && $token === $expectedToken;
     }
 
     // Обработка запросов

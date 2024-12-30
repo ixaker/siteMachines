@@ -1,29 +1,35 @@
 <?php
 
-$storedHash = '$2y$10$vCddfHT9K5KtkXh7OQpMaeKdhAsxyDQ6r0WNa9zG07J3uWcIwDn3y'; // test
+    // Загружаем настройки из secret.php
+    define('SECURE_ACCESS', true); // Определяем ключ для доступа к secret.php
+    $config = require __DIR__ . '/secret.php';
 
-header('Content-Type: application/json');
+    $storedHash = password_hash($config['auth_pass'], PASSWORD_DEFAULT); // test
+    
+    header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $inputPassword = $_GET['password'] ?? '';
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $inputPassword = $_GET['password'] ?? '';
 
-    if (password_verify($inputPassword, $storedHash)) {
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Пароль верный'
-        ]);
+        if (password_verify($inputPassword, $storedHash)) {
+            header('X-Auth-Token: ' . $config['secretKey']);
+
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Пароль верный'
+            ]);
+        } else {
+            http_response_code(401);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Неверный пароль'
+            ]);
+        }
     } else {
-        http_response_code(401);
+        http_response_code(405);
         echo json_encode([
             'status' => 'error',
-            'message' => 'Неверный пароль'
+            'message' => 'Используйте только GET-запрос'
         ]);
     }
-} else {
-    http_response_code(405);
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Используйте только GET-запрос'
-    ]);
-}
 ?>
