@@ -8,12 +8,14 @@ interface DataState {
   data: DataItem[];
   loading: boolean;
   error: string | null;
+  filter: string;
 }
 
 const initialState: DataState = {
   data: [],
   loading: false,
   error: null,
+  filter: "",
 };
 
 export const fetchMachines = createAsyncThunk<DataItem[]>(
@@ -54,25 +56,22 @@ export const addMachine = createAsyncThunk<DataItem, DataItem>(
   }
 );
 
-// export const getMachine = async (id: string | null): Promise<DataItem> => {
-//   const response = await axios.get(
-//     `https://machines.qpart.com.ua/storage.php?id=${id}`
-//   );
-
-//   const machine = response.data;
-//   if (!machine) {
-//     throw new Error("Machine not found");
-//   }
-//   machine.data = JSON.parse(machine.data);
-
-//   const result: DataItem = machine;
-//   return result;
-// };
+export const selectFilteredData = (state: { data: DataState }) => {
+  const { data, filter } = state.data;
+  if (!filter) return data;
+  return data.filter((item) =>
+    item.data.name.toLowerCase().includes(filter.toLowerCase())
+  );
+};
 
 const dataSlice = createSlice({
   name: "data",
   initialState,
-  reducers: {},
+  reducers: {
+    setFilter(state, action: PayloadAction<string>) {
+      state.filter = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMachines.pending, (state) => {
@@ -98,6 +97,7 @@ const dataSlice = createSlice({
 });
 
 // Селекторы для доступа к данным
+export const { setFilter } = dataSlice.actions;
 export const selectData = (state: { data: DataState }) => state.data.data;
 export const selectLoading = (state: { data: DataState }) => state.data.loading;
 

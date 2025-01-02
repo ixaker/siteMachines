@@ -23,7 +23,7 @@ const MachinePage = () => {
   const dispatch: AppDispatch = useDispatch();
   const admin = useSelector(selectAdmin);
 
-  console.log(admin);
+  console.log(admin, editor);
 
   useEffect(() => {
     checkAutorization().then((res) => {
@@ -60,7 +60,7 @@ const MachinePage = () => {
   };
 
   return (
-    <section className="w-full max-w-[1500px] my-10 mx-auto px-4 ">
+    <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
       <div className="flex gap-10">
         <ItemGallery gallery={machine?.data.gallery || []} />
         <div className="flex flex-1 flex-col gap-10">

@@ -39,17 +39,17 @@ const Card: React.FC<CardProps> = ({ item }) => {
           </p>
         </div>
 
-        <div className="p-4 shadow-md w-full absolute rounded-b-lg  z-[1] left-0 bg-white bottom-[0px] group-hover:bottom-[-142px] group-hover:z-[1]  transition-all duration-500 ease">
+        <div className="p-4 shadow-md w-full h-[145px] absolute rounded-b-lg z-[1] left-0 bg-white bottom-[0px] group-hover:bottom-[-40%] group-hover:z-[1]  transition-all duration-500 ease">
           <h3 className="text-md font-semibold text-gray-700">
             Характеристики:
           </h3>
           <ul className="mt-2 space-y-1">
-            {item.data.characteristics.map((char, index) => (
-              <li key={index} className="text-sm text-gray-600">
-                <strong>{char.name}:</strong> {char.value}
-              </li>
-            ))}
-          </ul>
+          {item.data.characteristics.slice(0, 3).map((char, index) => (
+            <li key={index} className="text-sm text-gray-600">
+              <strong>{char.name}:</strong> {char.value}
+            </li>
+          ))}
+        </ul>
         </div>
       </div>
     </div>

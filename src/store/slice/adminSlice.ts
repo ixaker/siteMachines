@@ -8,10 +8,17 @@ interface AdminState {
   error: string | null;
 }
 
+const getToken = (): string => {
+  if (typeof window !== 'undefined') {
+    return window.localStorage.getItem("token") || '';
+  }
+  return '';
+};
+
 const initialState: AdminState = {
   admin: false,
   editor: false,
-  token: "",
+  token: getToken(),
   error: null,
 };
 
@@ -61,7 +68,8 @@ const adminSlice = createSlice({
     logout: (state) => {
       state.admin = false;
       state.editor = false;
-      state.token = "";
+      state.token = "" ;
+      window.localStorage.removeItem("token");
       state.error = null;
     },
     setAdmin: (state, action: { payload: boolean }) => {

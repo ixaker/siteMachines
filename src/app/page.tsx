@@ -11,13 +11,11 @@ const Home = () => {
   const admin = useSelector(selectAdmin);
   const dispatch: AppDispatch = useDispatch();
 
-  console.log(admin);
-
   useEffect(() => {
     checkAutorization().then((res) => {
       dispatch(setAdmin(res));
     });
-  }, []);
+  }, [admin]);
 
   return (
     <div className="mt-10">
