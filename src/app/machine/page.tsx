@@ -2,7 +2,6 @@
 
 import ItemGallery from "@/components/item-gallery/ItemGallery";
 import { getMachine } from "@/shared/storage";
-import { selectAdmin } from "@/store/slice/adminSlice";
 import { DataItem } from "@/types/types";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StoreIcon from "@mui/icons-material/Store";
@@ -10,15 +9,11 @@ import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const admin = useSelector(selectAdmin);
-
-  console.log("admin", admin);
 
   const id = searchParams.get("id");
 
