@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import dataReducer from "../store/slice/dataSlice";
+import adminReducer from "../store/slice/adminSlice";
 
 const store = configureStore({
   reducer: {
     data: dataReducer,
+    admin: adminReducer,
   },
 });
 

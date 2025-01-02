@@ -26,10 +26,28 @@
             ]);
         }
     } else {
-        http_response_code(405);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Используйте только GET-запрос'
-        ]);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $token = $_POST['token'] ?? '';
+
+            if ($token === $config['secretKey']) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Токен верный'
+                ]);
+            } else {
+                http_response_code(401);
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Неверный токен'
+                ]);
+            }
+        }else {
+            http_response_code(405);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Используйте только GET-запрос'
+            ]);
+        }
+
     }
 ?>

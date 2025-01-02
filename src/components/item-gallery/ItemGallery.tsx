@@ -1,4 +1,4 @@
-import { GalleryItem, MediaType } from "@/types/types";
+import { GalleryItem } from "@/types/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -8,6 +8,24 @@ interface ItemGalleryProps {
 
 const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
+
+  const [zoomPhoto, setZoomPhoto] = useState(""); // Храним информацию об увеличенной версии
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
+
+  const handleMouseMove = (
+    e: React.MouseEvent<HTMLDivElement>,
+    src: string
+  ) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setZoomPosition({ x, y });
+    setZoomPhoto(src);
+  };
+
+  const handleMouseLeave = () => {
+    setZoomPhoto(""); // Убираем увеличенное изображение
+  };
 
   useEffect(() => {
     if (gallery.length > 0) {
@@ -23,30 +41,56 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
 
   return (
     <section>
-      <div className="w-auto flex gap-5 max-h-[500px]">
-        <Image width={500} height={400} alt={`Machine`} src={currentPhoto} />
+      <div className="w-auto flex gap-5 max-h-[400px]">
+        <Image
+          width={500}
+          height={400}
+          alt={`Machine`}
+          src={currentPhoto}
+          className="relative max-h-[400px]"
+          onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
+          onMouseLeave={handleMouseLeave}
+        />
 
         <div className=".scrol flex gap-5 overflow-hidden overflow-y-scroll flex-col pr-3">
           {gallery.map((image, index) => (
             <div
+              key={index}
               id={image.src}
               onClick={(e) => handleClickShowPhoto(e)}
               className="relative"
             >
               <Image
                 className="cursor-pointer p-1 bg-[#f6f6f6]"
-                key={index}
                 alt="Photo"
                 src={image.src}
                 width={100}
                 height={100}
-              />{" "}
+                decoding="async"
+              />
+
               {currentPhoto !== image.src && (
                 <div className="absolute w-full h-full bg-white top-0 left-0 opacity-60 cursor-pointer"></div>
               )}
             </div>
           ))}
         </div>
+
+        {zoomPhoto && (
+          <div className="absolute z-10 pointer-events-none top-[40px] right-[11.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
+            <Image
+              src={zoomPhoto}
+              alt="Zoomed Photo"
+              width={505}
+              height={505}
+              className="w-full h-full object-cover max-w-[500px] max-h-[405px]"
+              style={{
+                transform: `scale(2)`, // Масштабируем изображение в 2 раза
+                transformOrigin: `${zoomPosition.x}px ${zoomPosition.y}px`, // Центрируем масштаб в точке курсора
+              }}
+            />
+          </div>
+        )}
       </div>
     </section>
   );

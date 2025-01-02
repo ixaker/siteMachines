@@ -9,12 +9,6 @@
     // Получаем все заголовки запроса
     $headers = getallheaders();
 
-    // Проверяем, есть ли токен в заголовках и совпадает ли он с секретным ключом
-    if (!isset($headers['Authorization']) || $headers['Authorization'] !== "Bearer $secretKey") {
-        http_response_code(403); // Доступ запрещен
-        exit(json_encode(['success' => false, 'error' => 'Forbidden: Invalid token']));
-    }
-
     // Подключение к базе данных
     $host = $config['db_host']; // Измените на хост вашего хостинга
     $dbname = $config['db_name'];
@@ -207,6 +201,12 @@
             break;
 
         case 'POST':
+            // Проверяем, есть ли токен в заголовках и совпадает ли он с секретным ключом
+            if (!isset($headers['Authorization']) || $headers['Authorization'] !== "Bearer $secretKey") {
+                http_response_code(403); // Доступ запрещен
+                exit(json_encode(['success' => false, 'error' => 'Forbidden: Invalid token']));
+            }
+
             $data = $_POST['data'];
             $id = $_POST['id'];
 
