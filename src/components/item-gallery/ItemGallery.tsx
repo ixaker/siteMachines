@@ -1,12 +1,14 @@
 import { GalleryItem } from "@/types/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
 }
 
 const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
+  const admin = true;
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
 
   const [zoomPhoto, setZoomPhoto] = useState(""); // Храним информацию об увеличенной версии
@@ -74,6 +76,13 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
               )}
             </div>
           ))}
+          {admin ? (
+            <div className="flex justify-center items-center w-[100px] h-[100px] bg-[#f6f6f6] cursor-pointer">
+              <AddAPhotoIcon />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
 
         {zoomPhoto && (
@@ -85,7 +94,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
               height={505}
               className="w-full h-full object-cover max-w-[500px] max-h-[405px]"
               style={{
-                transform: `scale(2)`, // Масштабируем изображение в 2 раза
+                transform: `scale(3)`, // Масштабируем изображение в 2 раза
                 transformOrigin: `${zoomPosition.x}px ${zoomPosition.y}px`, // Центрируем масштаб в точке курсора
               }}
             />
