@@ -11,7 +11,7 @@ interface DataState {
 }
 
 const initialState: DataState = {
-  data: [] as DataItem[],
+  data: [],
   loading: false,
   error: null,
 };

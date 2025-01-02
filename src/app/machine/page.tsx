@@ -2,6 +2,7 @@
 
 import ItemGallery from "@/components/item-gallery/ItemGallery";
 import { getMachine } from "@/shared/storage";
+import { selectAdmin, selectEditor, setAdmin } from "@/store/slice/adminSlice";
 import { DataItem } from "@/types/types";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StoreIcon from "@mui/icons-material/Store";
@@ -9,11 +10,26 @@ import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { checkAutorization } from "../auth/utils/auth";
+import { AppDispatch } from "@/store/store";
+import TitleMachine from "./ui/title-machine/TitleMachine";
 
 const MachinePage = () => {
+  const editor = useSelector(selectEditor);
   const [machine, setMachine] = useState<DataItem>();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const dispatch: AppDispatch = useDispatch();
+  const admin = useSelector(selectAdmin);
+
+  console.log(admin);
+
+  useEffect(() => {
+    checkAutorization().then((res) => {
+      dispatch(setAdmin(res));
+    });
+  }, []);
 
   const id = searchParams.get("id");
 
@@ -36,14 +52,23 @@ const MachinePage = () => {
     fetchMachine();
   }, [id]);
 
+  const handleTitleChange = (value: string) => {
+    setMachine({
+      ...machine!,
+      data: { ...machine!.data, name: value },
+    });
+  };
+
   return (
     <section className="w-full max-w-[1500px] my-10 mx-auto px-4 ">
       <div className="flex gap-10">
         <ItemGallery gallery={machine?.data.gallery || []} />
         <div className="flex flex-1 flex-col gap-10">
-          <h1 className="text-3xl font-bold text-center">
-            {machine?.data.name}
-          </h1>
+          <TitleMachine
+            changeFunction={handleTitleChange}
+            value={machine?.data.name || ""}
+          />
+
           <div className="flex justify-between items-center">
             <span className="text-3xl font-bold">
               1000000 ₴{machine?.data.price}

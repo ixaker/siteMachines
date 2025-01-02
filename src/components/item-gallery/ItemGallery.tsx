@@ -2,13 +2,16 @@ import { GalleryItem } from "@/types/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import Skeleton from "@mui/material/Skeleton";
+import { useSelector } from "react-redux";
+import { selectEditor } from "@/store/slice/adminSlice";
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
 }
 
 const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
-  const admin = true;
+  const editor = useSelector(selectEditor);
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
 
   const [zoomPhoto, setZoomPhoto] = useState(""); // Храним информацию об увеличенной версии
@@ -38,21 +41,24 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
   const handleClickShowPhoto = (e: React.MouseEvent<HTMLDivElement>) => {
     const src = e.currentTarget.getAttribute("id") || "";
     setCurrentPhoto(src);
-    console.log(src);
   };
 
   return (
     <section>
       <div className="w-auto flex gap-5 max-h-[400px]">
-        <Image
-          width={500}
-          height={400}
-          alt={`Machine`}
-          src={currentPhoto}
-          className="relative max-h-[400px]"
-          onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
-          onMouseLeave={handleMouseLeave}
-        />
+        {!currentPhoto ? (
+          <Skeleton variant="rectangular" width={505} height={505} />
+        ) : (
+          <Image
+            width={500}
+            height={400}
+            alt={`Machine`}
+            src={currentPhoto}
+            className="relative max-h-[400px]"
+            onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
+            onMouseLeave={handleMouseLeave}
+          />
+        )}
 
         <div className=".scrol flex gap-5 overflow-hidden overflow-y-scroll flex-col pr-3">
           {gallery.map((image, index) => (
@@ -76,10 +82,12 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
               )}
             </div>
           ))}
-          {admin ? (
-            <div className="flex justify-center items-center w-[100px] h-[100px] bg-[#f6f6f6] cursor-pointer">
-              <AddAPhotoIcon />
-            </div>
+          {editor ? (
+            <>
+              <div className="flex justify-center items-center w-[100px] min-h-[77px] bg-[#f6f6f6] cursor-pointer">
+                <AddAPhotoIcon />
+              </div>
+            </>
           ) : (
             ""
           )}

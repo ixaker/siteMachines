@@ -4,20 +4,35 @@ import {
   logout,
   selectAdmin,
   selectError,
+  setAdmin,
 } from "@/store/slice/adminSlice";
 import { AppDispatch } from "@/store/store";
 import { Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { checkAutorization } from "./utils/auth";
+import { useRouter } from "next/navigation";
 
 const Auth = () => {
   const dispatch: AppDispatch = useDispatch();
   const [password, setPassword] = useState("");
   const admin = useSelector(selectAdmin);
   const error = useSelector(selectError);
+  const router = useRouter();
+
+  useEffect(() => {
+    checkAutorization().then((res) => {
+      dispatch(setAdmin(res));
+    });
+
+    if (admin) {
+      router.push("/");
+    }
+  }, [admin]);
 
   const handleLogin = () => {
     dispatch(login(password)); // Вызов асинхронной операции login
+    // Переход на главную страницу
   };
 
   const handleLogout = () => {

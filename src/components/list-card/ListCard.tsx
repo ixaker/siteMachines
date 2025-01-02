@@ -12,8 +12,6 @@ const ListCard = () => {
 
   const list = useSelector((state: RootState) => state.data.data);
 
-  console.log("list", list);
-
   return (
     <section className="w-full max-w-[1200px] my-10 mx-auto px-4">
       <div className="flex justify-center">

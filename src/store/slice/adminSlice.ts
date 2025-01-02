@@ -27,8 +27,6 @@ export const login = createAsyncThunk<boolean, string>(
       if (response.status === 200) {
         const token = response.headers["x-auth-token"]; // Получение токена
         window.localStorage.setItem("token", token); // Сохранение токена в localStorage
-        console.log("response", response);
-
         return true; // Успешный вход
       } else {
         console.error("Unexpected response status:", response.status);
@@ -66,6 +64,12 @@ const adminSlice = createSlice({
       state.token = "";
       state.error = null;
     },
+    setAdmin: (state, action: { payload: boolean }) => {
+      state.admin = action.payload; // Устанавливаем новое значение admin
+    },
+    setEditor: (state, action: { payload: boolean }) => {
+      state.editor = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -89,7 +93,9 @@ const adminSlice = createSlice({
   },
 });
 
-export const { logout } = adminSlice.actions;
+export const { logout, setAdmin, setEditor } = adminSlice.actions;
 export const selectAdmin = (state: { admin: AdminState }) => state.admin.admin;
+export const selectEditor = (state: { admin: AdminState }) =>
+  state.admin.editor;
 export const selectError = (state: { admin: AdminState }) => state.admin.error;
 export default adminSlice.reducer;
