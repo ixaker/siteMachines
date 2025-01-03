@@ -6,12 +6,12 @@ import { DataItem } from '@/types/types';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import TitleMachine from './ui/title-machine/TitleMachine';
-import Link from 'next/link';
 import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
+import Breadcrumb from './ui/bread-crumb/Breadcrumb';
+import PriceMachine from './ui/price-machine/PriceMachine';
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>();
@@ -46,17 +46,16 @@ const MachinePage = () => {
     });
   };
 
+  const handlePriceChange = (value: string) => {
+    setMachine({
+      ...machine!,
+      data: { ...machine!.data, price: value },
+    });
+  };
+
   return (
     <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
-      <div className="my-10 flex items-center">
-        <Link href={'/'} className="text-2xl font-bold">
-          Головна{' '}
-        </Link>
-        <KeyboardArrowRightIcon fontSize="large" />
-        <span className="text-2xl font-bold ">{machine?.data.type}</span>
-        <KeyboardArrowRightIcon fontSize="large" />
-        <span className="text-2xl font-bold ">{machine?.data.model}</span>
-      </div>
+      <Breadcrumb model={machine?.data.model || ''} type={machine?.data.type || ''} />
 
       <div className="flex gap-10">
         <ItemGallery gallery={machine?.data.gallery || []} />
@@ -64,7 +63,8 @@ const MachinePage = () => {
           <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
 
           <div className="flex justify-between items-center">
-            <span className="text-3xl font-bold">{machine?.data.price}₴</span>
+            {/* <span className="text-3xl font-bold">{machine?.data.price}₴</span> */}
+            <PriceMachine changeFunction={handlePriceChange} value={machine?.data.price || ''} />
             <div>
               <span>Код: {machine?.data.article}</span>
             </div>

@@ -1,7 +1,11 @@
 // import { DataItem } from "@/types/types";
 
 export interface TitleMachineProps {
-  value: string;
+  value: string | number;
   changeFunction: (value: string) => void;
-  className?: string;
+}
+
+export interface BreadcrumbProps {
+  type: string;
+  model: string;
 }

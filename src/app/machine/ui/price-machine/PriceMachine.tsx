@@ -1,10 +1,30 @@
-import React from 'react';
+import { selectEditor } from '@/store/slice/adminSlice';
+import { selectLoading } from '@/store/slice/dataSlice';
+import { useSelector } from 'react-redux';
+import { TitleMachineProps } from '../title-machine/types';
+import { Skeleton } from '@mui/material';
 
-const PriceMachine: React.FC = () => {
+const PriceMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) => {
+  const editor = useSelector(selectEditor);
+  const loading = useSelector(selectLoading);
+
   return (
-    <section>
-      <h1>PriceMachine</h1>
-    </section>
+    <>
+      {editor ? (
+        <input
+          type="number"
+          className="text-3xl font-bold"
+          value={value || ''}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            changeFunction(e.target.value);
+          }}
+        />
+      ) : loading ? (
+        <Skeleton variant="rectangular" animation="wave" sx={{ width: '100%', height: '36px' }} />
+      ) : (
+        <span className="text-3xl font-bold ">{value || ''} ₴</span>
+      )}
+    </>
   );
 };
 

@@ -30,7 +30,7 @@ export interface DataItem {
     fullDescription: string;
     article: string;
     type: string;
-    price: number;
+    price: string;
     model: string;
     availability: string;
   };
