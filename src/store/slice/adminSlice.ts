@@ -1,3 +1,4 @@
+import { checkAutorization } from "@/app/auth/utils/auth";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -6,14 +7,23 @@ interface AdminState {
   editor: boolean;
   token: string;
   error: string | null;
+  status?: "loading" | "succeeded" | "failed";
 }
 
 const getToken = (): string => {
-  if (typeof window !== 'undefined') {
-    return window.localStorage.getItem("token") || '';
+  if (typeof window !== "undefined") {
+    return window.localStorage.getItem("token") || "";
   }
-  return '';
+  return "";
 };
+
+export const fetchAdminStatus = createAsyncThunk(
+  "admin/fetchStatus",
+  async () => {
+    const response = await checkAutorization();
+    return response;
+  }
+);
 
 const initialState: AdminState = {
   admin: false,
@@ -25,7 +35,7 @@ const initialState: AdminState = {
 // Асинхронная операция для логина
 export const login = createAsyncThunk<boolean, string>(
   "admin/login",
-  async (password: string) => {
+  async (password: string, { dispatch }) => {
     try {
       const response = await axios.get(
         `https://machines.qpart.com.ua/auth.php?password=${password}`
@@ -34,6 +44,7 @@ export const login = createAsyncThunk<boolean, string>(
       if (response.status === 200) {
         const token = response.headers["x-auth-token"]; // Получение токена
         window.localStorage.setItem("token", token); // Сохранение токена в localStorage
+        dispatch(setAdmin(true)); // Устанавливаем admin в true
         return true; // Успешный вход
       } else {
         console.error("Unexpected response status:", response.status);
@@ -68,7 +79,7 @@ const adminSlice = createSlice({
     logout: (state) => {
       state.admin = false;
       state.editor = false;
-      state.token = "" ;
+      state.token = "";
       window.localStorage.removeItem("token");
       state.error = null;
     },
@@ -86,8 +97,8 @@ const adminSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         if (action.payload) {
-          state.admin = true; // Вход успешен
-          state.token = "some-token"; // Можно вернуть токен, если он есть
+          state.admin = true;
+          state.token = getToken();
           state.error = null;
         } else {
           state.admin = false; // Вход не удался
@@ -97,12 +108,23 @@ const adminSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.admin = false;
         state.error = action.error.message || "Login failed"; // Обработка ошибки
+      })
+      .addCase(fetchAdminStatus.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAdminStatus.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.admin = action.payload;
+      })
+      .addCase(fetchAdminStatus.rejected, (state) => {
+        state.status = "failed";
       });
   },
 });
 
 export const { logout, setAdmin, setEditor } = adminSlice.actions;
 export const selectAdmin = (state: { admin: AdminState }) => state.admin.admin;
+export const selectToken = (state: { admin: AdminState }) => state.admin.token;
 export const selectEditor = (state: { admin: AdminState }) =>
   state.admin.editor;
 export const selectError = (state: { admin: AdminState }) => state.admin.error;

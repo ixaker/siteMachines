@@ -1,22 +1,19 @@
-import { checkAutorization } from "@/app/auth/utils/auth";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   logout,
   selectAdmin,
   selectEditor,
-  setAdmin,
   setEditor,
 } from "@/store/slice/adminSlice";
 import { AppDispatch } from "@/store/store";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Switch from "@mui/material/Switch";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { setFilter } from "@/store/slice/dataSlice";
-// import Navigation from "./ui/Navigation";
 
 const Header: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -29,17 +26,13 @@ const Header: React.FC = () => {
     dispatch(setEditor(!editor));
   };
 
+  console.log("admin", admin);
+
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFilterValue(value); // Обновляем локальное состояние
     dispatch(setFilter(value)); // Обновляем фильтр в Redux
   };
-
-  useEffect(() => {
-    checkAutorization().then((res) => {
-      dispatch(setAdmin(res));
-    });
-  }, [dispatch]);
 
   return (
     <header className="flex flex-col w-full max-w-[1500px] mt-10 my-0 mx-auto px-4 bg-inherit">

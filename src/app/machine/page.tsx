@@ -2,37 +2,21 @@
 
 import ItemGallery from "@/components/item-gallery/ItemGallery";
 import { getMachine } from "@/shared/storage";
-import { selectAdmin, selectEditor, setAdmin } from "@/store/slice/adminSlice";
 import { DataItem } from "@/types/types";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StoreIcon from "@mui/icons-material/Store";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { checkAutorization } from "../auth/utils/auth";
-import { AppDispatch } from "@/store/store";
 import TitleMachine from "./ui/title-machine/TitleMachine";
 import Link from "next/link";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import TableHaracteristics from "@/components/table-haracteristics/TableHaracteristics";
 
 const MachinePage = () => {
-  const editor = useSelector(selectEditor);
   const [machine, setMachine] = useState<DataItem>();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const dispatch: AppDispatch = useDispatch();
-  const admin = useSelector(selectAdmin);
-
-  console.log(admin, editor);
-
-  useEffect(() => {
-    checkAutorization().then((res) => {
-      dispatch(setAdmin(res));
-    });
-  }, [dispatch]);
 
   const id = searchParams.get("id");
 
