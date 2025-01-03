@@ -1,17 +1,13 @@
-import { AppDispatch } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
-import Card from "./Card";
-import { useEffect } from "react";
-import {
-  fetchMachines,
-  selectData,
-  selectFilteredData,
-} from "@/store/slice/dataSlice";
-import { motion, AnimatePresence } from "framer-motion";
-import CustomSelect from "../custom-select/CustomSelect";
-import { selectEditor } from "@/store/slice/adminSlice";
-import AddIcon from "@mui/icons-material/Add";
-import { IconButton } from "@mui/material";
+import { AppDispatch } from '@/store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import Card from './Card';
+import { useEffect } from 'react';
+import { fetchMachines, selectData, selectFilteredData } from '@/store/slice/dataSlice';
+import { motion, AnimatePresence } from 'framer-motion';
+import CustomSelect from '../custom-select/CustomSelect';
+import { selectEditor } from '@/store/slice/adminSlice';
+import AddIcon from '@mui/icons-material/Add';
+import { IconButton } from '@mui/material';
 
 const ListCard = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -58,11 +54,11 @@ const ListCard = () => {
             {editor ? (
               <motion.div className="flex justify-center items-center w-full h-[350px] bg-[#6d6e7021] rounded">
                 <IconButton className="h-auto" size="large">
-                  <AddIcon sx={{ fontSize: "80px", color: "black" }} />
+                  <AddIcon sx={{ fontSize: '80px', color: 'black' }} />
                 </IconButton>
               </motion.div>
             ) : (
-              ""
+              ''
             )}
           </AnimatePresence>
         </div>

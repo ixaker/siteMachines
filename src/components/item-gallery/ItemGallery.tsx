@@ -1,10 +1,10 @@
-import { GalleryItem } from "@/types/types";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Skeleton from "@mui/material/Skeleton";
-import { useSelector } from "react-redux";
-import { selectEditor } from "@/store/slice/adminSlice";
+import { GalleryItem } from '@/types/types';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import Skeleton from '@mui/material/Skeleton';
+import { useSelector } from 'react-redux';
+import { selectEditor } from '@/store/slice/adminSlice';
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
@@ -12,15 +12,12 @@ interface ItemGalleryProps {
 
 const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
   const editor = useSelector(selectEditor);
-  const [currentPhoto, setCurrentPhoto] = useState<string>("");
+  const [currentPhoto, setCurrentPhoto] = useState<string>('');
 
-  const [zoomPhoto, setZoomPhoto] = useState(""); // Храним информацию об увеличенной версии
+  const [zoomPhoto, setZoomPhoto] = useState(''); // Храним информацию об увеличенной версии
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
 
-  const handleMouseMove = (
-    e: React.MouseEvent<HTMLDivElement>,
-    src: string
-  ) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, src: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -29,7 +26,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
   };
 
   const handleMouseLeave = () => {
-    setZoomPhoto(""); // Убираем увеличенное изображение
+    setZoomPhoto(''); // Убираем увеличенное изображение
   };
 
   useEffect(() => {
@@ -39,7 +36,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
   }, [gallery]);
 
   const handleClickShowPhoto = (e: React.MouseEvent<HTMLDivElement>) => {
-    const src = e.currentTarget.getAttribute("id") || "";
+    const src = e.currentTarget.getAttribute('id') || '';
     setCurrentPhoto(src);
   };
 
@@ -62,12 +59,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
 
         <div className=".scrol flex gap-5 overflow-hidden overflow-y-scroll flex-col pr-3">
           {gallery.map((image, index) => (
-            <div
-              key={index}
-              id={image.src}
-              onClick={(e) => handleClickShowPhoto(e)}
-              className="relative"
-            >
+            <div key={index} id={image.src} onClick={(e) => handleClickShowPhoto(e)} className="relative">
               <Image
                 className="cursor-pointer p-1 bg-[#f6f6f6]"
                 alt="Photo"
@@ -89,7 +81,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
               </div>
             </>
           ) : (
-            ""
+            ''
           )}
         </div>
 

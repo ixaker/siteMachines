@@ -5,13 +5,13 @@ export interface Characteristic {
 }
 
 export enum MediaType {
-  Video = "video",
-  Image = "image",
+  Video = 'video',
+  Image = 'image',
 }
 
 export enum MachineType {
-  Tokarniy = "Tokarniy",
-  Frezerniy = "Frezerniy",
+  Tokarniy = 'Tokarniy',
+  Frezerniy = 'Frezerniy',
 }
 
 export interface GalleryItem {

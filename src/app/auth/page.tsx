@@ -1,20 +1,15 @@
-"use client";
-import {
-  login,
-  logout,
-  selectAdmin,
-  selectError,
-} from "@/store/slice/adminSlice";
-import { AppDispatch } from "@/store/store";
-import { Button, TextField } from "@mui/material";
-import { useRouter } from "next/navigation";
+'use client';
+import { login, logout, selectAdmin, selectError } from '@/store/slice/adminSlice';
+import { AppDispatch } from '@/store/store';
+import { Button, TextField } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Auth = () => {
   const dispatch: AppDispatch = useDispatch();
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const admin = useSelector(selectAdmin);
   const error = useSelector(selectError);
   const router = useRouter();
@@ -24,9 +19,9 @@ const Auth = () => {
   };
 
   if (admin) {
-    console.log("Вход успешен");
+    console.log('Вход успешен');
 
-    router.push("/");
+    router.push('/');
   }
 
   const handleLogout = () => {

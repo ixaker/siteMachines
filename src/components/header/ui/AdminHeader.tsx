@@ -1,13 +1,8 @@
-import { AppDispatch } from "@/store/store";
-import { IconButton, Switch } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  logout,
-  selectAdmin,
-  selectEditor,
-  setEditor,
-} from "@/store/slice/adminSlice";
+import { AppDispatch } from '@/store/store';
+import { IconButton, Switch } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectAdmin, selectEditor, setEditor } from '@/store/slice/adminSlice';
 
 const AdminHeader: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -20,13 +15,13 @@ const AdminHeader: React.FC = () => {
 
   return (
     <div className="flex items-center justify-end gap-5">
-      {admin ? <Switch checked={editor} onChange={handleEditor} /> : ""}
+      {admin ? <Switch checked={editor} onChange={handleEditor} /> : ''}
       {admin ? (
         <IconButton onClick={() => dispatch(logout())} size="medium">
-          <LogoutIcon sx={{ color: "black" }} />
+          <LogoutIcon sx={{ color: 'black' }} />
         </IconButton>
       ) : (
-        ""
+        ''
       )}
     </div>
   );

@@ -1,32 +1,15 @@
-import LogoutIcon from "@mui/icons-material/Logout";
-import SearchIcon from "@mui/icons-material/Search";
-import {
-  logout,
-  selectAdmin,
-  selectEditor,
-  setEditor,
-} from "@/store/slice/adminSlice";
-import { AppDispatch } from "@/store/store";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Switch from "@mui/material/Switch";
-import { IconButton } from "@mui/material";
-import Image from "next/image";
-import Link from "next/link";
-import { setFilter } from "@/store/slice/dataSlice";
+import SearchIcon from '@mui/icons-material/Search';
+import { AppDispatch } from '@/store/store';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import Image from 'next/image';
+import Link from 'next/link';
+import { setFilter } from '@/store/slice/dataSlice';
+import AdminHeader from './ui/AdminHeader';
 
 const Header: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-
-  const admin = useSelector(selectAdmin);
-  const editor = useSelector(selectEditor);
-  const [filter, setFilterValue] = useState("");
-
-  const handleEditor = () => {
-    dispatch(setEditor(!editor));
-  };
-
-  console.log("admin", admin);
+  const [filter, setFilterValue] = useState('');
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -36,16 +19,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="flex flex-col w-full max-w-[1500px] mt-10 my-0 mx-auto px-4 bg-inherit">
-      <div className="flex items-center justify-end gap-5">
-        {admin ? <Switch checked={editor} onChange={handleEditor} /> : ""}
-        {admin ? (
-          <IconButton onClick={() => dispatch(logout())} size="medium">
-            <LogoutIcon sx={{ color: "black" }} />
-          </IconButton>
-        ) : (
-          ""
-        )}
-      </div>
+      <AdminHeader />
       <div className="flex items-center justify-between gap-5">
         <Link href="/">
           <Image alt="Logo" src="/logo.webp" width={44} height={44} />

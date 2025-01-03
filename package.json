@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "node ftp-deploy-config.js"
+    "deploy": "node ftp-deploy-config.js",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -32,6 +33,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.22",
     "postcss": "^8",
+    "prettier": "^3.4.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import ItemGallery from "@/components/item-gallery/ItemGallery";
-import { getMachine } from "@/shared/storage";
-import { DataItem } from "@/types/types";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import StoreIcon from "@mui/icons-material/Store";
-import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import TitleMachine from "./ui/title-machine/TitleMachine";
-import Link from "next/link";
-import TableHaracteristics from "@/components/table-haracteristics/TableHaracteristics";
+import ItemGallery from '@/components/item-gallery/ItemGallery';
+import { getMachine } from '@/shared/storage';
+import { DataItem } from '@/types/types';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import StoreIcon from '@mui/icons-material/Store';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import TitleMachine from './ui/title-machine/TitleMachine';
+import Link from 'next/link';
+import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>();
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const id = searchParams.get("id");
+  const id = searchParams.get('id');
 
   if (!id) {
-    router.push("/");
+    router.push('/');
   }
 
   useEffect(() => {
@@ -30,8 +30,8 @@ const MachinePage = () => {
         try {
           setMachine(await getMachine(id)); // Сохраняем результат в состояние
         } catch (error) {
-          console.error("Error fetching machine:", error);
-          router.push("/");
+          console.error('Error fetching machine:', error);
+          router.push('/');
         }
       }
     };
@@ -49,8 +49,8 @@ const MachinePage = () => {
   return (
     <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
       <div className="my-10 flex items-center">
-        <Link href={"/"} className="text-2xl font-bold">
-          Головна{" "}
+        <Link href={'/'} className="text-2xl font-bold">
+          Головна{' '}
         </Link>
         <KeyboardArrowRightIcon fontSize="large" />
         <span className="text-2xl font-bold ">{machine?.data.type}</span>
@@ -61,10 +61,7 @@ const MachinePage = () => {
       <div className="flex gap-10">
         <ItemGallery gallery={machine?.data.gallery || []} />
         <div className="flex flex-1 flex-col gap-10">
-          <TitleMachine
-            changeFunction={handleTitleChange}
-            value={machine?.data.name || ""}
-          />
+          <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
 
           <div className="flex justify-between items-center">
             <span className="text-3xl font-bold">{machine?.data.price}₴</span>
@@ -76,7 +73,7 @@ const MachinePage = () => {
             <label className="text-2xl font-bold">Характеристики:</label>
             {machine?.data.characteristics.map((item, index) => (
               <li key={index}>
-                <span className="font-bold text-[18px]">{item.name}:</span>{" "}
+                <span className="font-bold text-[18px]">{item.name}:</span>{' '}
                 <span className="text-[18px]">{item.value}</span>
               </li>
             ))}
@@ -124,9 +121,7 @@ const MachinePage = () => {
           <p className="text-[18px] mt-5">{machine?.data.fullDescription}</p>
         </article>
 
-        <TableHaracteristics
-          characteristics={machine?.data.characteristics || []}
-        />
+        <TableHaracteristics characteristics={machine?.data.characteristics || []} />
       </div>
     </section>
   );

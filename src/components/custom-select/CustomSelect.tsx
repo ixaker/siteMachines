@@ -17,17 +17,11 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Фрезерний',
-  'Токарний',
-  "Стрічкопильний"
-];
+const names = ['Фрезерний', 'Токарний', 'Стрічкопильний'];
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
-    fontWeight: personName.includes(name)
-      ? theme.typography.fontWeightMedium
-      : theme.typography.fontWeightRegular,
+    fontWeight: personName.includes(name) ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular,
   };
 }
 
@@ -39,9 +33,7 @@ export default function CustomSelect() {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      typeof value === 'string' ? value.split(',') : value,
-    );
+    setPersonName(typeof value === 'string' ? value.split(',') : value);
   };
 
   return (
@@ -58,11 +50,7 @@ export default function CustomSelect() {
           MenuProps={MenuProps}
         >
           {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
-            >
+            <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
               {name}
             </MenuItem>
           ))}

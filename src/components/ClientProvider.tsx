@@ -1,17 +1,13 @@
-"use client";
+'use client';
 
-import { Provider } from "react-redux";
-import store from "@/store/store";
-import Header from "./header/Header";
-import Navigation from "./header/ui/Navigation";
-import { useEffect } from "react";
-import { fetchAdminStatus } from "@/store/slice/adminSlice";
+import { Provider } from 'react-redux';
+import store from '@/store/store';
+import Header from './header/Header';
+import Navigation from './header/ui/Navigation';
+import { useEffect } from 'react';
+import { fetchAdminStatus } from '@/store/slice/adminSlice';
 
-export default function ClientProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ClientProvider({ children }: { children: React.ReactNode }) {
   const { dispatch } = store;
 
   useEffect(() => {

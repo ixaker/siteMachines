@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import ListCard from "@/components/list-card/ListCard";
+import ListCard from '@/components/list-card/ListCard';
 
 const Home = () => {
   return (

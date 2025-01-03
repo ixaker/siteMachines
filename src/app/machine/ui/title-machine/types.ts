@@ -3,4 +3,5 @@
 export interface TitleMachineProps {
   value: string;
   changeFunction: (value: string) => void;
+  className?: string;
 }
