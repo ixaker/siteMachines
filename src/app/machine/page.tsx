@@ -14,6 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkAutorization } from "../auth/utils/auth";
 import { AppDispatch } from "@/store/store";
 import TitleMachine from "./ui/title-machine/TitleMachine";
+import Link from "next/link";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import TableHaracteristics from "@/components/table-haracteristics/TableHaracteristics";
 
 const MachinePage = () => {
   const editor = useSelector(selectEditor);
@@ -29,7 +32,7 @@ const MachinePage = () => {
     checkAutorization().then((res) => {
       dispatch(setAdmin(res));
     });
-  }, []);
+  }, [dispatch]);
 
   const id = searchParams.get("id");
 
@@ -61,6 +64,16 @@ const MachinePage = () => {
 
   return (
     <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
+      <div className="my-10 flex items-center">
+        <Link href={"/"} className="text-2xl font-bold">
+          Головна{" "}
+        </Link>
+        <KeyboardArrowRightIcon fontSize="large" />
+        <span className="text-2xl font-bold ">{machine?.data.type}</span>
+        <KeyboardArrowRightIcon fontSize="large" />
+        <span className="text-2xl font-bold ">{machine?.data.model}</span>
+      </div>
+
       <div className="flex gap-10">
         <ItemGallery gallery={machine?.data.gallery || []} />
         <div className="flex flex-1 flex-col gap-10">
@@ -70,10 +83,10 @@ const MachinePage = () => {
           />
 
           <div className="flex justify-between items-center">
-            <span className="text-3xl font-bold">
-              1000000 ₴{machine?.data.price}
-            </span>
-            <span>Код: {machine?.data.article}</span>
+            <span className="text-3xl font-bold">{machine?.data.price}₴</span>
+            <div>
+              <span>Код: {machine?.data.article}</span>
+            </div>
           </div>
           <ul className="flex flex-col gap-5">
             <label className="text-2xl font-bold">Характеристики:</label>
@@ -124,20 +137,12 @@ const MachinePage = () => {
       <div className="flex flex-col gap-10 mt-10">
         <article>
           <label className="text-2xl font-bold">Опис</label>
-          <p className="text-[18px]">{machine?.data.fullDescription}</p>
+          <p className="text-[18px] mt-5">{machine?.data.fullDescription}</p>
         </article>
 
-        <article>
-          <label className="text-2xl font-bold">Всі характеристики</label>
-          <ul className="flex flex-col gap-5 mt-5">
-            {machine?.data.characteristics.map((item, index) => (
-              <li key={index}>
-                <span className="font-bold text-[18px]">{item.name}:</span>{" "}
-                <span className="text-[18px]">{item.value}</span>
-              </li>
-            ))}
-          </ul>
-        </article>
+        <TableHaracteristics
+          characteristics={machine?.data.characteristics || []}
+        />
       </div>
     </section>
   );

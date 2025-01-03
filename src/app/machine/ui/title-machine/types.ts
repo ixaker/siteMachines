@@ -1,4 +1,4 @@
-import { DataItem } from "@/types/types";
+// import { DataItem } from "@/types/types";
 
 export interface TitleMachineProps {
   value: string;

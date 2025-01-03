@@ -1,7 +1,7 @@
 import { selectEditor } from "@/store/slice/adminSlice";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { TitleMachineProps } from "./types"; // Исправлено: "trpes" на "types"
+import { TitleMachineProps } from "./types";
 import { selectLoading } from "@/store/slice/dataSlice";
 import Skeleton from "@mui/material/Skeleton";
 
@@ -27,7 +27,7 @@ const TitleMachine: React.FC<TitleMachineProps> = ({
             changeFunction(e.target.value);
           }}
         />
-      ) : loading ? (
+      ) : !value ? (
         <Skeleton
           variant="rectangular"
           animation="wave"

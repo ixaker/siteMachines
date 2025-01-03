@@ -94,7 +94,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
         </div>
 
         {zoomPhoto && (
-          <div className="absolute z-10 pointer-events-none top-[40px] right-[11.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
+          <div className="absolute z-10 pointer-events-none top-[25%] right-[11.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
             <Image
               src={zoomPhoto}
               alt="Zoomed Photo"
@@ -102,7 +102,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery }) => {
               height={505}
               className="w-full h-full object-cover max-w-[500px] max-h-[405px]"
               style={{
-                transform: `scale(3)`, // Масштабируем изображение в 2 раза
+                transform: `scale(3)`, // Масштабируем изображение
                 transformOrigin: `${zoomPosition.x}px ${zoomPosition.y}px`, // Центрируем масштаб в точке курсора
               }}
             />

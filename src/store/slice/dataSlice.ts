@@ -56,6 +56,26 @@ export const addMachine = createAsyncThunk<DataItem, DataItem>(
   }
 );
 
+export const deleteMachine = createAsyncThunk<string, string>(
+  "data/deleteMachine",
+  async (id) => {
+    try {
+      // Используем DELETE-запрос с параметром id
+      const response = await axios.delete(`${API_URL}?id=${id}`);
+
+      // Убедимся, что сервер подтвердил удаление, вернем id
+      if (response.status === 200) {
+        return id;
+      } else {
+        throw new Error("Failed to delete machine");
+      }
+    } catch (error) {
+      console.error("Error deleting machine:", error);
+      throw error;
+    }
+  }
+);
+
 export const selectFilteredData = (state: { data: DataState }) => {
   const { data, filter } = state.data;
   if (!filter) return data;
@@ -92,7 +112,20 @@ const dataSlice = createSlice({
           state.loading = false;
           state.data.push(action.payload);
         }
-      );
+      )
+      .addCase(deleteMachine.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteMachine.fulfilled, (state, action) => {
+        state.loading = false;
+        // Удаляем элемент с указанным id из списка
+        state.data = state.data.filter((item) => item.id !== action.payload);
+      })
+      .addCase(deleteMachine.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to delete machine";
+      });
   },
 });
 

@@ -9,6 +9,11 @@ export enum MediaType {
   Image = "image",
 }
 
+export enum MachineType {
+  Tokarniy = "Tokarniy",
+  Frezerniy = "Frezerniy",
+}
+
 export interface GalleryItem {
   type: MediaType;
   src: string;
@@ -26,5 +31,7 @@ export interface DataItem {
     article: string;
     type: string;
     price: number;
+    model: string;
+    availability: string;
   };
 }

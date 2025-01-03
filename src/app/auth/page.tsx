@@ -40,10 +40,10 @@ const Auth = () => {
   };
 
   return (
-    <section className="relative flex justify-center items-center h-screen">
+    <section>
       <div className="w-screen h-screen absolute z-0 top-0 left-0 bg-[#0000004f]"></div>
       {!admin ? (
-        <div className="relative z-10 bg-white p-10 flex flex-col gap-10 max-w-[500px]">
+        <div className="absolute z-10 bg-white p-10 flex top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex-col gap-10 max-w-[500px]">
           <TextField
             variant="outlined"
             type="password"
