@@ -1,6 +1,7 @@
 import { DataItem } from '@/types/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { RootState } from '../store';
 
 const API_URL = 'https://machines.qpart.com.ua/storage.php';
 // Тип состояния
@@ -69,6 +70,48 @@ export const selectFilteredData = (state: { data: DataState }) => {
   return data.filter((item) => item.data.name.toLowerCase().includes(filter.toLowerCase()));
 };
 
+export const updateMachine = createAsyncThunk<
+  DataItem,
+  { id: string; updatedData: DataItem['data'] },
+  { state: RootState } // Добавляем доступ к состоянию для извлечения токена
+>('data/updateMachine', async ({ id, updatedData }, { getState, rejectWithValue }) => {
+  try {
+    const state = getState(); // Извлечение глобального состояния
+    const token = state.admin.token; // Получение токена из admin слайса
+
+    if (!token) {
+      throw new Error('Unauthorized: Token is missing');
+    }
+
+    const requestData = new URLSearchParams({
+      id,
+      data: JSON.stringify(updatedData),
+    }).toString();
+
+    const response = await axios.post<DataItem>(API_URL, requestData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${token}`, // Передача токена в заголовке
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error updating machine:', error);
+
+    if (axios.isAxiosError(error)) {
+      // Логирование ошибок Axios
+      console.error('Axios error message:', error.message);
+      console.error('Response data:', error.response?.data);
+      console.error('Response status:', error.response?.status);
+
+      return rejectWithValue(error.response?.data || 'An error occurred while updating the machine');
+    }
+
+    return rejectWithValue('Unexpected error occurred');
+  }
+});
+
 const dataSlice = createSlice({
   name: 'data',
   initialState,
@@ -103,6 +146,14 @@ const dataSlice = createSlice({
         state.loading = false;
         // Удаляем элемент с указанным id из списка
         state.data = state.data.filter((item) => item.id !== action.payload);
+      });
+    builder
+      .addCase(updateMachine.fulfilled, (state, action: PayloadAction<DataItem>) => {
+        state.loading = false;
+        const index = state.data.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) {
+          state.data[index] = action.payload;
+        }
       })
       .addCase(deleteMachine.rejected, (state, action) => {
         state.loading = false;

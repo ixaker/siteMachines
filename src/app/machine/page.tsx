@@ -2,7 +2,7 @@
 
 import ItemGallery from '@/components/item-gallery/ItemGallery';
 import { getMachine } from '@/shared/storage';
-import { DataItem } from '@/types/types';
+import { Characteristic, DataItem, GalleryItem } from '@/types/types';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
@@ -12,9 +12,20 @@ import TitleMachine from './ui/title-machine/TitleMachine';
 import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
 import Breadcrumb from './ui/bread-crumb/Breadcrumb';
 import PriceMachine from './ui/price-machine/PriceMachine';
+import EditableCharacteristics from './ui/characteristics/EditableCharacteristics';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { updateMachine } from '@/store/slice/dataSlice';
+import { AppDispatch } from '@/store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectEditor, setEditor } from '@/store/slice/adminSlice';
+import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>();
+  const dispatch: AppDispatch = useDispatch();
+  const editor = useSelector(selectEditor);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -53,31 +64,68 @@ const MachinePage = () => {
     });
   };
 
+  const handleCharacteristicsChange = (updatedCharacteristics: Characteristic[]) => {
+    setMachine((prev) => {
+      if (!prev) {
+        return undefined; // Если объекта нет, возвращаем undefined
+      }
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          characteristics: updatedCharacteristics,
+        },
+      };
+    });
+  };
+
+  const handlePhotoChange = (gallery: GalleryItem[]) => {
+    setMachine((prev) => {
+      if (!prev) {
+        return undefined;
+      }
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          gallery: gallery,
+        },
+      };
+    });
+  };
+
+  const handleUpdate = (id: string, updatedData: DataItem['data']) => {
+    dispatch(updateMachine({ id, updatedData }))
+      .unwrap()
+      .then(() => {
+        setOpenSnackbar(true);
+        dispatch(setEditor(!editor));
+      })
+      .catch((error) => {
+        console.error('Failed to update machine:', error);
+      });
+  };
+
   return (
     <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
       <Breadcrumb model={machine?.data.model || ''} type={machine?.data.type || ''} />
 
       <div className="flex gap-10">
-        <ItemGallery gallery={machine?.data.gallery || []} />
+        <ItemGallery onChange={handlePhotoChange} gallery={machine?.data.gallery || []} />
         <div className="flex flex-1 flex-col gap-10">
           <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
 
           <div className="flex justify-between items-center">
-            {/* <span className="text-3xl font-bold">{machine?.data.price}₴</span> */}
             <PriceMachine changeFunction={handlePriceChange} value={machine?.data.price || ''} />
             <div>
               <span>Код: {machine?.data.article}</span>
             </div>
           </div>
-          <ul className="flex flex-col gap-5">
-            <label className="text-2xl font-bold">Характеристики:</label>
-            {machine?.data.characteristics.map((item, index) => (
-              <li key={index}>
-                <span className="font-bold text-[18px]">{item.name}:</span>{' '}
-                <span className="text-[18px]">{item.value}</span>
-              </li>
-            ))}
-          </ul>
+          <EditableCharacteristics
+            characteristics={machine?.data.characteristics || []}
+            onChange={handleCharacteristicsChange}
+          />
           <div>
             <button className="text-xl p-3 rounded-full font-medium bg-[#f74936] hover:bg-[#ce4a40] hover:shadow-lg  transition-all duration-300 ease-in-out transform">
               Зателефонувати
@@ -123,6 +171,17 @@ const MachinePage = () => {
 
         <TableHaracteristics characteristics={machine?.data.characteristics || []} />
       </div>
+      {editor ? (
+        <button
+          onClick={() => handleUpdate(machine!.id, machine!.data)}
+          className="fixed bottom-1/2 right-16 bg-[#e5e7eb] p-3 rounded-full shadow-lg"
+        >
+          <SaveAltIcon sx={{ fontSize: '40px', color: 'black' }} />
+        </button>
+      ) : (
+        ''
+      )}
+      <CustomizedSnackbars openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} />
     </section>
   );
 };

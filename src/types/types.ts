@@ -1,5 +1,5 @@
 export interface Characteristic {
-  viewInCard: boolean;
+  // viewInCard: boolean;
   name: string;
   value: string;
 }
@@ -15,7 +15,7 @@ export enum MachineType {
 }
 
 export interface GalleryItem {
-  type: MediaType;
+  type?: MediaType;
   src: string;
 }
 

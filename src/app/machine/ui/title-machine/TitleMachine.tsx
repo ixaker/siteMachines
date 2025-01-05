@@ -1,17 +1,12 @@
 import { selectEditor } from '@/store/slice/adminSlice';
-import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { TitleMachineProps } from './types'; // Исправлено: "trpes" на "types"
+import { TitleMachineProps } from './types'; 
 import { selectLoading } from '@/store/slice/dataSlice';
 import Skeleton from '@mui/material/Skeleton';
 
 const TitleMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) => {
   const editor = useSelector(selectEditor);
   const loading = useSelector(selectLoading);
-
-  useEffect(() => {
-    console.log('loading', loading);
-  }, [loading]);
 
   return (
     <>
