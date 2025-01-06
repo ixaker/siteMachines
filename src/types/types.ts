@@ -15,7 +15,7 @@ export enum MachineType {
 }
 
 export interface GalleryItem {
-  type?: MediaType;
+  type: string;
   src: string;
 }
 
@@ -33,5 +33,6 @@ export interface DataItem {
     price: string;
     model: string;
     availability: string;
+    chengedDate: string;
   };
 }

@@ -7,11 +7,14 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import Skeleton from '@mui/material/Skeleton';
 import { useSelector } from 'react-redux';
 import { selectEditor } from '@/store/slice/adminSlice';
-import { Button, styled } from '@mui/material';
+import { Button, IconButton, styled } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
-  onChange: (updatedPhoto: { src: string }[]) => void;
+  onChange: (updatedPhoto: { src: string; type: string }[]) => void;
+  files: File[];
+  setFiles: (param: File[]) => void;
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -27,7 +30,7 @@ const VisuallyHiddenInput = styled('input')({
   zIndex: 10,
 });
 
-const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange }) => {
+const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, setFiles }) => {
   const [photo, setPhoto] = useState(gallery);
   const editor = useSelector(selectEditor);
   const [currentPhoto, setCurrentPhoto] = useState<string>('');
@@ -62,20 +65,24 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange }) => {
     setCurrentPhoto(src);
   };
 
-  // const addPhoto = (e) => {
-  //   const updated = [...photo, { src: e.target.files }];
-  //   setPhoto(updated);
-  //   onChange(updated);
-  // };
-
   const addPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
+    const combinedFiles = [...files, ...Array.from(e.target.files)];
+    setFiles(combinedFiles);
+
     const filesArray = Array.from(e.target.files).map((file) => ({
-      src: URL.createObjectURL(file), // Генерируем временный URL для отображения
+      src: URL.createObjectURL(file),
+      type: file.type, // Генерируем временный URL для отображения
     }));
 
     const updated = [...photo, ...filesArray];
+    setPhoto(updated);
+    onChange(updated);
+  };
+
+  const removePhoto = (index: number) => {
+    const updated = photo.filter((_, i) => i !== index);
     setPhoto(updated);
     onChange(updated);
   };
@@ -108,7 +115,13 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange }) => {
                 height={100}
                 decoding="async"
               />
-
+              {editor ? (
+                <IconButton onClick={() => removePhoto(index)} sx={{ position: 'absolute', top: 0, right: 0 }}>
+                  <DeleteIcon />
+                </IconButton>
+              ) : (
+                ''
+              )}
               {currentPhoto !== image.src && (
                 <div className="absolute w-full h-full bg-white top-0 left-0 opacity-60 cursor-pointer"></div>
               )}

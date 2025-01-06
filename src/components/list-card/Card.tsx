@@ -56,7 +56,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
 
       <div className="h-[200px] w-full bg-gray-100 flex items-center justify-center">
         <Image
-          src={item.data.mainImage}
+          src={item.data.mainImage || ''}
           alt={item.data.name}
           className="h-full w-auto object-contain"
           height={200}
@@ -70,7 +70,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
           <p className="text-lg font-bold text-primary">Ціна: {item.data.price} грн</p>
         </div>
 
-        <div className="p-4 shadow-md w-full h-[145px] absolute rounded-b-lg z-[1] left-0 bg-white bottom-[0px] group-hover:bottom-[-40%] group-hover:z-[1]  transition-all duration-500 ease">
+        <div className="px-4  group-hover:py-4 shadow-md w-full group-hover:h-[auto] absolute rounded-b-lg z-[1] left-0 bg-white bottom-[0px] group-hover:bottom-[-35%] group-hover:z-[1]  transition-all duration-500 ease">
           <h3 className="text-md font-semibold text-gray-700">Характеристики:</h3>
           <ul className="mt-2 space-y-1">
             {item.data.characteristics.slice(0, 3).map((char, index) => (

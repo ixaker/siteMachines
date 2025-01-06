@@ -12,6 +12,7 @@ import { IconButton } from '@mui/material';
 const ListCard = () => {
   const dispatch: AppDispatch = useDispatch();
   const list = useSelector(selectFilteredData);
+
   const editor = useSelector(selectEditor);
   const machines = useSelector(selectData);
 
@@ -30,14 +31,14 @@ const ListCard = () => {
             {list.length > 0 ? (
               list.map((item, index) => (
                 <motion.div
-                  key={item.id}
+                  key={index}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                   className="flex flex-col w-full items-center"
                 >
-                  <Card item={item} key={index} />
+                  <Card item={item} />
                 </motion.div>
               ))
             ) : (

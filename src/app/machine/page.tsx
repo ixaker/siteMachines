@@ -6,7 +6,7 @@ import { Characteristic, DataItem, GalleryItem } from '@/types/types';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StoreIcon from '@mui/icons-material/Store';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import TitleMachine from './ui/title-machine/TitleMachine';
 import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
@@ -21,15 +21,31 @@ import { selectEditor, setEditor } from '@/store/slice/adminSlice';
 import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
 
 const MachinePage = () => {
-  const [machine, setMachine] = useState<DataItem>();
+  const [machine, setMachine] = useState<DataItem>({
+    data: {
+      name: '',
+      article: '',
+      availability: '',
+      characteristics: [],
+      description: '',
+      fullDescription: '',
+      gallery: [],
+      mainImage: '',
+      model: '',
+      price: '',
+      type: '',
+      chengedDate: '',
+    },
+    id: '',
+  });
   const dispatch: AppDispatch = useDispatch();
   const editor = useSelector(selectEditor);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-
+  const [files, setFiles] = useState<File[]>([]);
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const id = searchParams.get('id');
+  const pathName = usePathname();
 
   if (!id) {
     router.push('/');
@@ -50,6 +66,31 @@ const MachinePage = () => {
     fetchMachine();
   }, [id]);
 
+  useEffect(() => {
+    const urlToFile = async (url: string, filename: string, mimeType: string): Promise<File> => {
+      const response = await fetch(url);
+      const buffer = await response.arrayBuffer();
+      return new File([buffer], filename, { type: mimeType });
+    };
+
+    const fetchFiles = async () => {
+      if (!editor) {
+        return;
+      }
+      const fetchedFiles = await Promise.all(
+        machine?.data.gallery.map((item, index) => urlToFile(item.src, `image${index + 1}.jpg`, item.type))
+      );
+
+      setFiles(fetchedFiles);
+    };
+
+    if (pathName.search('machine') !== -1) {
+      if (editor) {
+        fetchFiles();
+      }
+    }
+  }, [editor, machine]);
+
   const handleTitleChange = (value: string) => {
     setMachine({
       ...machine!,
@@ -66,10 +107,6 @@ const MachinePage = () => {
 
   const handleCharacteristicsChange = (updatedCharacteristics: Characteristic[]) => {
     setMachine((prev) => {
-      if (!prev) {
-        return undefined; // Если объекта нет, возвращаем undefined
-      }
-
       return {
         ...prev,
         data: {
@@ -82,9 +119,6 @@ const MachinePage = () => {
 
   const handlePhotoChange = (gallery: GalleryItem[]) => {
     setMachine((prev) => {
-      if (!prev) {
-        return undefined;
-      }
       return {
         ...prev,
         data: {
@@ -95,8 +129,8 @@ const MachinePage = () => {
     });
   };
 
-  const handleUpdate = (id: string, updatedData: DataItem['data']) => {
-    dispatch(updateMachine({ id, updatedData }))
+  const handleUpdate = (id: string, updatedData: DataItem['data'], files: File[]) => {
+    dispatch(updateMachine({ id, updatedData, files }))
       .unwrap()
       .then(() => {
         setOpenSnackbar(true);
@@ -112,7 +146,12 @@ const MachinePage = () => {
       <Breadcrumb model={machine?.data.model || ''} type={machine?.data.type || ''} />
 
       <div className="flex gap-10">
-        <ItemGallery onChange={handlePhotoChange} gallery={machine?.data.gallery || []} />
+        <ItemGallery
+          files={files}
+          setFiles={setFiles}
+          onChange={handlePhotoChange}
+          gallery={machine?.data.gallery || []}
+        />
         <div className="flex flex-1 flex-col gap-10">
           <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
 
@@ -173,7 +212,7 @@ const MachinePage = () => {
       </div>
       {editor ? (
         <button
-          onClick={() => handleUpdate(machine!.id, machine!.data)}
+          onClick={() => handleUpdate(machine!.id, machine!.data, files)}
           className="fixed bottom-1/2 right-16 bg-[#e5e7eb] p-3 rounded-full shadow-lg"
         >
           <SaveAltIcon sx={{ fontSize: '40px', color: 'black' }} />

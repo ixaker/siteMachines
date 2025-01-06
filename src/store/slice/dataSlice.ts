@@ -1,4 +1,4 @@
-import { DataItem } from '@/types/types';
+import { DataItem, GalleryItem } from '@/types/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
@@ -70,28 +70,81 @@ export const selectFilteredData = (state: { data: DataState }) => {
   return data.filter((item) => item.data.name.toLowerCase().includes(filter.toLowerCase()));
 };
 
+// export const updateMachine = createAsyncThunk<
+//   DataItem,
+//   { id: string; updatedData: DataItem['data'] },
+//   { state: RootState } // Добавляем доступ к состоянию для извлечения токена
+// >('data/updateMachine', async ({ id, updatedData }, { getState, rejectWithValue }) => {
+//   try {
+//     const state = getState(); // Извлечение глобального состояния
+//     const token = state.admin.token; // Получение токена из admin слайса
+
+//     if (!token) {
+//       throw new Error('Unauthorized: Token is missing');
+//     }
+
+//     const requestData = new URLSearchParams({
+//       id,
+//       data: JSON.stringify(updatedData),
+//     }).toString();
+
+//     const response = await axios.post<DataItem>(API_URL, requestData, {
+//       headers: {
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//         Authorization: `Bearer ${token}`, // Передача токена в заголовке
+//       },
+//     });
+
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error updating machine:', error);
+
+//     if (axios.isAxiosError(error)) {
+//       // Логирование ошибок Axios
+//       console.error('Axios error message:', error.message);
+//       console.error('Response data:', error.response?.data);
+//       console.error('Response status:', error.response?.status);
+
+//       return rejectWithValue(error.response?.data || 'An error occurred while updating the machine');
+//     }
+
+//     return rejectWithValue('Unexpected error occurred');
+//   }
+// });
+
 export const updateMachine = createAsyncThunk<
   DataItem,
-  { id: string; updatedData: DataItem['data'] },
-  { state: RootState } // Добавляем доступ к состоянию для извлечения токена
->('data/updateMachine', async ({ id, updatedData }, { getState, rejectWithValue }) => {
+  { id: string; updatedData: DataItem['data']; files: File[] },
+  { state: RootState }
+>('data/updateMachine', async ({ id, updatedData, files }, { getState, rejectWithValue }) => {
   try {
-    const state = getState(); // Извлечение глобального состояния
-    const token = state.admin.token; // Получение токена из admin слайса
+    const state = getState();
+    const token = state.admin.token;
 
     if (!token) {
       throw new Error('Unauthorized: Token is missing');
     }
+    const version = Date.now().toString();
+    const formData = new FormData();
+    formData.append('id', id);
 
-    const requestData = new URLSearchParams({
-      id,
-      data: JSON.stringify(updatedData),
-    }).toString();
+    updatedData.gallery = [];
 
-    const response = await axios.post<DataItem>(API_URL, requestData, {
+    files.forEach((file, index) => {
+      formData.append(`file${index}`, file);
+      const fileItem: GalleryItem = {
+        type: file.type,
+        src: `https://a7b85a942d4082eb.cdn.express/machines/${id}/${file.name}?v=${version}`,
+      };
+      updatedData.gallery.push(fileItem);
+    });
+
+    formData.append('data', JSON.stringify(updatedData));
+
+    const response = await axios.post<DataItem>(API_URL, formData, {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${token}`, // Передача токена в заголовке
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -100,7 +153,6 @@ export const updateMachine = createAsyncThunk<
     console.error('Error updating machine:', error);
 
     if (axios.isAxiosError(error)) {
-      // Логирование ошибок Axios
       console.error('Axios error message:', error.message);
       console.error('Response data:', error.response?.data);
       console.error('Response status:', error.response?.status);
