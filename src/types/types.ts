@@ -17,6 +17,7 @@ export enum MachineType {
 export interface GalleryItem {
   type: string;
   src: string;
+  name: string;
 }
 
 export interface DataItem {

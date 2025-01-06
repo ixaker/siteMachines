@@ -3,11 +3,8 @@
 import ItemGallery from '@/components/item-gallery/ItemGallery';
 import { getMachine } from '@/shared/storage';
 import { Characteristic, DataItem, GalleryItem } from '@/types/types';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import StoreIcon from '@mui/icons-material/Store';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import { Key, Suspense, useEffect, useState } from 'react';
 import TitleMachine from './ui/title-machine/TitleMachine';
 import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
 import Breadcrumb from './ui/bread-crumb/Breadcrumb';
@@ -19,6 +16,7 @@ import { AppDispatch } from '@/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectEditor, setEditor } from '@/store/slice/adminSlice';
 import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
+import ArticleMachine from './ui/article-machine/ArticleMachine';
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>({
@@ -78,7 +76,7 @@ const MachinePage = () => {
         return;
       }
       const fetchedFiles = await Promise.all(
-        machine?.data.gallery.map((item, index) => urlToFile(item.src, `image${index + 1}.jpg`, item.type))
+        machine?.data.gallery.map((item) => urlToFile(item.src, item.name, item.type))
       );
 
       setFiles(fetchedFiles);
@@ -102,6 +100,20 @@ const MachinePage = () => {
     setMachine({
       ...machine!,
       data: { ...machine!.data, price: value },
+    });
+  };
+
+  const handleArticle = (value: string) => {
+    setMachine({
+      ...machine!,
+      data: { ...machine!.data, article: value },
+    });
+  };
+
+  const handleTypeAndModel = (key: string, value: string) => {
+    setMachine({
+      ...machine!,
+      data: { ...machine!.data, [key]: value },
     });
   };
 
@@ -143,7 +155,11 @@ const MachinePage = () => {
 
   return (
     <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
-      <Breadcrumb model={machine?.data.model || ''} type={machine?.data.type || ''} />
+      <Breadcrumb
+        changeFunction={handleTypeAndModel}
+        model={machine?.data.model || ''}
+        type={machine?.data.type || ''}
+      />
 
       <div className="flex gap-10">
         <ItemGallery
@@ -157,9 +173,7 @@ const MachinePage = () => {
 
           <div className="flex justify-between items-center">
             <PriceMachine changeFunction={handlePriceChange} value={machine?.data.price || ''} />
-            <div>
-              <span>Код: {machine?.data.article}</span>
-            </div>
+            <ArticleMachine changeFunction={handleArticle} article={machine?.data.article} />
           </div>
           <EditableCharacteristics
             characteristics={machine?.data.characteristics || []}
@@ -170,35 +184,6 @@ const MachinePage = () => {
               Зателефонувати
             </button>
           </div>
-          <ul className="flex justify-center gap-10">
-            <li className="flex gap-4">
-              <div className="bg-[#f6f6f6] p-3 rounded-lg">
-                <LocalShippingIcon />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[#828282]">Безкоштовна Доставка</span>
-                <span className="font-medium">1-2 дні</span>
-              </div>
-            </li>
-            <li className="flex gap-4">
-              <div className="bg-[#f6f6f6] p-3 rounded-lg">
-                <StoreIcon />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[#828282]">В Наявності</span>
-                <span className="font-medium">Сьогодні</span>
-              </div>
-            </li>
-            <li className="flex gap-4">
-              <div className="bg-[#f6f6f6] p-3 rounded-lg">
-                <WorkspacePremiumIcon />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[#828282]">Гарантія</span>
-                <span className="font-medium">1 рік</span>
-              </div>
-            </li>
-          </ul>
         </div>
       </div>
 

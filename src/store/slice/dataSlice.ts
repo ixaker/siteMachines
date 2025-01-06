@@ -4,8 +4,9 @@ import axios from 'axios';
 import { RootState } from '../store';
 
 const API_URL = 'https://machines.qpart.com.ua/storage.php';
-// Тип состояния
+
 interface DataState {
+  emptyDataItem: DataItem;
   data: DataItem[];
   loading: boolean;
   error: string | null;
@@ -13,6 +14,23 @@ interface DataState {
 }
 
 const initialState: DataState = {
+  emptyDataItem: {
+    data: {
+      name: '',
+      article: '',
+      availability: '',
+      characteristics: [],
+      chengedDate: Date.now().toString(),
+      description: '',
+      fullDescription: '',
+      gallery: [],
+      mainImage: '',
+      model: '',
+      price: '',
+      type: '',
+    },
+    id: '',
+  },
   data: [],
   loading: false,
   error: null,
@@ -30,22 +48,34 @@ export const fetchMachines = createAsyncThunk<DataItem[]>('data/fetchMachines', 
   return list;
 });
 
-export const addMachine = createAsyncThunk<DataItem, DataItem>('data/addMachine', async (newMachine) => {
-  try {
-    const requestData = new URLSearchParams({
-      data: JSON.stringify(newMachine),
-    }).toString();
+export const addMachine = createAsyncThunk<DataItem, void, { state: RootState }>(
+  'data/addMachine',
+  async (_, { getState }) => {
+    try {
+      const state = getState();
+      const token = state.admin.token;
 
-    const response = await axios.post<DataItem>('https://site.qpart.com.ua/storage.php', requestData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    });
+      if (!token) {
+        throw new Error('Unauthorized: Token is missing');
+      }
 
-    return response.data;
-  } catch (error) {
-    console.error('Error adding machine:');
-    throw error;
+      const data = JSON.stringify(initialState.emptyDataItem.data);
+      const formData = new FormData();
+      formData.append('data', data);
+
+      const response = await axios.post<DataItem>(API_URL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding machine:');
+      throw error;
+    }
   }
-});
+);
 
 export const deleteMachine = createAsyncThunk<string, string>('data/deleteMachine', async (id) => {
   try {
@@ -70,48 +100,6 @@ export const selectFilteredData = (state: { data: DataState }) => {
   return data.filter((item) => item.data.name.toLowerCase().includes(filter.toLowerCase()));
 };
 
-// export const updateMachine = createAsyncThunk<
-//   DataItem,
-//   { id: string; updatedData: DataItem['data'] },
-//   { state: RootState } // Добавляем доступ к состоянию для извлечения токена
-// >('data/updateMachine', async ({ id, updatedData }, { getState, rejectWithValue }) => {
-//   try {
-//     const state = getState(); // Извлечение глобального состояния
-//     const token = state.admin.token; // Получение токена из admin слайса
-
-//     if (!token) {
-//       throw new Error('Unauthorized: Token is missing');
-//     }
-
-//     const requestData = new URLSearchParams({
-//       id,
-//       data: JSON.stringify(updatedData),
-//     }).toString();
-
-//     const response = await axios.post<DataItem>(API_URL, requestData, {
-//       headers: {
-//         'Content-Type': 'application/x-www-form-urlencoded',
-//         Authorization: `Bearer ${token}`, // Передача токена в заголовке
-//       },
-//     });
-
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error updating machine:', error);
-
-//     if (axios.isAxiosError(error)) {
-//       // Логирование ошибок Axios
-//       console.error('Axios error message:', error.message);
-//       console.error('Response data:', error.response?.data);
-//       console.error('Response status:', error.response?.status);
-
-//       return rejectWithValue(error.response?.data || 'An error occurred while updating the machine');
-//     }
-
-//     return rejectWithValue('Unexpected error occurred');
-//   }
-// });
-
 export const updateMachine = createAsyncThunk<
   DataItem,
   { id: string; updatedData: DataItem['data']; files: File[] },
@@ -135,6 +123,7 @@ export const updateMachine = createAsyncThunk<
       const fileItem: GalleryItem = {
         type: file.type,
         src: `https://a7b85a942d4082eb.cdn.express/machines/${id}/${file.name}?v=${version}`,
+        name: file.name,
       };
       updatedData.gallery.push(fileItem);
     });
@@ -186,9 +175,8 @@ const dataSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch data';
       })
-      .addCase(addMachine.fulfilled, (state, action: PayloadAction<DataItem>) => {
+      .addCase(addMachine.fulfilled, (state) => {
         state.loading = false;
-        state.data.push(action.payload);
       })
       .addCase(deleteMachine.pending, (state) => {
         state.loading = true;

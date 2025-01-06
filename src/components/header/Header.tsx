@@ -36,10 +36,10 @@ const Header: React.FC = () => {
         </div>
         <ul className="flex gap-5">
           <li className="text-2xl text-[#373435] font-bold">
-            <a href="#">Контакти</a>
+            <a href="#">Про компанію</a>
           </li>
           <li className="text-2xl text-[#373435] font-bold">
-            <a href="#">Про компанію</a>
+            <a href="#">Контакти</a>
           </li>
         </ul>
       </div>

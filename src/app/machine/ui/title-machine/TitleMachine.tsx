@@ -1,6 +1,6 @@
 import { selectEditor } from '@/store/slice/adminSlice';
 import { useSelector } from 'react-redux';
-import { TitleMachineProps } from './types'; 
+import { TitleMachineProps } from './types';
 import { selectLoading } from '@/store/slice/dataSlice';
 import Skeleton from '@mui/material/Skeleton';
 
@@ -18,6 +18,7 @@ const TitleMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) =>
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             changeFunction(e.target.value);
           }}
+          placeholder="Назва Станку"
         />
       ) : loading ? (
         <Skeleton variant="rectangular" animation="wave" sx={{ width: '100%', height: '36px' }} />

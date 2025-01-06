@@ -12,6 +12,7 @@ const PriceMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) =>
     <>
       {editor ? (
         <input
+          placeholder="Ціна в ГРН"
           type="number"
           className="text-3xl font-bold"
           value={value || ''}

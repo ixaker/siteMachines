@@ -8,4 +8,5 @@ export interface TitleMachineProps {
 export interface BreadcrumbProps {
   type: string;
   model: string;
+  changeFunction: (key: string, value: string) => void;
 }

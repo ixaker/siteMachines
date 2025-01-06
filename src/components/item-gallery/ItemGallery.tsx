@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
-  onChange: (updatedPhoto: { src: string; type: string }[]) => void;
+  onChange: (updatedPhoto: { src: string; type: string; name: string }[]) => void;
   files: File[];
   setFiles: (param: File[]) => void;
 }
@@ -74,9 +74,11 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, set
     const filesArray = Array.from(e.target.files).map((file) => ({
       src: URL.createObjectURL(file),
       type: file.type, // Генерируем временный URL для отображения
+      name: file.name,
     }));
 
     const updated = [...photo, ...filesArray];
+
     setPhoto(updated);
     onChange(updated);
   };
@@ -91,7 +93,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, set
     <section>
       <div className="w-auto flex gap-5 max-h-[400px]">
         {!currentPhoto ? (
-          <Skeleton variant="rectangular" width={505} height={505} />
+          <Skeleton variant="rectangular" width={500} height={400} />
         ) : (
           <Image
             width={500}
@@ -107,14 +109,20 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, set
         <div className=".scrol flex gap-5 overflow-hidden overflow-y-scroll flex-col pr-3">
           {photo.map((image, index) => (
             <div key={index} id={image.src} onClick={(e) => handleClickShowPhoto(e)} className="relative">
-              <Image
-                className="cursor-pointer p-1 bg-[#f6f6f6]"
-                alt="Photo"
-                src={image.src}
-                width={100}
-                height={100}
-                decoding="async"
-              />
+              {image.type.split('/')[0] === 'image' ? (
+                <Image
+                  className="cursor-pointer p-1 bg-[#f6f6f6]"
+                  alt="Photo"
+                  src={image.src}
+                  width={100}
+                  height={100}
+                  decoding="async"
+                />
+              ) : (
+                <video className="w-[100px] p-1 h-full cursor-pointer  bg-[#f6f6f6]" autoPlay loop muted>
+                  <source src={image.src} type={image.type} />
+                </video>
+              )}
               {editor ? (
                 <IconButton onClick={() => removePhoto(index)} sx={{ position: 'absolute', top: 0, right: 0 }}>
                   <DeleteIcon />
@@ -128,7 +136,12 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, set
             </div>
           ))}
           {editor ? (
-            <Button component="label" sx={{ minHeight: '77px', bgcolor: '#e5e7eb' }} role={undefined} tabIndex={-1}>
+            <Button
+              component="label"
+              sx={{ minHeight: '77px', width: '100px', bgcolor: '#e5e7eb' }}
+              role={undefined}
+              tabIndex={-1}
+            >
               <AddAPhotoIcon />
               <VisuallyHiddenInput type="file" onChange={addPhoto} multiple />
             </Button>
@@ -142,11 +155,11 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, set
             <Image
               src={zoomPhoto}
               alt="Zoomed Photo"
-              width={505}
-              height={505}
-              className="w-full h-full object-cover max-w-[500px] max-h-[405px]"
+              width={500}
+              height={405}
+              className="w-full h-full object-cover overflow-visible max-w-[500px] max-h-[405px]"
               style={{
-                transform: `scale(3)`, // Масштабируем изображение
+                transform: `scale(2)`,
                 transformOrigin: `${zoomPosition.x}px ${zoomPosition.y}px`, // Центрируем масштаб в точке курсора
               }}
             />
