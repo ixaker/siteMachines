@@ -21,7 +21,7 @@ const NewCard: React.FC = () => {
   };
 
   return (
-    <div className="max-w-[350px] relative bg-white shadow-md rounded-lg group cursor-pointer flex items-center justify-center transition-all duration-500 ease-in-out">
+    <div className="max-w-[350px] h-[350px] relative bg-white shadow-md rounded-lg group cursor-pointer flex items-center justify-center transition-all duration-500 ease-in-out">
       <IconButton onClick={addNewMachine} sx={{ padding: '20px' }}>
         <AddCircleOutlineIcon sx={{ fontSize: '80px' }} />
       </IconButton>
