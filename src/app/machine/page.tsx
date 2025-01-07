@@ -4,7 +4,7 @@ import ItemGallery from '@/components/item-gallery/ItemGallery';
 import { getMachine } from '@/shared/storage';
 import { Characteristic, DataItem, GalleryItem } from '@/types/types';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Key, Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import TitleMachine from './ui/title-machine/TitleMachine';
 import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
 import Breadcrumb from './ui/bread-crumb/Breadcrumb';
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectEditor, setEditor } from '@/store/slice/adminSlice';
 import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
 import ArticleMachine from './ui/article-machine/ArticleMachine';
+import DescriptionMachine from './ui/description-machine/DescriptionMachine';
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>({
@@ -141,6 +142,17 @@ const MachinePage = () => {
     });
   };
 
+  const handleDescriptionChange = (value: string) => {
+    setMachine({
+      ...machine!,
+      data: { ...machine!.data, fullDescription: value, description: value },
+    });
+    // setMachine({
+    //   ...machine!,
+    //   data: { ...machine!.data, description: value },
+    // });
+  };
+
   const handleUpdate = (id: string, updatedData: DataItem['data'], files: File[]) => {
     dispatch(updateMachine({ id, updatedData, files }))
       .unwrap()
@@ -162,14 +174,25 @@ const MachinePage = () => {
       />
 
       <div className="flex gap-10">
-        <ItemGallery
-          files={files}
-          setFiles={setFiles}
-          onChange={handlePhotoChange}
-          gallery={machine?.data.gallery || []}
-        />
+        <div className="hidden lg:block ">
+          <ItemGallery
+            files={files}
+            setFiles={setFiles}
+            onChange={handlePhotoChange}
+            gallery={machine?.data.gallery || []}
+          />
+        </div>
         <div className="flex flex-1 flex-col gap-10">
           <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
+
+          <div className="lg:hidden w-full flex justify-center items-center">
+            <ItemGallery
+              files={files}
+              setFiles={setFiles}
+              onChange={handlePhotoChange}
+              gallery={machine?.data.gallery || []}
+            />
+          </div>
 
           <div className="flex justify-between items-center">
             <PriceMachine changeFunction={handlePriceChange} value={machine?.data.price || ''} />
@@ -188,11 +211,11 @@ const MachinePage = () => {
       </div>
 
       <div className="flex flex-col gap-10 mt-10">
-        <article>
+        {/* <article>
           <label className="text-2xl font-bold">Опис</label>
           <p className="text-[18px] mt-5">{machine?.data.fullDescription}</p>
-        </article>
-
+        </article> */}
+        <DescriptionMachine changeFunction={handleDescriptionChange} description={machine?.data.fullDescription} />
         <TableHaracteristics characteristics={machine?.data.characteristics || []} />
       </div>
       {editor ? (

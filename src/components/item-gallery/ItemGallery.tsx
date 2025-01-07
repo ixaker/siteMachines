@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { selectEditor } from '@/store/slice/adminSlice';
 import { Button, IconButton, styled } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
@@ -89,44 +91,82 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, set
     onChange(updated);
   };
 
+  function moveElement(array: GalleryItem[], index: number, offset: number) {
+    // Проверяем границы массива, чтобы не выйти за них
+    const newIndex = index + offset;
+    if (newIndex < 0 || newIndex >= array.length) {
+      console.error('Смещение выходит за границы массива');
+      return array;
+    }
+
+    // Меняем местами элементы
+    const temp = array[index];
+    array[index] = array[newIndex];
+    array[newIndex] = temp;
+
+    return array;
+  }
+
+  // Пример использования:
+  // const arr = [1, 2, 3, 4, 5];
+  // console.log(moveElement(arr, 2, -1)); // Сместить 3 вверх: [1, 3, 2, 4, 5]
+  // console.log(moveElement(arr, 2, 1)); // Сместить 3 вниз: [1, 2, 4, 3, 5]
+
   return (
     <section>
-      <div className="w-auto flex gap-5 max-h-[400px]">
+      <div className="w-auto flex flex-col gap-5 ">
         {!currentPhoto ? (
-          <Skeleton variant="rectangular" width={500} height={400} />
+          <Skeleton variant="rectangular" width={500} height={350} />
         ) : (
           <Image
             width={500}
-            height={400}
+            height={350}
             alt={`Machine`}
             src={currentPhoto}
-            className="relative max-h-[400px]"
+            className="relative max-h-[350px] min-h-[350px] object-contain"
             onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
             onMouseLeave={handleMouseLeave}
           />
         )}
 
-        <div className=".scrol flex gap-5 overflow-hidden overflow-y-scroll flex-col pr-3">
+        <div className=".scrol flex gap-5 overflow-hidden overflow-x-scroll items-center max-w-[500px] pb-3">
           {photo.map((image, index) => (
-            <div key={index} id={image.src} onClick={(e) => handleClickShowPhoto(e)} className="relative">
+            <div
+              key={index}
+              id={image.src}
+              onClick={(e) => handleClickShowPhoto(e)}
+              className="relative w-[100px] h-[70px]"
+            >
               {image.type.split('/')[0] === 'image' ? (
-                <Image
-                  className="cursor-pointer p-1 bg-[#f6f6f6]"
-                  alt="Photo"
-                  src={image.src}
-                  width={100}
-                  height={100}
-                  decoding="async"
-                />
+                <div>
+                  <Image
+                    className="cursor-pointer p-1 min-h-[70px] min-w-[100px] bg-[#f6f6f6] object-contain"
+                    alt="Photo"
+                    src={image.src}
+                    width={100}
+                    height={70}
+                    decoding="async"
+                  />
+                </div>
               ) : (
                 <video className="w-[100px] p-1 h-full cursor-pointer  bg-[#f6f6f6]" autoPlay loop muted>
                   <source src={image.src} type={image.type} />
                 </video>
               )}
               {editor ? (
-                <IconButton onClick={() => removePhoto(index)} sx={{ position: 'absolute', top: 0, right: 0 }}>
-                  <DeleteIcon />
-                </IconButton>
+                <div className="relative">
+                  <IconButton onClick={() => removePhoto(index)} sx={{ position: 'absolute', bottom: 0, right: 0 }}>
+                    <DeleteIcon sx={{ color: 'white' }} />
+                  </IconButton>
+                  {/* <div className="absolute z-[90] flex flex-col -right-10 bottom-0">
+                    <Button variant="text">
+                      <KeyboardArrowUpIcon />
+                    </Button>
+                    <Button variant="text" onClick={() => moveElement(photo, index, -1)}>
+                      <KeyboardArrowDownIcon />
+                    </Button>
+                  </div> */}
+                </div>
               ) : (
                 ''
               )}
@@ -138,9 +178,10 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({ gallery, onChange, files, set
           {editor ? (
             <Button
               component="label"
-              sx={{ minHeight: '77px', width: '100px', bgcolor: '#e5e7eb' }}
+              sx={{ minHeight: '70px', width: '100px', bgcolor: '#e5e7eb' }}
               role={undefined}
               tabIndex={-1}
+              className="min-h-[70px] min-w-[100px]"
             >
               <AddAPhotoIcon />
               <VisuallyHiddenInput type="file" onChange={addPhoto} multiple />

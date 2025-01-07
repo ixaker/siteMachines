@@ -78,7 +78,7 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
           <ul className="flex flex-col gap-5">
             <label className="text-2xl font-bold">Характеристики:</label>
             {characteristics.map((item, index) => (
-              <li key={index}>
+              <li className="max-w-[400px] flex justify-between" key={index}>
                 <span className="font-bold text-[18px]">{item.name}:</span>{' '}
                 <span className="text-[18px]">{item.value}</span>
               </li>
