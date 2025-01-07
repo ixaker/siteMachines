@@ -19,6 +19,10 @@ import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
 import ArticleMachine from './ui/article-machine/ArticleMachine';
 import DescriptionMachine from './ui/description-machine/DescriptionMachine';
 import Loader from './ui/loader/Loader';
+import { MenuItem, Select } from '@mui/material';
+import ApiClient, { Type } from '@/store/slice/db';
+
+const api = new ApiClient('https://machines.qpart.com.ua/');
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>({
@@ -46,10 +50,18 @@ const MachinePage = () => {
   const router = useRouter();
   const id = searchParams.get('id');
   const pathName = usePathname();
+  const [types, setTypes] = useState<Type[]>([]);
 
   if (!id) {
     router.push('/');
   }
+
+  useEffect(() => {
+    api
+      .getTypes()
+      .then((res) => setTypes(res))
+      .catch(console.error);
+  }, []);
 
   useEffect(() => {
     const fetchMachine = async () => {
@@ -132,6 +144,13 @@ const MachinePage = () => {
     });
   };
 
+  const handleTypeChange = (val: string) => {
+    setMachine({
+      ...machine!,
+      data: { ...machine!.data, type: val },
+    });
+  };
+
   const handleCharacteristicsChange = (updatedCharacteristics: Characteristic[]) => {
     setMachine((prev) => {
       return {
@@ -196,6 +215,20 @@ const MachinePage = () => {
         </div>
         <div className="flex flex-1 flex-col gap-10">
           <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
+
+          {editor ? (
+            <>
+              <Select label="Тип Станка" value={machine.data.type} onChange={(e) => handleTypeChange(e.target.value)}>
+                {types.map((item, index) => (
+                  <MenuItem key={index} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          ) : (
+            ''
+          )}
 
           <div className="lg:hidden w-full flex justify-center items-center">
             <ItemGallery

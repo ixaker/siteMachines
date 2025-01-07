@@ -1,6 +1,6 @@
 import SaveIcon from '@mui/icons-material/Save';
 import ApiClient, { Type } from '@/store/slice/db';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Checkbox, FormControlLabel, FormGroup, IconButton, TextField } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { selectEditor } from '@/store/slice/adminSlice';
@@ -13,10 +13,6 @@ export default function CustomSelect() {
   const [types, setTypes] = useState<Type[]>([]);
   const [disabledButtonSave, setDisabledButtonSave] = useState<boolean>(true);
   const editor = useSelector(selectEditor);
-
-  useEffect(() => {
-    console.log('types', types);
-  }, [types.length]);
 
   useEffect(() => {
     api
@@ -34,7 +30,9 @@ export default function CustomSelect() {
 
   const handleClickDelete = (index: number) => {
     setDisabledButtonSave(false);
-    api.deleteType(types[index].id);
+    if (types[index].id !== 0) {
+      api.deleteType(types[index].id);
+    }
     const newTypes = types.filter((_, i) => i !== index);
     setTypes(newTypes);
   };
@@ -63,13 +61,12 @@ export default function CustomSelect() {
     <div>
       <span className="font-bold text-[20px]">Тип верстата:</span>
       <FormGroup>
-        {/* <FormControlLabel control={<Checkbox defaultChecked />} label="Label" /> */}
-
         {editor ? (
           <>
             {types.map((item, index) => (
-              <div key={index}>
+              <div key={index} className="w-full flex">
                 <TextField
+                  sx={{ width: '100%' }}
                   variant="standard"
                   placeholder="Назва типу"
                   value={item.name}
@@ -81,12 +78,12 @@ export default function CustomSelect() {
                 </IconButton>
               </div>
             ))}
-            <div className="flex justify-start">
-              <IconButton onClick={handleClickAdd}>
-                <AddCircleOutlineIcon />
-              </IconButton>
-              <IconButton disabled={disabledButtonSave} onClick={handleClickSave}>
-                <SaveIcon />
+            <div className="flex justify-end ">
+              <IconButton color="primary" onClick={handleClickAdd}>
+                <AddCircleOutlineIcon sx={{ fontSize: '35px' }} />
+              </IconButton>{' '}
+              <IconButton color="primary" disabled={disabledButtonSave} onClick={handleClickSave}>
+                <SaveIcon sx={{ fontSize: '35px' }} />
               </IconButton>
             </div>
           </>
