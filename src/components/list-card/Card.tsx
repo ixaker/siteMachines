@@ -35,7 +35,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
     <div
       id={item.id}
       onClick={handleClick}
-      className="w-[350px] max-w-[350px] relative z-10 bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out "
+      className="w-[350px] max-w-[350px] relative  bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out "
     >
       {editor ? (
         <IconButton
@@ -55,7 +55,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
         ''
       )}
 
-      <div className="w-full relative z-10 max-h-[200px]">
+      <div className="w-full z-[1] relative max-h-[200px] group-hover:z-[12] transition-all duration-500 ease">
         <Image
           src={item.data?.mainImage || ''}
           alt={item.data?.name || ''}
@@ -64,14 +64,14 @@ const Card: React.FC<CardProps> = ({ item }) => {
           width={350}
         />
       </div>
-      <div className="relative z-10 bg-white h-[150px] max-h-[150px] px-4 rounded-b-lg  group-hover:rounded-b-none">
+      <div className="relative z-10 bg-white h-[150px] max-h-[150px] px-4 rounded-b-lg  group-hover:rounded-b-none group-hover:z-[12] transition-all duration-500 ease">
         <div className="flex flex-col justify-around h-full">
           <h2 className="text-lg font-semibold text-gray-800  mt-1">{item.data?.name || ''}</h2>
           <p className="text-sm text-gray-600 line-clamp-2 mt-1">{item.data?.description || ''}</p>
           <p className="text-lg font-bold text-primary mt-1">Ціна: {item.data?.price || ''} грн</p>
         </div>
       </div>
-      <div className="px-4 rounded-b-lg absolute bg-[white] w-full top-0 group-hover:shadow-md transition-all duration-500 ease group-hover:top-[100%]">
+      <div className="px-4 z-[0] group-hover:z-[11] rounded-b-lg absolute bg-[white] w-full top-0 group-hover:shadow-md transition-all duration-500 ease group-hover:top-[100%]">
         <h3 className="text-md font-semibold text-gray-700">Характеристики:</h3>
         <ul className="flex flex-col gap-1 mt-1 pb-1">
           {item.data?.characteristics.length > 0 &&
