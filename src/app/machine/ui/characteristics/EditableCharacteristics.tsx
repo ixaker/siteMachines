@@ -13,10 +13,6 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
   const editor = useSelector(selectEditor);
 
   useEffect(() => {
-    console.log('localCharacteristics', localCharacteristics);
-  });
-
-  useEffect(() => {
     setLocalCharacteristics(characteristics);
   }, [characteristics]);
 
