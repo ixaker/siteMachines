@@ -1,5 +1,5 @@
 export interface Characteristic {
-  // viewInCard: boolean;
+  viewInCard: boolean;
   name: string;
   value: string;
 }

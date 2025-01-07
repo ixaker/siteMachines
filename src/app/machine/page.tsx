@@ -111,6 +111,19 @@ const MachinePage = () => {
     });
   };
 
+  const handleMainPhoto = (value: string) => {
+    setMachine((prevMachine) => {
+      const currentMainImage = prevMachine?.data.mainImage || '';
+      return {
+        ...prevMachine!,
+        data: {
+          ...prevMachine!.data,
+          mainImage: currentMainImage === value ? '' : value, // Сбрасываем, если совпадает
+        },
+      };
+    });
+  };
+
   const handleTypeAndModel = (key: string, value: string) => {
     setMachine({
       ...machine!,
@@ -147,10 +160,6 @@ const MachinePage = () => {
       ...machine!,
       data: { ...machine!.data, fullDescription: value, description: value },
     });
-    // setMachine({
-    //   ...machine!,
-    //   data: { ...machine!.data, description: value },
-    // });
   };
 
   const handleUpdate = (id: string, updatedData: DataItem['data'], files: File[]) => {
@@ -180,6 +189,8 @@ const MachinePage = () => {
             setFiles={setFiles}
             onChange={handlePhotoChange}
             gallery={machine?.data.gallery || []}
+            onChangeMainPhoto={handleMainPhoto}
+            mainImage={machine?.data.mainImage}
           />
         </div>
         <div className="flex flex-1 flex-col gap-10">
@@ -191,6 +202,8 @@ const MachinePage = () => {
               setFiles={setFiles}
               onChange={handlePhotoChange}
               gallery={machine?.data.gallery || []}
+              onChangeMainPhoto={handleMainPhoto}
+              mainImage={machine?.data.mainImage}
             />
           </div>
 
@@ -211,10 +224,6 @@ const MachinePage = () => {
       </div>
 
       <div className="flex flex-col gap-10 mt-10">
-        {/* <article>
-          <label className="text-2xl font-bold">Опис</label>
-          <p className="text-[18px] mt-5">{machine?.data.fullDescription}</p>
-        </article> */}
         <DescriptionMachine changeFunction={handleDescriptionChange} description={machine?.data.fullDescription} />
         <TableHaracteristics characteristics={machine?.data.characteristics || []} />
       </div>

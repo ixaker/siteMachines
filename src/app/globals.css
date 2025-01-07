@@ -16,4 +16,5 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555; /* Цвет ползунка при наведении */
+  cursor: pointer;
 }

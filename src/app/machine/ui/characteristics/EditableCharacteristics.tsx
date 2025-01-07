@@ -1,15 +1,20 @@
 import { selectEditor } from '@/store/slice/adminSlice';
+import { Checkbox } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 interface EditableCharacteristicsProps {
-  characteristics: { name: string; value: string }[];
-  onChange: (updatedCharacteristics: { name: string; value: string }[]) => void;
+  characteristics: { name: string; value: string; viewInCard: boolean }[];
+  onChange: (updatedCharacteristics: { name: string; value: string; viewInCard: boolean }[]) => void;
 }
 
 const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ characteristics, onChange }) => {
   const [localCharacteristics, setLocalCharacteristics] = useState(characteristics);
   const editor = useSelector(selectEditor);
+
+  useEffect(() => {
+    console.log('localCharacteristics', localCharacteristics);
+  });
 
   useEffect(() => {
     setLocalCharacteristics(characteristics);
@@ -29,8 +34,15 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
     onChange(updated);
   };
 
+  const handleInViewChange = (index: number, newValue: boolean) => {
+    const updated = [...localCharacteristics];
+    updated[index].viewInCard = newValue;
+    setLocalCharacteristics(updated);
+    onChange(updated);
+  };
+
   const addCharacteristic = () => {
-    const updated = [...localCharacteristics, { name: '', value: '' }];
+    const updated = [...localCharacteristics, { name: '', value: '', viewInCard: false }];
     setLocalCharacteristics(updated);
     onChange(updated);
   };
@@ -63,6 +75,7 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
                   onChange={(e) => handleValueChange(index, e.target.value)}
                   className="border rounded px-2 py-1"
                 />
+                <Checkbox checked={item.viewInCard} onChange={(e) => handleInViewChange(index, e.target.checked)} />
                 <button onClick={() => removeCharacteristic(index)} className="text-red-500 font-bold">
                   Удалить
                 </button>
@@ -78,10 +91,14 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
           <ul className="flex flex-col gap-5">
             <label className="text-2xl font-bold">Характеристики:</label>
             {characteristics.map((item, index) => (
-              <li className="max-w-[400px] flex justify-between" key={index}>
-                <span className="font-bold text-[18px]">{item.name}:</span>{' '}
-                <span className="text-[18px]">{item.value}</span>
-              </li>
+              <>
+                {item.viewInCard === true && (
+                  <li className="w-full flex justify-between" key={index}>
+                    <span className="font-bold text-[18px]">{item.name}:</span>{' '}
+                    <span className="text-[18px]">{item.value}</span>
+                  </li>
+                )}
+              </>
             ))}
           </ul>
         </>
