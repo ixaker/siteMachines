@@ -43,13 +43,15 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
   const [photo, setPhoto] = useState(gallery);
   const editor = useSelector(selectEditor);
   const [currentPhoto, setCurrentPhoto] = useState<string>('');
-
-  useEffect(() => {
-    console.log('currentPhoto', currentPhoto.includes('jpg'));
-  });
-
+  const [currentType, setCurrentType] = useState<string>('');
   const [zoomPhoto, setZoomPhoto] = useState(''); // Храним информацию об увеличенной версии
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
+
+  useEffect(() => {
+    console.log('photo', photo);
+    console.log('currentPhoto', currentPhoto);
+    console.log('currentType', currentType);
+  });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, src: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -70,12 +72,15 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
   useEffect(() => {
     if (photo.length > 0) {
       setCurrentPhoto(photo[0].src);
+      setCurrentType(photo[0].type.split('/')[0]);
     }
   }, [photo]);
 
   const handleClickShowPhoto = (e: React.MouseEvent<HTMLDivElement>) => {
     const src = e.currentTarget.getAttribute('id') || '';
+    const about = e.currentTarget.getAttribute('about') || '';
     setCurrentPhoto(src);
+    setCurrentType(about);
   };
 
   const addPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +114,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
           <Skeleton variant="rectangular" width={500} height={350} />
         ) : (
           <>
-            {currentPhoto.includes('jpg') ? (
+            {currentType === 'image' ? (
               <Image
                 width={500}
                 height={350}
@@ -158,13 +163,15 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
               key={index}
               id={image.src}
               onClick={(e) => handleClickShowPhoto(e)}
+              about={image.type.split('/')[0]}
               className="relative w-[100px] h-[70px]"
             >
               {image.type.split('/')[0] === 'image' ? (
                 <div>
                   <Image
                     className="cursor-pointer p-1 min-h-[70px] min-w-[100px] bg-[#f6f6f6] object-contain"
-                    alt="Photo"
+                    alt="Image"
+                    about="Image"
                     src={image.src}
                     width={100}
                     height={70}
@@ -172,7 +179,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
                   />
                 </div>
               ) : (
-                <video className="min-h-[70px] min-w-[100px] p-1 h-full cursor-pointer  bg-[#f6f6f6]" autoPlay loop>
+                <video about="Video" className="min-h-[70px] min-w-[100px] p-1 h-full cursor-pointer bg-[#f6f6f6]" loop>
                   <source src={image.src} type={image.type} />
                 </video>
               )}

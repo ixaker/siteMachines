@@ -4,7 +4,7 @@ import ItemGallery from '@/components/item-gallery/ItemGallery';
 import { getMachine } from '@/shared/storage';
 import { Characteristic, DataItem, GalleryItem } from '@/types/types';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TitleMachine from './ui/title-machine/TitleMachine';
 import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
 import Breadcrumb from './ui/bread-crumb/Breadcrumb';
@@ -18,6 +18,7 @@ import { selectEditor, setEditor } from '@/store/slice/adminSlice';
 import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
 import ArticleMachine from './ui/article-machine/ArticleMachine';
 import DescriptionMachine from './ui/description-machine/DescriptionMachine';
+import Loader from './ui/loader/Loader';
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>({
@@ -181,7 +182,7 @@ const MachinePage = () => {
         model={machine?.data.model || ''}
         type={machine?.data.type || ''}
       />
-
+      <Loader />
       <div className="flex gap-10">
         <div className="hidden lg:block ">
           <ItemGallery
@@ -242,10 +243,10 @@ const MachinePage = () => {
   );
 };
 
-const MachinePageWrapper = () => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <MachinePage />
-  </Suspense>
-);
+// const MachinePageWrapper = () => (
+//   <Suspense fallback={<div>Loading...</div>}>
+//     <MachinePage />
+//   </Suspense>
+// );
 
-export default MachinePageWrapper;
+export default MachinePage;

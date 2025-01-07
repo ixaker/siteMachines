@@ -17,13 +17,8 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({ openSnackbar, setOpenSn
   };
 
   return (
-    <div>
-      <Snackbar
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
+    <div style={{ position: 'fixed', top: '50%', right: '55%', transform: 'translate(50%, -50%)' }}>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" variant="filled" sx={{ width: '100%', textWrap: 'nowrap' }}>
           Дані успішно оновлені!
         </Alert>

@@ -188,6 +188,10 @@ const dataSlice = createSlice({
         state.data = state.data.filter((item) => item.id !== action.payload);
       });
     builder
+      .addCase(updateMachine.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(updateMachine.fulfilled, (state, action: PayloadAction<DataItem>) => {
         state.loading = false;
         const index = state.data.findIndex((item) => item.id === action.payload.id);
