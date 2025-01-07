@@ -45,7 +45,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
             top: '10px',
             right: '10px',
             background: 'white',
-            zIndex: '11',
+            zIndex: '99',
           }}
           onClick={(e) => deleteItem(e, item.id)}
         >
