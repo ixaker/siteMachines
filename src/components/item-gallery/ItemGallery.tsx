@@ -47,12 +47,6 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
   const [zoomPhoto, setZoomPhoto] = useState(''); // Храним информацию об увеличенной версии
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
 
-  useEffect(() => {
-    console.log('photo', photo);
-    console.log('currentPhoto', currentPhoto);
-    console.log('currentType', currentType);
-  });
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, src: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;

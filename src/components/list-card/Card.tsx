@@ -76,13 +76,13 @@ const Card: React.FC<CardProps> = ({ item }) => {
         <ul className="flex flex-col gap-1 mt-1 pb-1">
           {item.data?.characteristics.length > 0 &&
             item.data?.characteristics.map((char, index) => (
-              <>
+              <div key={index}>
                 {char.viewInCard === true && (
-                  <li key={index} className="text-sm text-gray-600">
+                  <li className="text-sm text-gray-600">
                     <strong>{char.name}:</strong> {char.value}
                   </li>
                 )}
-              </>
+              </div>
             ))}
         </ul>
       </div>
