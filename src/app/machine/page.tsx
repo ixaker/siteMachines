@@ -4,7 +4,7 @@ import ItemGallery from '@/components/item-gallery/ItemGallery';
 import { getMachine } from '@/shared/storage';
 import { Characteristic, DataItem, GalleryItem } from '@/types/types';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import TitleMachine from './ui/title-machine/TitleMachine';
 import TableHaracteristics from '@/components/table-haracteristics/TableHaracteristics';
 import Breadcrumb from './ui/bread-crumb/Breadcrumb';
@@ -243,10 +243,10 @@ const MachinePage = () => {
   );
 };
 
-// const MachinePageWrapper = () => (
-//   <Suspense fallback={<div>Loading...</div>}>
-//     <MachinePage />
-//   </Suspense>
-// );
+const MachinePageWrapper = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <MachinePage />
+  </Suspense>
+);
 
-export default MachinePage;
+export default MachinePageWrapper;
