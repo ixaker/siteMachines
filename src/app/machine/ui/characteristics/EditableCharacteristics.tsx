@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import ItemCharacteric from './ItemCharacteric';
+import BuildIcon from '@mui/icons-material/Build';
 
 interface EditableCharacteristicsProps {
   characteristics: { name: string; value: string; viewInCard: boolean }[];
@@ -97,18 +98,23 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
         </>
       ) : (
         <>
-          <ul className="flex flex-col gap-5">
-            <label className="text-2xl font-bold">Характеристики:</label>
-            {localCharacteristics.map((item, index) => (
-              <>
-                {item.viewInCard === true && (
-                  <li className="w-full flex justify-between" key={index}>
-                    <span className="font-bold text-[18px]">{item.name}:</span>{' '}
-                    <span className="text-[18px]">{item.value}</span>
+          <label className="text-2xl font-semibold text-gray-800 mb-3 w-full">Характеристика верстата:</label>
+          <ul className="grid grid-cols-2 gap-4 mt-5">
+            {localCharacteristics.map(
+              (item, index) =>
+                item.viewInCard && (
+                  <li
+                    key={index}
+                    className="w-full flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-300 shadow-md hover:shadow-lg transition-all ease-in-out duration-200"
+                  >
+                    <div className="flex items-center gap-2">
+                      <BuildIcon className="text-gray-600" />
+                      <span className="font-medium text-lg text-gray-800">{item.name}:</span>
+                    </div>
+                    <span className="text-lg text-gray-600">{item.value}</span>
                   </li>
-                )}
-              </>
-            ))}
+                )
+            )}
           </ul>
         </>
       )}

@@ -1,7 +1,7 @@
 import SaveIcon from '@mui/icons-material/Save';
 import ApiClient, { Type } from '@/store/slice/db';
 import { useEffect, useState } from 'react';
-import { Checkbox, FormControlLabel, FormGroup, IconButton, TextField } from '@mui/material';
+import { Checkbox, FormControlLabel, FormGroup, IconButton, Skeleton, TextField } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { selectEditor } from '@/store/slice/adminSlice';
 import { useSelector } from 'react-redux';
@@ -9,9 +9,12 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const api = new ApiClient('https://machines.qpart.com.ua/');
 
-export default function CustomSelect() {
+export default function FilterMachines() {
   const [types, setTypes] = useState<Type[]>([]);
   const [disabledButtonSave, setDisabledButtonSave] = useState<boolean>(true);
+  const [filter, setFilter] = useState('');
+  console.log('filter', filter);
+
   const editor = useSelector(selectEditor);
 
   useEffect(() => {
@@ -90,11 +93,22 @@ export default function CustomSelect() {
         ) : (
           <>
             {' '}
-            {types.map((item, index) => (
-              <div key={index}>
-                <FormControlLabel control={<Checkbox />} label={item.name} />
-              </div>
-            ))}
+            {types.map((item, index) =>
+              types.length < 0 ? (
+                <>
+                  <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                </>
+              ) : (
+                <>
+                  <div key={index}>
+                    <FormControlLabel
+                      control={<Checkbox onChange={(e) => setFilter(e.target.value)} value={item.id} />}
+                      label={item.name}
+                    />
+                  </div>
+                </>
+              )
+            )}
           </>
         )}
       </FormGroup>

@@ -19,29 +19,14 @@ import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
 import ArticleMachine from './ui/article-machine/ArticleMachine';
 import DescriptionMachine from './ui/description-machine/DescriptionMachine';
 import Loader from './ui/loader/Loader';
-import { MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import ApiClient, { Type } from '@/store/slice/db';
+import { EMPTY_DATA_ITEM } from '@/constants/dataConstants';
 
 const api = new ApiClient('https://machines.qpart.com.ua/');
 
 const MachinePage = () => {
-  const [machine, setMachine] = useState<DataItem>({
-    data: {
-      name: '',
-      article: '',
-      availability: '',
-      characteristics: [],
-      description: '',
-      fullDescription: '',
-      gallery: [],
-      mainImage: '',
-      model: '',
-      price: '',
-      type: '',
-      chengedDate: '',
-    },
-    id: '',
-  });
+  const [machine, setMachine] = useState<DataItem>(EMPTY_DATA_ITEM);
   const dispatch: AppDispatch = useDispatch();
   const editor = useSelector(selectEditor);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -218,13 +203,23 @@ const MachinePage = () => {
 
           {editor ? (
             <>
-              <Select label="Тип Станка" value={machine.data.type} onChange={(e) => handleTypeChange(e.target.value)}>
-                {types.map((item, index) => (
-                  <MenuItem key={index} value={item.id}>
-                    {item.name}
+              <FormControl>
+                <InputLabel id="demo-select-small-label">Тип верстату</InputLabel>
+                <Select
+                  label="Тип верстату"
+                  value={machine.data.type}
+                  onChange={(e) => handleTypeChange(e.target.value)}
+                >
+                  <MenuItem value="">
+                    <em>Тип верстату</em>
                   </MenuItem>
-                ))}
-              </Select>
+                  {types.map((item, index) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </>
           ) : (
             ''
