@@ -28,16 +28,14 @@ const ItemCharacteric: React.FC<ItemCharactericProps> = ({
   const style: React.CSSProperties = {
     padding: '10px',
     margin: '5px 0',
-    border: '1px solid #ccc',
-    background: 'lightgray',
-    cursor: 'move',
+    // cursor: 'move',
     position: 'relative', // Сделать элементы фиксированными относительно их контейнера
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined, // Обновляем стиль при перетаскивании
     transition: transition || 'none', // Добавляем плавный переход
   };
 
   return (
-    <li ref={setNodeRef} {...listeners} {...attributes} style={style} className="flex items-center gap-4" key={index}>
+    <li style={style} className="flex items-center gap-4" key={index}>
       <input
         type="text"
         placeholder="Название"
@@ -56,8 +54,9 @@ const ItemCharacteric: React.FC<ItemCharactericProps> = ({
       <button onClick={() => removeCharacteristic(index)} className="text-red-500 font-bold">
         Удалить
       </button>
-
-      <DragIndicatorIcon />
+      <div ref={setNodeRef} {...listeners} {...attributes} className="cursor-grab">
+        <DragIndicatorIcon />
+      </div>
     </li>
   );
 };

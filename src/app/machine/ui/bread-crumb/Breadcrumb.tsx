@@ -1,16 +1,29 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { BreadcrumbProps } from '../title-machine/types';
 import { useSelector } from 'react-redux';
 import { selectEditor } from '@/store/slice/adminSlice';
+import ApiClient, { Type } from '@/store/slice/db';
+
+const api = new ApiClient('https://machines.qpart.com.ua/');
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) => {
   const editor = useSelector(selectEditor);
+  const [types, setTypes] = useState<Type[]>([]);
+
+  useEffect(() => {
+    api
+      .getTypes()
+      .then((res) => setTypes(res))
+      .catch(console.error);
+  }, []);
+
+  const typeMachine: string = types.find((val) => val.id.toString() === type)?.name.toString() || '';
 
   const breaDcrumbData = [
     { title: 'Головна', href: '/', arrow: <KeyboardArrowRightIcon /> },
-    { title: type, href: '#', arrow: <KeyboardArrowRightIcon />, placeholder: 'ТИП СТАНКУ', key: 'type' },
+    { title: typeMachine, href: '/', arrow: <KeyboardArrowRightIcon />, placeholder: 'ТИП СТАНКУ', key: 'type' },
     { title: model, href: '#', arrow: '', placeholder: 'МОДЕЛЬ СТАНКУ', key: 'model' },
   ];
 

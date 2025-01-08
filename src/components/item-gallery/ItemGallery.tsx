@@ -218,7 +218,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
               height={405}
               className="w-full h-full object-cover overflow-visible max-w-[500px] max-h-[405px]"
               style={{
-                transform: `scale(2)`,
+                transform: `scale(3)`,
                 transformOrigin: `${zoomPosition.x}px ${zoomPosition.y}px`, // Центрируем масштаб в точке курсора
               }}
             />

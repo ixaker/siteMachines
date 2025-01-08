@@ -18,10 +18,6 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
     setLocalCharacteristics(characteristics);
   }, [characteristics]);
 
-  useEffect(() => {
-    console.log('characteristic', characteristics);
-  });
-
   const handleNameChange = (index: number, newName: string) => {
     const updated = [...localCharacteristics];
     updated[index].name = newName;
