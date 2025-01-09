@@ -24,7 +24,9 @@ const ArticleMachine: React.FC<ArticleMachineProps> = ({ article, changeFunction
           />
         </div>
       ) : (
-        <span>Код: {article}</span>
+        <span className="text-md font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-lg shadow-sm">
+          Код: {article}
+        </span>
       )}
     </div>
   );

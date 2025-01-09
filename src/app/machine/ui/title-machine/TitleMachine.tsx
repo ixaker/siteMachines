@@ -13,7 +13,7 @@ const TitleMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) =>
       {editor ? (
         <input
           type="text"
-          className="text-3xl font-bold text-center"
+          className="text-3xl font-bold text-start"
           value={value || ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             changeFunction(e.target.value);
@@ -23,7 +23,7 @@ const TitleMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) =>
       ) : loading ? (
         <Skeleton variant="rectangular" animation="wave" sx={{ width: '100%', height: '36px' }} />
       ) : (
-        <h1 className="text-3xl font-bold text-center">{value || ''}</h1>
+        <h1 className="text-3xl font-bold text-start">{value || ''}</h1>
       )}
     </>
   );

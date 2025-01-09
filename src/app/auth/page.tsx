@@ -19,7 +19,7 @@ const Auth = () => {
   };
 
   if (admin) {
-    console.log('Вход успешен');
+    // console.log('Вход успешен');
 
     router.push('/');
   }

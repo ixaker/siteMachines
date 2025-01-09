@@ -184,7 +184,6 @@ const dataSlice = createSlice({
       })
       .addCase(deleteMachine.fulfilled, (state, action) => {
         state.loading = false;
-        // Удаляем элемент с указанным id из списка
         state.data = state.data.filter((item) => item.id !== action.payload);
       });
     builder

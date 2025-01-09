@@ -47,12 +47,6 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
   const [zoomPhoto, setZoomPhoto] = useState(''); // Храним информацию об увеличенной версии
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
 
-  useEffect(() => {
-    console.log('photo', photo);
-    console.log('currentPhoto', currentPhoto);
-    console.log('currentType', currentType);
-  });
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, src: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -111,16 +105,16 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
     <section>
       <div className="w-auto flex flex-col gap-5 ">
         {!currentPhoto ? (
-          <Skeleton variant="rectangular" width={500} height={350} />
+          <Skeleton variant="rectangular" width={550} height={400} />
         ) : (
           <>
             {currentType === 'image' ? (
               <Image
-                width={500}
-                height={350}
+                width={550}
+                height={400}
                 alt={`Machine`}
                 src={currentPhoto}
-                className="relative max-h-[350px] min-h-[350px] object-contain"
+                className="relative max-h-[400px] min-h-[400px] object-contain"
                 onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
                 onMouseLeave={handleMouseLeave}
               />
@@ -216,7 +210,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
         </div>
 
         {zoomPhoto && (
-          <div className="absolute z-10 pointer-events-none top-[25%] right-[11.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
+          <div className="absolute z-10 pointer-events-none top-[25%] right-[5.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
             <Image
               src={zoomPhoto}
               alt="Zoomed Photo"
@@ -224,7 +218,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
               height={405}
               className="w-full h-full object-cover overflow-visible max-w-[500px] max-h-[405px]"
               style={{
-                transform: `scale(2)`,
+                transform: `scale(3)`,
                 transformOrigin: `${zoomPosition.x}px ${zoomPosition.y}px`, // Центрируем масштаб в точке курсора
               }}
             />

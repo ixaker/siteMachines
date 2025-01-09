@@ -5,51 +5,57 @@ type Type = {
 };
 
 class ApiClient {
-    private baseUrl: string;
+  private baseUrl: string;
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
+
+  // Работа с таблицей Type
+  async getTypes(): Promise<Type[]> {
+    const response = await fetch(`${this.baseUrl}/type.php`);
+    if (!response.ok) {
+      throw new Error(`Ошибка при получении типов: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  async getTypeById(id: number): Promise<Type> {
+    const response = await fetch(`${this.baseUrl}/type?id=${id}`);
+    if (!response.ok) {
+      throw new Error(`Ошибка при получении типа с ID ${id}: ${response.statusText}`);
+    }
+    return response.json();
+  }
+  async createType(name: string): Promise<Type> {
+    const formData = new FormData();
+    formData.append('name', name);
+
+    const response = await fetch(`${this.baseUrl}/type.php`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка при создании типа: ${response.statusText}`);
     }
 
-    // Работа с таблицей Type
-    async getTypes(): Promise<Type[]> {
-        const response = await fetch(`${this.baseUrl}/type`);
-        if (!response.ok) {
-            throw new Error(`Ошибка при получении типов: ${response.statusText}`);
-        }
-        return response.json();
-    }
+    return response.json();
+  }
 
-    async getTypeById(id: number): Promise<Type> {
-        const response = await fetch(`${this.baseUrl}/type?id=${id}`);
-        if (!response.ok) {
-            throw new Error(`Ошибка при получении типа с ID ${id}: ${response.statusText}`);
-        }
-        return response.json();
-    }
+  async updateType(id: number, name: string): Promise<void> {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('id', id.toString());
 
-    async createType(name: string): Promise<Type> {
-        const response = await fetch(`${this.baseUrl}/type`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name }),
-        });
-        if (!response.ok) {
-            throw new Error(`Ошибка при создании типа: ${response.statusText}`);
-        }
-        return response.json();
+    const response = await fetch(`${this.baseUrl}/type.php`, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error(`Ошибка при обновлении типа: ${response.statusText}`);
     }
-
-    async updateType(id: number, name: string): Promise<void> {
-        const response = await fetch(`${this.baseUrl}/type`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, name }),
-        });
-        if (!response.ok) {
-            throw new Error(`Ошибка при обновлении типа: ${response.statusText}`);
-        }
-    }
+  }
 
     async deleteType(id: number): Promise<void> {
         const response = await fetch(`${this.baseUrl}/type?id=${id}`, {

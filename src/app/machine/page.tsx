@@ -19,25 +19,14 @@ import CustomizedSnackbars from './ui/custom-snackbar/CustomSnackbar';
 import ArticleMachine from './ui/article-machine/ArticleMachine';
 import DescriptionMachine from './ui/description-machine/DescriptionMachine';
 import Loader from './ui/loader/Loader';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import ApiClient, { Type } from '@/store/slice/db';
+import { EMPTY_DATA_ITEM } from '@/constants/dataConstants';
+
+const api = new ApiClient('https://machines.qpart.com.ua/');
 
 const MachinePage = () => {
-  const [machine, setMachine] = useState<DataItem>({
-    data: {
-      name: '',
-      article: '',
-      availability: '',
-      characteristics: [],
-      description: '',
-      fullDescription: '',
-      gallery: [],
-      mainImage: '',
-      model: '',
-      price: '',
-      type: '',
-      chengedDate: '',
-    },
-    id: '',
-  });
+  const [machine, setMachine] = useState<DataItem>(EMPTY_DATA_ITEM);
   const dispatch: AppDispatch = useDispatch();
   const editor = useSelector(selectEditor);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -46,10 +35,18 @@ const MachinePage = () => {
   const router = useRouter();
   const id = searchParams.get('id');
   const pathName = usePathname();
+  const [types, setTypes] = useState<Type[]>([]);
 
   if (!id) {
     router.push('/');
   }
+
+  useEffect(() => {
+    api
+      .getTypes()
+      .then((res) => setTypes(res))
+      .catch(console.error);
+  }, []);
 
   useEffect(() => {
     const fetchMachine = async () => {
@@ -132,6 +129,13 @@ const MachinePage = () => {
     });
   };
 
+  const handleTypeChange = (val: string) => {
+    setMachine({
+      ...machine!,
+      data: { ...machine!.data, type: val },
+    });
+  };
+
   const handleCharacteristicsChange = (updatedCharacteristics: Characteristic[]) => {
     setMachine((prev) => {
       return {
@@ -183,7 +187,7 @@ const MachinePage = () => {
         type={machine?.data.type || ''}
       />
       <Loader />
-      <div className="flex gap-10">
+      <div className="flex gap-[100px]">
         <div className="hidden lg:block ">
           <ItemGallery
             files={files}
@@ -196,6 +200,30 @@ const MachinePage = () => {
         </div>
         <div className="flex flex-1 flex-col gap-10">
           <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
+
+          {editor ? (
+            <>
+              <FormControl>
+                <InputLabel id="demo-select-small-label">Тип верстату</InputLabel>
+                <Select
+                  label="Тип верстату"
+                  value={machine.data.type}
+                  onChange={(e) => handleTypeChange(e.target.value)}
+                >
+                  <MenuItem value="">
+                    <em>Тип верстату</em>
+                  </MenuItem>
+                  {types.map((item, index) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </>
+          ) : (
+            ''
+          )}
 
           <div className="lg:hidden w-full flex justify-center items-center">
             <ItemGallery
