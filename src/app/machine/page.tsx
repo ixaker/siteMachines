@@ -22,6 +22,7 @@ import Loader from './ui/loader/Loader';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import ApiClient, { Type } from '@/store/slice/db';
 import { EMPTY_DATA_ITEM } from '@/constants/dataConstants';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 const api = new ApiClient('https://machines.qpart.com.ua/');
 
@@ -263,12 +264,10 @@ const MachinePage = () => {
             <PriceMachine changeFunction={handlePriceChange} value={machine?.data.price || ''} />
             <ArticleMachine changeFunction={handleArticle} article={machine?.data.article} />
           </div>
-          <EditableCharacteristics
-            characteristics={machine?.data.characteristics || []}
-            onChange={handleCharacteristicsChange}
-            machine={machine}
-            currenTypeName={currenTypeName}
-          />
+          <div className="flex items-center text-[green] text-lg font-bold">
+            <TaskAltIcon sx={{ marginRight: '8px' }} />В наявності
+          </div>
+          <EditableCharacteristics characteristics={machine?.data.characteristics || []} />
           <div>
             <button className="text-xl p-3 rounded-full font-medium bg-[#f74936] hover:bg-[#ce4a40] hover:shadow-lg  transition-all duration-300 ease-in-out transform">
               Зателефонувати
@@ -279,7 +278,12 @@ const MachinePage = () => {
 
       <div className="flex flex-col gap-10 mt-10">
         <DescriptionMachine changeFunction={handleDescriptionChange} description={machine?.data.fullDescription} />
-        <TableHaracteristics characteristics={machine?.data.characteristics || []} />
+        <TableHaracteristics
+          characteristics={machine?.data.characteristics || []}
+          onChange={handleCharacteristicsChange}
+          machine={machine}
+          currenTypeName={currenTypeName}
+        />
       </div>
       {editor ? (
         <button

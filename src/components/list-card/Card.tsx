@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectEditor } from '@/store/slice/adminSlice';
 import { deleteMachine } from '@/store/slice/dataSlice';
 import { AppDispatch } from '@/store/store';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 interface CardProps {
   item: DataItem;
@@ -70,9 +71,12 @@ const Card: React.FC<CardProps> = ({ item }) => {
             <div className="relative z-10 bg-white h-[150px] max-h-[150px] px-4 rounded-b-lg  group-hover:rounded-b-none group-hover:z-[12] transition-all duration-500 ease">
               <div className="flex flex-col justify-around h-full">
                 <h2 className="text-lg font-semibold text-gray-800  mt-1">{item.data?.name || ''}</h2>
-                <p className="text-sm text-gray-600 line-clamp-2 mt-1">{item.data?.description || ''}</p>
+
+                <div className="flex items-center text-[green] text-lg font-bold">
+                  <TaskAltIcon sx={{ marginRight: '8px' }} />В наявності
+                </div>
                 <div className="flex justify-between items-end">
-                  <p className="text-lg font-bold text-primary mt-1">Ціна: {item.data?.price || ''} грн</p>
+                  <p className="text-lg font-bold text-primary mt-1">Ціна: {item.data?.price || ''} $</p>
                   <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-lg shadow-sm">
                     Код: {item.data?.article || ''}
                   </span>

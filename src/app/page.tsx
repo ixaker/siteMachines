@@ -1,6 +1,6 @@
 'use client';
 
-import ListCard from '@/components/list-card/ListCard';
+// import ListCard from '@/components/list-card/ListCard';
 import { fetchMachines } from '@/store/slice/dataSlice';
 import { AppDispatch } from '@/store/store';
 import { useEffect } from 'react';
@@ -13,11 +13,7 @@ const Home = () => {
     dispatch(fetchMachines());
   });
 
-  return (
-    <div className="mt-10">
-      <ListCard />
-    </div>
-  );
+  return <div className="mt-10">{/* <ListCard /> */}</div>;
 };
 
 export default Home;

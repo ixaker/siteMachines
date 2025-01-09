@@ -15,8 +15,6 @@ const ListCard = () => {
   const list = useSelector(selectFilteredData);
   const editor = useSelector(selectEditor);
   dispatch(setData(list));
-  const test = useSelector(setData);
-  console.log('test', test);
 
   return (
     <section className="w-full max-w-[1500px] my-0 mx-auto px-4 flex mb-40">

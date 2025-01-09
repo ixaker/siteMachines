@@ -47,8 +47,6 @@ export default function FilterMachines() {
 
   const handleClickSave = () => {
     types.map((item) => {
-      console.log('item.characteristics', item.characteristics);
-
       if (item.id === '0') {
         if (item.name.length > 0) {
           api.createType(item.name);

@@ -11,20 +11,27 @@ const DescriptionMachine: React.FC<DescriptionMachineProps> = ({ description, ch
   const editor = useSelector(selectEditor);
 
   return (
-    <article className="flex flex-col">
-      <label className="text-2xl font-bold">Опис</label>
+    <article>
       {editor ? (
-        <input
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            changeFunction(e.target.value);
-          }}
-          value={description}
-          type="text"
-          className="text-[18px] mt-5"
-          placeholder="Опис Станку"
-        />
+        <div className="flex flex-col">
+          <label className="text-2xl font-bold">Опис</label>
+          <input
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              changeFunction(e.target.value);
+            }}
+            value={description}
+            type="text"
+            className="text-[18px] mt-5 border rounded px-2"
+            placeholder="Опис Станку"
+          />
+        </div>
+      ) : description.length > 0 ? (
+        <div className="flex flex-col">
+          <label className="text-2xl font-bold">Опис</label>
+          <p className="text-[18px] mt-5">{description}</p>
+        </div>
       ) : (
-        <p className="text-[18px] mt-5">{description}</p>
+        ''
       )}
     </article>
   );
