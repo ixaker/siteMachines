@@ -1,26 +1,16 @@
-import SearchIcon from '@mui/icons-material/Search';
-import { AppDispatch } from '@/store/store';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 import Link from 'next/link';
-import { setFilter } from '@/store/slice/dataSlice';
 import AdminHeader from './ui/AdminHeader';
 import BurgerMenu from './ui/BurgerMenu';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchComponent from './ui/SearchComponent';
+import Navigation from './ui/Navigation';
 
 const Header: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const [filter, setFilterValue] = useState('');
   const [openMenu, setOpenMenu] = useState<boolean>(false);
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setFilterValue(value); // Обновляем локальное состояние
-    dispatch(setFilter(value)); // Обновляем фильтр в Redux
-  };
-
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
   };
@@ -43,40 +33,25 @@ const Header: React.FC = () => {
             QPART
           </Link>
         </div>
-        <div className="hidden md:flex items-center w-1/3 border-2 border-[#76767a] rounded-full p-2 shadow-sm">
-          <input
-            value={filter}
-            onChange={handleFilterChange}
-            type="text"
-            placeholder="Фрезерний верстат з ЧПК Vector 0906F Z150"
-            className="border-none focus:outline-none focus:ring-inherit rounded-lg w-full"
-          />
-          <SearchIcon className="ml-2" />
-        </div>
-        <ul className=" gap-5 hidden md:flex">
-          <li className="md:text-xl lg:text-2xl text-[#373435] font-bold">
-            <a href="#">Про компанію</a>
-          </li>
-          <li className="md:text-xl lg:text-2xl text-[#373435] font-bold">
-            <a href="#">Контакти</a>
-          </li>
-        </ul>
-        <IconButton onClick={handleOpenMenu}>
-          <MenuIcon />
+
+        <SearchComponent variant="desktop" />
+
+        <Navigation />
+        <IconButton
+          color="primary"
+          sx={{ display: { md: 'none' }, position: 'relative', zIndex: 10 }}
+          onClick={handleOpenMenu}
+        >
+          {openMenu ? (
+            <CloseIcon sx={{ fontSize: '35px', color: 'white' }} />
+          ) : (
+            <MenuIcon sx={{ fontSize: '35px', color: 'black' }} />
+          )}
         </IconButton>
         <BurgerMenu setOpenMenu={setOpenMenu} openMenu={openMenu} />
       </div>
 
-      <div className="flex md:hidden mt-4 items-center w-full border-2 border-[#76767a] rounded-full p-2 shadow-sm">
-        <input
-          value={filter}
-          onChange={handleFilterChange}
-          type="text"
-          placeholder="Фрезерний верстат з ЧПК Vector 0906F Z150"
-          className="border-none focus:outline-none focus:ring-inherit rounded-lg w-full"
-        />
-        <SearchIcon className="ml-2" />
-      </div>
+      <SearchComponent variant="mobile" />
     </header>
   );
 };
