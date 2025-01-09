@@ -1,12 +1,7 @@
 type Type = {
     id: number;
     name: string;
-};
-
-type Characteristic = {
-    id: number;
-    name: string;
-    type_id: number;
+    characteristics: string[];
 };
 
 class ApiClient {
@@ -62,56 +57,6 @@ class ApiClient {
         });
         if (!response.ok) {
             throw new Error(`Ошибка при удалении типа с ID ${id}: ${response.statusText}`);
-        }
-    }
-
-    // Работа с таблицей Characteristics
-    async getCharacteristics(typeId?: number): Promise<Characteristic[]> {
-        const url = typeId ? `${this.baseUrl}/characteristics?type_id=${typeId}` : `${this.baseUrl}/characteristics`;
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Ошибка при получении характеристик: ${response.statusText}`);
-        }
-        return response.json();
-    }
-
-    async getCharacteristicById(id: number): Promise<Characteristic> {
-        const response = await fetch(`${this.baseUrl}/characteristics?id=${id}`);
-        if (!response.ok) {
-            throw new Error(`Ошибка при получении характеристики с ID ${id}: ${response.statusText}`);
-        }
-        return response.json();
-    }
-
-    async createCharacteristic(name: string, typeId: number): Promise<Characteristic> {
-        const response = await fetch(`${this.baseUrl}/characteristics`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, type_id: typeId }),
-        });
-        if (!response.ok) {
-            throw new Error(`Ошибка при создании характеристики: ${response.statusText}`);
-        }
-        return response.json();
-    }
-
-    async updateCharacteristic(id: number, name: string, typeId: number): Promise<void> {
-        const response = await fetch(`${this.baseUrl}/characteristics`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, name, type_id: typeId }),
-        });
-        if (!response.ok) {
-            throw new Error(`Ошибка при обновлении характеристики: ${response.statusText}`);
-        }
-    }
-
-    async deleteCharacteristic(id: number): Promise<void> {
-        const response = await fetch(`${this.baseUrl}/characteristics?id=${id}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            throw new Error(`Ошибка при удалении характеристики с ID ${id}: ${response.statusText}`);
         }
     }
 }
