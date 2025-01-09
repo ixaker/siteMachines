@@ -1,16 +1,22 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Card from './Card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { selectEditor } from '@/store/slice/adminSlice';
 import NewCard from './NewCard';
 import { selectFilteredData } from '@/store/slice/dataSlice';
 import FilterMachines from '../custom-select/FilterMachines';
+import { AppDispatch } from '@/store/store';
+import { setData } from '@/store/slice/filterSlice';
 
 // import { Skeleton } from '@mui/material';
 
 const ListCard = () => {
+  const dispatch: AppDispatch = useDispatch();
   const list = useSelector(selectFilteredData);
   const editor = useSelector(selectEditor);
+  dispatch(setData(list));
+  const test = useSelector(setData);
+  console.log('test', test);
 
   return (
     <section className="w-full max-w-[1500px] my-0 mx-auto px-4 flex mb-40">
