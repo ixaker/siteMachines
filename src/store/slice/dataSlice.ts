@@ -2,7 +2,6 @@ import { DataItem, GalleryItem } from '@/types/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
-import { EMPTY_DATA_ITEM } from '@/constants/dataConstants';
 
 const API_URL = 'https://machines.qpart.com.ua/storage.php';
 
@@ -15,7 +14,23 @@ interface DataState {
 }
 
 const initialState: DataState = {
-  emptyDataItem: EMPTY_DATA_ITEM,
+  emptyDataItem: {
+    data: {
+      name: '',
+      article: '',
+      availability: '',
+      characteristics: [],
+      chengedDate: Date.now().toString(),
+      description: '',
+      fullDescription: '',
+      gallery: [],
+      mainImage: '',
+      model: '',
+      price: '',
+      type: '',
+    },
+    id: '',
+  },
   data: [],
   loading: false,
   error: null,

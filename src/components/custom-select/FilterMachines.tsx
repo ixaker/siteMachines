@@ -12,7 +12,7 @@ const api = new ApiClient('https://machines.qpart.com.ua/');
 export default function FilterMachines() {
   const [types, setTypes] = useState<Type[]>([]);
   const [disabledButtonSave, setDisabledButtonSave] = useState<boolean>(true);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState<string[]>([]);
   console.log('filter', filter);
 
   const editor = useSelector(selectEditor);
@@ -102,7 +102,16 @@ export default function FilterMachines() {
                 <>
                   <div key={index}>
                     <FormControlLabel
-                      control={<Checkbox onChange={(e) => setFilter(e.target.value)} value={item.id} />}
+                      control={
+                        <Checkbox
+                          onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            const value = e.target.value;
+                            setFilter((prev) => (isChecked ? [...prev, value] : prev.filter((item) => item !== value)));
+                          }}
+                          value={item.id}
+                        />
+                      }
                       label={item.name}
                     />
                   </div>

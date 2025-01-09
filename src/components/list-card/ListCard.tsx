@@ -11,7 +11,6 @@ import FilterMachines from '../custom-select/FilterMachines';
 const ListCard = () => {
   const list = useSelector(selectFilteredData);
   const editor = useSelector(selectEditor);
-  // const loading = useSelector(selectLoading);
 
   return (
     <section className="w-full max-w-[1500px] my-0 mx-auto px-4 flex mb-40">

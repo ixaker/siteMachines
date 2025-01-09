@@ -105,16 +105,16 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
     <section>
       <div className="w-auto flex flex-col gap-5 ">
         {!currentPhoto ? (
-          <Skeleton variant="rectangular" width={500} height={350} />
+          <Skeleton variant="rectangular" width={550} height={400} />
         ) : (
           <>
             {currentType === 'image' ? (
               <Image
-                width={500}
-                height={350}
+                width={550}
+                height={400}
                 alt={`Machine`}
                 src={currentPhoto}
-                className="relative max-h-[350px] min-h-[350px] object-contain"
+                className="relative max-h-[400px] min-h-[400px] object-contain"
                 onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
                 onMouseLeave={handleMouseLeave}
               />
@@ -210,7 +210,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
         </div>
 
         {zoomPhoto && (
-          <div className="absolute z-10 pointer-events-none top-[25%] right-[11.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
+          <div className="absolute z-10 pointer-events-none top-[25%] right-[5.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
             <Image
               src={zoomPhoto}
               alt="Zoomed Photo"

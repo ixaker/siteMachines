@@ -17,7 +17,7 @@ const TableHaracteristics: React.FC<TableHaracteristicsProps> = ({ characteristi
   return (
     <section>
       <label className="text-2xl font-bold">Всі характеристики</label>
-      <TableContainer component={Paper} className="mt-5">
+      <TableContainer component={Paper} className="mt-5 max-w-[800px]">
         <Table sx={{ minWidth: 650, backgroundColor: '#f9f9f9' }} aria-label="simple table">
           <TableBody>
             {characteristics.map((row) => (

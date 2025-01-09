@@ -28,7 +28,6 @@ const ItemCharacteric: React.FC<ItemCharactericProps> = ({
   const style: React.CSSProperties = {
     padding: '10px',
     margin: '5px 0',
-    // cursor: 'move',
     position: 'relative', // Сделать элементы фиксированными относительно их контейнера
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined, // Обновляем стиль при перетаскивании
     transition: transition || 'none', // Добавляем плавный переход
@@ -41,7 +40,7 @@ const ItemCharacteric: React.FC<ItemCharactericProps> = ({
         placeholder="Название"
         value={item.name}
         onChange={(e) => handleNameChange(index, e.target.value)}
-        className="border rounded px-2 py-1"
+        className="border rounded px-2 py-1 flex-1"
       />
       <input
         type="text"

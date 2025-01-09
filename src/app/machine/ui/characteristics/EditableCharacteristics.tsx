@@ -58,8 +58,12 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const activeIndex = localCharacteristics.findIndex((item) => item.name === active.id);
-      const overIndex = localCharacteristics.findIndex((item) => item.name === over.id);
+      const activeIndex = localCharacteristics.findIndex(
+        (item, index) => `${item.name}${item.value}${index}` === active.id
+      );
+      const overIndex = localCharacteristics.findIndex(
+        (item, index) => `${item.name}${item.value}${index}` === over.id
+      );
       const reorderedItems = arrayMove(localCharacteristics, activeIndex, overIndex);
       setLocalCharacteristics(reorderedItems);
       onChange(reorderedItems);
@@ -73,15 +77,15 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
           <label className="text-2xl font-bold">Редактировать характеристики</label>
           <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <SortableContext
-              items={localCharacteristics.map((item) => item.name)}
+              items={localCharacteristics.map((item, index) => `${item.name}${item.value}${index}`)}
               strategy={verticalListSortingStrategy}
             >
               <ul className="space-y-4">
                 {localCharacteristics.map((item, index) => (
                   <ItemCharacteric
-                    key={item.name}
+                    key={index}
                     index={index}
-                    id={item.name}
+                    id={`${item.name}${item.value}${index}`}
                     item={item}
                     handleNameChange={handleNameChange}
                     handleValueChange={handleValueChange}
@@ -98,14 +102,14 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
         </>
       ) : (
         <>
-          <label className="text-2xl font-semibold text-gray-800 mb-3 w-full">Характеристика верстата:</label>
-          <ul className="grid grid-cols-2 gap-4 mt-5">
+          <p className="text-2xl font-semibold text-gray-800 mb-3 w-full text-start">Характеристика верстата:</p>
+          <ul className="flex flex-col  gap-4 mt-5 w-full">
             {localCharacteristics.map(
               (item, index) =>
                 item.viewInCard && (
                   <li
                     key={index}
-                    className="w-full flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-300 shadow-md hover:shadow-lg transition-all ease-in-out duration-200"
+                    className="w-[75%] flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-300 shadow-md hover:shadow-lg transition-all ease-in-out duration-200"
                   >
                     <div className="flex items-center gap-2">
                       <BuildIcon className="text-gray-600" />

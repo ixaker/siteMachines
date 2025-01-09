@@ -187,7 +187,7 @@ const MachinePage = () => {
         type={machine?.data.type || ''}
       />
       <Loader />
-      <div className="flex gap-10">
+      <div className="flex gap-[100px]">
         <div className="hidden lg:block ">
           <ItemGallery
             files={files}
