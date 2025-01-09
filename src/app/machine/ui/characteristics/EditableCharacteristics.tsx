@@ -1,19 +1,34 @@
-import { selectEditor } from '@/store/slice/adminSlice';
+import { selectEditor, selectToken } from '@/store/slice/adminSlice';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import ItemCharacteric from './ItemCharacteric';
 import BuildIcon from '@mui/icons-material/Build';
+import ApiClient from '@/store/slice/db';
+import { DataItem } from '@/types/types';
+
+// const token: string = localStorage.getItem('token') || '';
+// const api = new ApiClient('https://machines.qpart.com.ua/', token);
 
 interface EditableCharacteristicsProps {
+  machine: DataItem;
+  currenTypeName: string;
   characteristics: { name: string; value: string; viewInCard: boolean }[];
   onChange: (updatedCharacteristics: { name: string; value: string; viewInCard: boolean }[]) => void;
 }
 
-const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ characteristics, onChange }) => {
+const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({
+  characteristics,
+  onChange,
+  machine,
+  currenTypeName,
+}) => {
   const [localCharacteristics, setLocalCharacteristics] = useState(characteristics);
   const editor = useSelector(selectEditor);
+
+  const token = useSelector(selectToken);
+  const api = new ApiClient('https://machines.qpart.com.ua/', token);
 
   useEffect(() => {
     setLocalCharacteristics(characteristics);
@@ -70,6 +85,19 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
     }
   };
 
+  const saveCharacteristicsForType = () => {
+    const characteristics: string[] = [];
+
+    localCharacteristics.forEach((item) => {
+      characteristics.push(item.name);
+    });
+    console.log('localCharacteristics', characteristics);
+    console.log('machine', machine);
+    console.log('currenTypeName', currenTypeName);
+
+    api.updateType(machine.data.type, currenTypeName, characteristics);
+  };
+
   return (
     <div>
       {editor ? (
@@ -96,9 +124,14 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
               </ul>
             </SortableContext>
           </DndContext>
-          <button onClick={addCharacteristic} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-            Добавить характеристику
-          </button>
+          <div className="flex gap-4">
+            <button onClick={addCharacteristic} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+              Добавить характеристику
+            </button>
+            <button onClick={saveCharacteristicsForType} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+              Зберегти харктеристики для типу
+            </button>
+          </div>
         </>
       ) : (
         <>

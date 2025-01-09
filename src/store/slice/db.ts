@@ -1,14 +1,16 @@
-type Type = {
-    id: number;
-    name: string;
-    characteristics: string[];
+export type Type = {
+  id: string;
+  name: string;
+  characteristics: string[];
 };
 
 class ApiClient {
   private baseUrl: string;
+  private token: string;
 
-  constructor(baseUrl: string) {
+  constructor(baseUrl: string, token: string = '') {
     this.baseUrl = baseUrl;
+    this.token = token;
   }
 
   // Работа с таблицей Type
@@ -43,28 +45,32 @@ class ApiClient {
     return response.json();
   }
 
-  async updateType(id: number, name: string): Promise<void> {
+  async updateType(id: string, name: string, characteristics: string[]): Promise<void> {
     const formData = new FormData();
     formData.append('name', name);
     formData.append('id', id.toString());
+    formData.append('characteristics', JSON.stringify(characteristics));
 
     const response = await fetch(`${this.baseUrl}/type.php`, {
       method: 'POST',
       body: formData,
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
     });
     if (!response.ok) {
       throw new Error(`Ошибка при обновлении типа: ${response.statusText}`);
     }
   }
 
-    async deleteType(id: number): Promise<void> {
-        const response = await fetch(`${this.baseUrl}/type?id=${id}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            throw new Error(`Ошибка при удалении типа с ID ${id}: ${response.statusText}`);
-        }
+  async deleteType(id: string): Promise<void> {
+    const response = await fetch(`${this.baseUrl}/type?id=${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error(`Ошибка при удалении типа с ID ${id}: ${response.statusText}`);
     }
+  }
 }
 
 export default ApiClient;

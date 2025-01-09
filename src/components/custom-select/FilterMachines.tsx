@@ -3,19 +3,20 @@ import ApiClient, { Type } from '@/store/slice/db';
 import { useEffect, useState } from 'react';
 import { Checkbox, FormControlLabel, FormGroup, IconButton, Skeleton, TextField } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { selectEditor } from '@/store/slice/adminSlice';
+import { selectEditor, selectToken } from '@/store/slice/adminSlice';
 import { useSelector } from 'react-redux';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
-const api = new ApiClient('https://machines.qpart.com.ua/');
 
 export default function FilterMachines() {
   const [types, setTypes] = useState<Type[]>([]);
   const [disabledButtonSave, setDisabledButtonSave] = useState<boolean>(true);
   const [filter, setFilter] = useState<string[]>([]);
-  console.log('filter', filter);
+  console.log(filter);
 
   const editor = useSelector(selectEditor);
+
+  const token = useSelector(selectToken);
+  const api = new ApiClient('https://machines.qpart.com.ua/', token);
 
   useEffect(() => {
     api
@@ -33,7 +34,7 @@ export default function FilterMachines() {
 
   const handleClickDelete = (index: number) => {
     setDisabledButtonSave(false);
-    if (types[index].id !== 0) {
+    if (types[index].id !== '0') {
       api.deleteType(types[index].id);
     }
     const newTypes = types.filter((_, i) => i !== index);
@@ -41,18 +42,23 @@ export default function FilterMachines() {
   };
 
   const handleClickAdd = () => {
-    setTypes((prev) => [...prev, ...[{ name: '', id: 0 }]]);
+    setTypes((prev) => [...prev, ...[{ name: '', id: '0', characteristics: [] }]]);
   };
 
   const handleClickSave = () => {
     types.map((item) => {
-      if (item.id === 0) {
+      console.log('item.characteristics', item.characteristics);
+
+      if (item.id === '0') {
         if (item.name.length > 0) {
           api.createType(item.name);
         }
       } else {
         if (item.name.length > 0) {
-          api.updateType(item.id, item.name);
+          if (item.characteristics === null) {
+            item.characteristics = [];
+          }
+          api.updateType(item.id, item.name, item.characteristics);
         } else {
           api.deleteType(item.id);
         }

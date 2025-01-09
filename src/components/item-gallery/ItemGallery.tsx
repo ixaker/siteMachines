@@ -120,7 +120,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
               />
             ) : (
               <video
-                className="max-h-[350px] min-h-[350px] p-1 h-full cursor-pointer  bg-[#f6f6f6]"
+                className="max-h-[400px] min-h-[400px] w-full p-1 max-w-[550px] cursor-pointer  bg-[#f6f6f6]"
                 autoPlay
                 loop
                 muted

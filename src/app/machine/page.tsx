@@ -36,10 +36,20 @@ const MachinePage = () => {
   const id = searchParams.get('id');
   const pathName = usePathname();
   const [types, setTypes] = useState<Type[]>([]);
+  const [currenTypeName, setCurrentTypeName] = useState<string>('');
 
   if (!id) {
     router.push('/');
   }
+
+  useEffect(() => {
+    if (machine.data.type.length > 0) {
+      if (types.length > 0) {
+        const currentType = types.filter((item) => item.id === machine.data.type)[0] || { name: '' };
+        setCurrentTypeName(currentType.name);
+      }
+    }
+  }, [types, machine]);
 
   useEffect(() => {
     api
@@ -130,9 +140,22 @@ const MachinePage = () => {
   };
 
   const handleTypeChange = (val: string) => {
+    const currentItem = types.filter((item) => item.id === val)[0] || { characteristics: [], name: '' };
+
+    setCurrentTypeName(currentItem.name);
+
+    const characteristics: Characteristic[] = [];
+    if (currentItem.characteristics === null) {
+      currentItem.characteristics = [];
+    }
+    currentItem.characteristics.forEach((item) => {
+      const characteristic: Characteristic = { name: item, value: '', viewInCard: false };
+      characteristics.push(characteristic);
+    });
+
     setMachine({
       ...machine!,
-      data: { ...machine!.data, type: val },
+      data: { ...machine!.data, type: val, characteristics: characteristics },
     });
   };
 
@@ -243,6 +266,8 @@ const MachinePage = () => {
           <EditableCharacteristics
             characteristics={machine?.data.characteristics || []}
             onChange={handleCharacteristicsChange}
+            machine={machine}
+            currenTypeName={currenTypeName}
           />
           <div>
             <button className="text-xl p-3 rounded-full font-medium bg-[#f74936] hover:bg-[#ce4a40] hover:shadow-lg  transition-all duration-300 ease-in-out transform">
