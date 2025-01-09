@@ -12,10 +12,10 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ openMenu, setOpenMenu }) => {
         onClick={() => {
           setOpenMenu(false);
         }}
-        className={`absolute top-0 left-0 w-screen bg-black ${openMenu ? 'opacity-10' : 'opacity-0 hidden'}  top-0 h-full z-[0] duration-300 ease-in-out`}
+        className={`absolute top-0 left-0 w-screen bg-black ${openMenu ? 'opacity-10' : 'opacity-0 hidden'}  top-0 h-full z-[4] duration-300 ease-in-out`}
       ></div>
       <div
-        className={`absolute top-0 bg-white w-1/2 h-full transition-all duration-300 ease-in-out z-1 ${
+        className={`absolute top-0 bg-white w-1/2 h-full transition-all duration-300 ease-in-out z-[5] ${
           openMenu ? 'left-0' : 'left-[-100%]'
         }`}
       >
