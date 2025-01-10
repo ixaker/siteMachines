@@ -33,7 +33,7 @@ const VisuallyHiddenInput = styled('input')({
   zIndex: 10,
 });
 
-const ItemGallery: React.FC<ItemGalleryProps> = ({
+const CustomGallery: React.FC<ItemGalleryProps> = ({
   gallery,
   onChange,
   files,
@@ -71,7 +71,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
     }
   }, [photo]);
 
-  const handleClickShowPhoto = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClickShowPhoto = (e: React.MouseEvent<HTMLElement>) => {
     const src = e.currentTarget.getAttribute('id') || '';
     const about = e.currentTarget.getAttribute('about') || '';
     setCurrentPhoto(src);
@@ -104,13 +104,13 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
 
   return (
     <section>
-      <div className="w-auto max-w-[550px] flex flex-col gap-5 ">
+      <div className="w-full flex flex-col gap-5 max-w-[550px] overflow-x-scroll overflow-hidden">
         {!currentPhoto ? (
           <Skeleton variant="rectangular" width={550} height={400} />
         ) : (
           <>
             {currentType === 'image' ? (
-              <div className="h-[350px] max-w-[550px]">
+              <div className="max-h-[350px] max-w-[550px]">
                 <Image
                   width={550}
                   height={400}
@@ -158,80 +158,59 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
           </>
         )}
 
-        <div className=".scrol flex gap-5 overflow-hidden overflow-x-scroll items-center max-w-[500px] pb-3">
-          {photo.map((image, index) => (
-            <div
-              key={index}
-              id={image.src}
-              onClick={(e) => handleClickShowPhoto(e)}
-              about={image.type.split('/')[0]}
-              className="relative w-[100px] h-[70px]"
-            >
-              {image.type.split('/')[0] === 'image' ? (
-                <div className="h-[70px] w-[100px]">
-                  <Image
-                    className="cursor-pointer p-1 w-full h-full bg-[#f6f6f6] object-cover"
-                    alt="Image"
-                    about="Image"
-                    src={image.src}
-                    width={100}
-                    height={70}
-                    decoding="async"
-                  />
-                </div>
-              ) : (
-                <div>
-                  <video
-                    about="Video"
-                    className="max-h-[70px] max-w-[100px] p-1 h-full cursor-pointer relative object-cover"
-                    autoPlay
-                    loop
-                  >
-                    <source src={image.src} />
-                  </video>
-                  <div className="absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-full h-full bg-nonne rounded-lg shadow-lg ">
-                    <div className="bg-black rounded-full p-[3px] bg-opacity-50 opacity-95">
-                      <PlayArrowIcon
-                        sx={{
-                          fontSize: '30px',
-                          color: 'white',
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-              {editor ? (
-                <div className="relative">
-                  <IconButton onClick={() => removePhoto(index)} sx={{ position: 'absolute', bottom: 0, right: 0 }}>
-                    <DeleteIcon sx={{ color: 'white' }} />
-                  </IconButton>
-
-                  <div id={image.src} className="absolute z-[90] flex  bottom-5"></div>
-                </div>
-              ) : (
-                ''
-              )}
-              {currentPhoto !== image.src && (
-                <div className="absolute w-full h-full bg-white top-0 left-0 opacity-60 cursor-pointer"></div>
-              )}
-            </div>
-          ))}
-          {editor ? (
+        <ul className="flex gap-3 md:gap-5 overflow-x-scroll items-center pb-2">
+          {editor && (
             <Button
               component="label"
-              sx={{ minHeight: '70px', width: '100px', bgcolor: '#e5e7eb' }}
+              sx={{ bgcolor: '#e5e7eb', width: '100px', height: '70px' }}
               role={undefined}
               tabIndex={-1}
-              className="min-h-[70px] min-w-[100px]"
             >
               <AddAPhotoIcon />
               <VisuallyHiddenInput type="file" onChange={addPhoto} multiple />
             </Button>
-          ) : (
-            ''
           )}
-        </div>
+          {photo.map((image, index) => (
+            <li
+              className="max-w-[100px] flex-shrink-0 relative "
+              key={index}
+              id={image.src}
+              onClick={(e) => handleClickShowPhoto(e)}
+              about={image.type.split('/')[0]}
+            >
+              {image.type.split('/')[0] === 'image' ? (
+                <Image alt={image.name} src={image.src} width={100} height={70} className="w-[100px] h-[70px] p-1" />
+              ) : (
+                <div className="relative">
+                  <video about="Video" className="w-[100px] h-[70px] p-1  cursor-pointer object-cover" loop>
+                    <source src={image.src} />
+                  </video>
+
+                  <div className="absolute top-1/2 left-1/2 transform- -translate-x-1/2 -translate-y-1/2 bg-black rounded-full p-1  bg-opacity-80">
+                    <PlayArrowIcon
+                      sx={{
+                        fontSize: '30px',
+                        color: 'white',
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+              {editor && (
+                <div className="absolute top-0 right-0">
+                  <IconButton onClick={() => removePhoto(index)}>
+                    <DeleteIcon sx={{ color: 'white' }} />
+                  </IconButton>
+
+                  {/* <div id={image.src} className="absolute z-[90] flex  bottom-5"></div> */}
+                </div>
+              )}
+              {currentPhoto !== image.src && (
+                <div className="absolute w-full h-full bg-white top-0 left-0 opacity-60 cursor-pointer"></div>
+              )}
+            </li>
+          ))}
+        </ul>
 
         {zoomPhoto && (
           <div className="absolute z-10 pointer-events-none top-[25%] right-[5.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] hidden md:flex items-center justify-center">
@@ -253,4 +232,4 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
   );
 };
 
-export default ItemGallery;
+export default CustomGallery;

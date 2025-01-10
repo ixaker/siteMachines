@@ -1,6 +1,6 @@
 'use client';
 
-import ItemGallery from '@/components/item-gallery/ItemGallery';
+import CustomGallery from '@/components/item-gallery/CustomGallery';
 import { getMachine } from '@/shared/storage';
 import { Characteristic, DataItem, GalleryItem } from '@/types/types';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -235,7 +235,7 @@ const MachinePage = () => {
       <Loader />
       <div className="flex gap-[100px]">
         <div className="hidden lg:block ">
-          <ItemGallery
+          <CustomGallery
             files={files}
             setFiles={setFiles}
             onChange={handlePhotoChange}
@@ -272,7 +272,7 @@ const MachinePage = () => {
           )}
 
           <div className="lg:hidden w-full flex justify-center items-center">
-            <ItemGallery
+            <CustomGallery
               files={files}
               setFiles={setFiles}
               onChange={handlePhotoChange}
