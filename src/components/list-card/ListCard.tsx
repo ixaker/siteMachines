@@ -8,6 +8,8 @@ import FilterMachines from '../custom-select/FilterMachines';
 import { AppDispatch } from '@/store/store';
 import { setData } from '@/store/slice/filterSlice';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '@mui/material';
 
 // import { Skeleton } from '@mui/material';
 
@@ -15,16 +17,34 @@ const ListCard = () => {
   const dispatch: AppDispatch = useDispatch();
   const list = useSelector(selectFilteredData);
   const editor = useSelector(selectEditor);
+  const [loading, setLoading] = useState(true);
   dispatch(setData(list));
 
+  useEffect(() => {
+    if (list[0]?.id.length > 0) {
+      setLoading(false);
+    }
+  }, [list]);
+
   return (
-    <section className="w-full max-w-[1500px]  my-0 mx-auto px-4 flex justify-center md:justify-between mb-40">
+    <section className="w-full max-w-[1500px]  my-0 mx-auto px-2 flex justify-center md:justify-between mb-40">
       <FilterMachines />
 
       <div className="flex justify-center items-center">
-        <div className="grid grid-wrap w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <AnimatePresence>
-            {list.length > 0 ? (
+            {loading ? (
+              <>
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    sx={{ width: '350px', height: '350px', display: 'block' }}
+                    variant="rectangular"
+                    animation="wave"
+                  />
+                ))}
+              </>
+            ) : list.length > 0 ? (
               list.map((item, index) => (
                 <motion.div
                   key={index}
@@ -40,16 +60,8 @@ const ListCard = () => {
                 </motion.div>
               ))
             ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="col-span-full text-gray-500 w-full   text-center"
-              >
-                <p>На жаль немає станків за вашим запитом</p>
-              </motion.div>
+              <p>На жаль немає станків за вашим запитом</p>
             )}
-
             {editor ? <NewCard /> : ''}
           </AnimatePresence>
         </div>

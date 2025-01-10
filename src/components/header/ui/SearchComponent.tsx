@@ -38,7 +38,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ variant }) => {
         <SearchIcon />
       </div>
       <div className="block md:hidden relative ">
-        <IconButton color="primary">
+        <IconButton color="primary" sx={{ padding: '0px' }}>
           <FilterAltIcon sx={{ fontSize: '35px', color: 'black' }} />
         </IconButton>
       </div>

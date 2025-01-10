@@ -44,7 +44,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
                   background: 'white',
                   zIndex: 99,
                   width: '40px',
-                  height: '40px', // Убедитесь, что кнопка имеет размер
+                  height: '40px',
                 }}
                 onClick={(e) => deleteItem(e, item.id)}
               >

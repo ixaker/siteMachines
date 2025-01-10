@@ -39,7 +39,7 @@ const Header: React.FC = () => {
         <Navigation />
         <IconButton
           color="primary"
-          sx={{ display: { md: 'none' }, position: 'relative', zIndex: 10 }}
+          sx={{ display: { md: 'none' }, position: 'relative', zIndex: 10, padding: '0px' }}
           onClick={handleOpenMenu}
         >
           {openMenu ? (
