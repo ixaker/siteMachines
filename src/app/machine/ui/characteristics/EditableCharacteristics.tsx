@@ -13,7 +13,7 @@ const EditableCharacteristics: React.FC<EditableCharacteristicsProps> = ({ chara
   }, [characteristics]);
 
   return (
-    <section>
+    <section className="hidden sm:block">
       <p className="text-xl xl:text-2xl font-semibold text-gray-800 mb-3 w-full text-start">Характеристика верстата:</p>
       <ul className="flex flex-col  gap-4 mt-5 w-full">
         {localCharacteristics.map(

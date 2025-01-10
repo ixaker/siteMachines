@@ -102,7 +102,7 @@ const TableHaracteristics: React.FC<TableHaracteristicsProps> = ({
       {editor ? (
         <div className="max-w-[800px]">
           {' '}
-          <label className="text-2xl font-bold">Редактировать характеристики</label>
+          <label className="text-lg sm:text-2xl font-bold">Редактировать характеристики</label>
           <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <SortableContext
               items={localCharacteristics.map((item, index) => `${item.name}${item.value}${index}`)}
@@ -136,7 +136,7 @@ const TableHaracteristics: React.FC<TableHaracteristicsProps> = ({
       ) : (
         <>
           {' '}
-          <label className="text-2xl font-bold">Всі характеристики</label>
+          <label className="text-lg sm:text-2xl font-bold">Всі характеристики</label>
           <TableContainer component={Paper} className="mt-5 max-w-[800px]">
             <Table sx={{ backgroundColor: '#f9f9f9' }} aria-label="simple table">
               <TableBody>

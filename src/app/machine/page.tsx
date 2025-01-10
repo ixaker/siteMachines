@@ -226,7 +226,7 @@ const MachinePage = () => {
   };
 
   return (
-    <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
+    <section className="w-full max-w-[1500px] my-5 sm:my-10 mx-auto px-2">
       <Breadcrumb
         changeFunction={handleTypeAndModel}
         model={machine?.data.model || ''}
@@ -244,7 +244,7 @@ const MachinePage = () => {
             mainImage={machine?.data.mainImage}
           />
         </div>
-        <div className="flex flex-1 flex-col gap-10">
+        <div className="flex flex-1 flex-col gap-5 sm:gap-10">
           <TitleMachine changeFunction={handleTitleChange} value={machine?.data.name || ''} />
 
           {editor ? (
@@ -291,7 +291,7 @@ const MachinePage = () => {
           </div>
           <EditableCharacteristics characteristics={machine?.data.characteristics || []} />
           <div>
-            <button className="text-xl p-3 rounded-full font-medium bg-[#f74936] hover:bg-[#ce4a40] hover:shadow-lg  transition-all duration-300 ease-in-out transform">
+            <button className="w-full sm:w-auto text-xl p-3 rounded-full font-medium bg-[#f74936] hover:bg-[#ce4a40] hover:shadow-lg  transition-all duration-300 ease-in-out transform">
               Зателефонувати
             </button>
           </div>

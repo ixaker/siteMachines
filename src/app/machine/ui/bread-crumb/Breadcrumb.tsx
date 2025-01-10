@@ -22,13 +22,19 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) 
   const typeMachine: string = types.find((val) => val.id.toString() === type)?.name.toString() || '';
 
   const breaDcrumbData = [
-    { title: 'Головна', href: '/', arrow: <KeyboardArrowRightIcon /> },
-    { title: typeMachine, href: '/', arrow: <KeyboardArrowRightIcon />, placeholder: 'ТИП СТАНКУ', key: 'type' },
+    { title: 'Головна', href: '/', arrow: <KeyboardArrowRightIcon sx={{ fontSize: { xs: '14px', sm: '30px' } }} /> },
+    {
+      title: typeMachine,
+      href: '/',
+      arrow: <KeyboardArrowRightIcon sx={{ fontSize: { xs: '14px', sm: '30px' } }} />,
+      placeholder: 'ТИП СТАНКУ',
+      key: 'type',
+    },
     { title: model, href: '#', arrow: '', placeholder: 'МОДЕЛЬ СТАНКУ', key: 'model' },
   ];
 
   return (
-    <section className="my-10 flex">
+    <section className="my-5 sm:my-10 flex items-center">
       {editor
         ? breaDcrumbData.slice(1, 3).map((item, index) => (
             <div key={index}>
@@ -45,7 +51,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) 
             </div>
           ))
         : breaDcrumbData.map((item, index) => (
-            <Link className="text-xl md:text-2xl font-bold capitalize" href={item.href} key={index + 1}>
+            <Link className="text-[12px] sm:text-xl md:text-2xl font-bold capitalize" href={item.href} key={index + 1}>
               {item.title.toLowerCase()} {item.arrow}
             </Link>
           ))}

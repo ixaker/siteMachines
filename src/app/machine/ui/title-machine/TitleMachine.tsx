@@ -23,7 +23,7 @@ const TitleMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) =>
       ) : loading ? (
         <Skeleton variant="rectangular" animation="wave" sx={{ width: '100%', height: '36px' }} />
       ) : (
-        <h1 className="text-xl xl:text-3xl font-bold text-start">{value || ''}</h1>
+        <h1 className="text-lg sm:text-3xl font-bold text-start">{value || ''}</h1>
       )}
     </>
   );

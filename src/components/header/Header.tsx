@@ -16,7 +16,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="flex flex-col w-full max-w-[1500px] mt-10 my-0 mx-auto px-4 bg-inherit">
+    <header className="flex flex-col w-full max-w-[1500px] mt-5 my-0 mx-auto px-2 bg-inherit">
       <AdminHeader />
       <div className="flex items-center justify-between gap-5">
         <div className="flex items-center gap-5">
@@ -43,7 +43,7 @@ const Header: React.FC = () => {
           onClick={handleOpenMenu}
         >
           {openMenu ? (
-            <CloseIcon sx={{ fontSize: '35px', color: 'white' }} />
+            <CloseIcon sx={{ fontSize: '35px', color: 'black' }} />
           ) : (
             <MenuIcon sx={{ fontSize: '35px', color: 'black' }} />
           )}

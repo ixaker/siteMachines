@@ -1,10 +1,10 @@
 import { setFilter } from '@/store/slice/dataSlice';
 import { AppDispatch } from '@/store/store';
 import SearchIcon from '@mui/icons-material/Search';
-import TuneIcon from '@mui/icons-material/Tune';
 import { IconButton } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 interface SearchComponentProps {
   variant: 'mobile' | 'desktop';
@@ -26,7 +26,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ variant }) => {
   }[variant];
 
   return (
-    <div className={`${searchVariant} items-center  mt-4 gap-4`}>
+    <div className={`${searchVariant} items-center  mt-4 gap-1`}>
       <div className="flex items-center w-full border-2 border-[#76767a] rounded-full p-2 shadow-sm">
         <input
           value={filter}
@@ -39,7 +39,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ variant }) => {
       </div>
       <div className="block md:hidden relative ">
         <IconButton color="primary">
-          <TuneIcon sx={{ fontSize: '35px', color: 'black' }} />
+          <FilterAltIcon sx={{ fontSize: '35px', color: 'black' }} />
         </IconButton>
       </div>
     </div>

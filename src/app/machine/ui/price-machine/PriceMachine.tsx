@@ -23,7 +23,7 @@ const PriceMachine: React.FC<TitleMachineProps> = ({ value, changeFunction }) =>
       ) : loading ? (
         <Skeleton variant="rectangular" animation="wave" sx={{ width: '100%', height: '36px' }} />
       ) : (
-        <span className="text-3xl font-bold ">{value || ''}$</span>
+        <span className="text-xl sm:text-3xl font-bold ">{value || ''}$</span>
       )}
     </>
   );
