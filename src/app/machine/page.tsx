@@ -23,6 +23,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import ApiClient, { Type } from '@/store/slice/db';
 import { EMPTY_DATA_ITEM } from '@/constants/dataConstants';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import CachedIcon from '@mui/icons-material/Cached';
 
 const api = new ApiClient('https://machines.qpart.com.ua/');
 
@@ -38,10 +39,21 @@ const MachinePage = () => {
   const pathName = usePathname();
   const [types, setTypes] = useState<Type[]>([]);
   const [currenTypeName, setCurrentTypeName] = useState<string>('');
+  const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(true);
 
   if (!id) {
     router.push('/');
   }
+
+  useEffect(() => {
+    console.log('Update giles:', files);
+    if (machine.id !== '') {
+      if (machine.data.gallery.length === files.length) {
+        setIsLoadingFiles(false);
+        console.log('PROVERKA ID', machine);
+      }
+    }
+  }, [files]);
 
   useEffect(() => {
     if (machine.data.type.length > 0) {
@@ -78,6 +90,10 @@ const MachinePage = () => {
     const urlToFile = async (url: string, filename: string, mimeType: string): Promise<File> => {
       const response = await fetch(url);
       const buffer = await response.arrayBuffer();
+      console.log('url', url);
+      console.log('filename', filename);
+      console.log('buffer', buffer);
+
       return new File([buffer], filename, { type: mimeType });
     };
 
@@ -86,10 +102,16 @@ const MachinePage = () => {
         return;
       }
       const fetchedFiles = await Promise.all(
-        machine?.data.gallery.map((item) => urlToFile(item.src, item.name, item.type))
-      );
+        machine?.data.gallery.map((item) => {
+          const urlFile = urlToFile(item.src, item.name, item.type);
+          console.log('urlFile', urlFile);
 
+          return urlFile;
+        })
+      );
+      console.log('fetchedFiles', typeof fetchedFiles);
       setFiles(fetchedFiles);
+      console.log('files', typeof files);
     };
 
     if (pathName.search('machine') !== -1) {
@@ -286,12 +308,18 @@ const MachinePage = () => {
         />
       </div>
       {editor ? (
-        <button
-          onClick={() => handleUpdate(machine!.id, machine!.data, files)}
-          className="fixed bottom-1/2 right-16 bg-[#e5e7eb] p-3 rounded-full shadow-lg"
-        >
-          <SaveAltIcon sx={{ fontSize: '40px', color: 'black' }} />
-        </button>
+        isLoadingFiles ? (
+          <div className="fixed bottom-1/2 right-16 bg-[#e5e7eb] p-3 rounded-full animate-spinInfinite">
+            <CachedIcon sx={{ fontSize: '40px', color: 'black' }} />
+          </div>
+        ) : (
+          <button
+            onClick={() => handleUpdate(machine.id, machine.data, files)}
+            className="fixed bottom-1/2 right-16 bg-[#e5e7eb] p-3 rounded-full shadow-lg"
+          >
+            <SaveAltIcon sx={{ fontSize: '40px', color: 'black' }} />
+          </button>
+        )
       ) : (
         ''
       )}

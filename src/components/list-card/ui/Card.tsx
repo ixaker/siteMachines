@@ -61,7 +61,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
             )}
 
             <div className="w-full z-[0] sm:z-[1] group-hover:z-[3] relative h-[200px] transition-all duration-500 ease">
-              {item.data.mainImage || '' ? (
+              {item.data?.mainImage || '' ? (
                 <Image
                   src={item.data?.mainImage || ''}
                   alt={item.data?.name || ''}
