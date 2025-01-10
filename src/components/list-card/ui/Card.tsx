@@ -34,15 +34,75 @@ const Card: React.FC<CardProps> = ({ item }) => {
   };
 
   return (
+    // <>
+    //   {item ? (
+    //     <>
+    //       <div
+    //         id={item.id}
+    //         onClick={handleClick}
+    //         className="max-w-[350px] relative  bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out "
+    //       >
+    //         {editor ? (
+    //           <IconButton
+    //             aria-label="delete"
+    //             sx={{
+    //               position: 'absolute',
+    //               top: '10px',
+    //               right: '10px',
+    //               background: 'white',
+    //               zIndex: '99',
+    //             }}
+    //             onClick={(e) => deleteItem(e, item.id)}
+    //           >
+    //             <DeleteIcon />
+    //           </IconButton>
+    //         ) : (
+    //           ''
+    //         )}
+
+    //         <div className="w-full z-[0] sm:z-[1]  group-hover:z-[3] relative max-h-[200px] transition-all duration-500 ease">
+    //           <Image
+    //             src={item.data?.mainImage || ''}
+    //             alt={item.data?.name || ''}
+    //             className="h-full w-auto object-contain rounded-t-lg"
+    //             height={200}
+    //             width={350}
+    //           />
+    //         </div>
+    //         <div className="relative z-[0] sm:z-[1] group-hover:z-[3] bg-white sm:h-[150px] max-h-[150px] px-4 rounded-b-lg  group-hover:rounded-b-none  transition-all duration-500 ease">
+    //           <div className="flex flex-col pt-3 md:pt-0 gap-3 md:gap-0 md:justify-around md:h-full">
+    //             <h2 className="text-sm md:text-lg font-bold text-gray-800 mt-1">{item.data?.name || ''}</h2>
+
+    //             <div className="flex items-center text-[green] text-sm md:text-lg font-bold">
+    //               <TaskAltIcon sx={{ marginRight: '8px' }} />В наявності
+    //             </div>
+    //             <div className="flex justify-between items-end">
+    //               <p className="text:sm md:text-lg font-bold text-primary mt-1">Ціна: {item.data?.price || ''} $</p>
+    //               <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-lg shadow-sm">
+    //                 Код: {item.data?.article || ''}
+    //               </span>
+    //             </div>
+    //           </div>
+    //         </div>
+    //         <ListCharacteristicsInCard characteristics={item.data?.characteristics} />
+    //       </div>
+    //     </>
+    //   ) : (
+    //     <>
+    //       <Skeleton sx={{ width: '350px', height: '350px' }} />
+    //     </>
+    //   )}
+    // </>
+
     <>
       {item ? (
         <>
           <div
             id={item.id}
             onClick={handleClick}
-            className=" max-w-[350px] relative  bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out "
+            className="max-w-[350px] relative bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out"
           >
-            {editor ? (
+            {editor && (
               <IconButton
                 aria-label="delete"
                 sx={{
@@ -50,28 +110,28 @@ const Card: React.FC<CardProps> = ({ item }) => {
                   top: '10px',
                   right: '10px',
                   background: 'white',
-                  zIndex: '99',
+                  zIndex: 99,
+                  width: '40px',
+                  height: '40px', // Убедитесь, что кнопка имеет размер
                 }}
                 onClick={(e) => deleteItem(e, item.id)}
               >
                 <DeleteIcon />
               </IconButton>
-            ) : (
-              ''
             )}
 
-            <div className="w-full z-[0] sm:z-[1]  group-hover:z-[3] relative max-h-[200px] transition-all duration-500 ease">
+            <div className="w-full z-[0] sm:z-[1] group-hover:z-[3] relative h-[200px] transition-all duration-500 ease">
               <Image
                 src={item.data?.mainImage || ''}
                 alt={item.data?.name || ''}
-                className="h-full w-auto object-contain rounded-t-lg"
+                className="h-full w-full object-cover rounded-t-lg"
                 height={200}
                 width={350}
               />
             </div>
-            <div className="relative z-[0] sm:z-[1] group-hover:z-[3] bg-white h-[150px] max-h-[150px] px-4 rounded-b-lg  group-hover:rounded-b-none  transition-all duration-500 ease">
-              <div className="flex flex-col justify-around h-full">
-                <h2 className="text-sm md:text-lg font-semibold text-gray-800 mt-1">{item.data?.name || ''}</h2>
+            <div className="relative z-[0] sm:z-[1] group-hover:z-[3] bg-white sm:h-[150px] max-h-[150px] px-4 rounded-b-lg group-hover:rounded-b-none transition-all duration-500 ease">
+              <div className="flex flex-col pt-3 md:pt-0 gap-3 md:gap-0 md:justify-around md:h-full">
+                <h2 className="text-sm md:text-lg font-bold text-gray-800 mt-1">{item.data?.name || ''}</h2>
 
                 <div className="flex items-center text-[green] text-sm md:text-lg font-bold">
                   <TaskAltIcon sx={{ marginRight: '8px' }} />В наявності
@@ -89,7 +149,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
         </>
       ) : (
         <>
-          <Skeleton sx={{ width: '350px', height: '350px' }} />
+          <Skeleton sx={{ width: '350px', height: '350px' }} variant="rectangular" />
         </>
       )}
     </>
