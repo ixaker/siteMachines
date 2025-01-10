@@ -9,6 +9,7 @@ import { deleteMachine } from '@/store/slice/dataSlice';
 import { AppDispatch } from '@/store/store';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import ListCharacteristicsInCard from './ListCharacteristicsInCard';
+import Carusel from './Carusel';
 
 interface CardProps {
   item: DataItem;
@@ -25,6 +26,8 @@ const Card: React.FC<CardProps> = ({ item }) => {
       dispatch(deleteMachine(id));
     }
   };
+
+  console.log(item);
 
   return (
     <>
@@ -54,13 +57,20 @@ const Card: React.FC<CardProps> = ({ item }) => {
 
             <div className="w-full z-[0] sm:z-[1] group-hover:z-[3] relative h-[200px] transition-all duration-500 ease">
               {item.data?.mainImage || '' ? (
-                <Image
-                  src={item.data?.mainImage || ''}
-                  alt={item.data?.name || ''}
-                  className="h-full w-full object-cover rounded-t-lg"
-                  height={200}
-                  width={350}
-                />
+                <>
+                  <div className="hidden sm:block">
+                    <Image
+                      src={item.data?.mainImage || ''}
+                      alt={item.data?.name || ''}
+                      className="h-full w-full object-cover rounded-t-lg "
+                      height={200}
+                      width={350}
+                    />
+                  </div>
+                  <div className="block sm:hidden">
+                    <Carusel photos={item.data.gallery || []} />
+                  </div>
+                </>
               ) : (
                 <div className="bg-[white] w-full z-[0] sm:z-[1] group-hover:z-[3] relative h-[200px] transition-all duration-500 ease">
                   <Skeleton sx={{ width: '100%', height: '100%' }} variant="rectangular" component="animateMotion" />
