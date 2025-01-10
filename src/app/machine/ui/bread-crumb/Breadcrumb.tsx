@@ -31,11 +31,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) 
     <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
       {editor
         ? breaDcrumbData.slice(1, 3).map((item, index) => (
-            <>
+            <div key={index}>
               <input
                 className="text-2xl font-bold capitalize "
                 value={item.title}
-                key={index}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   changeFunction(item.key ?? '', e.target.value);
                 }}
@@ -43,10 +42,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) 
                 placeholder={item.placeholder}
               />{' '}
               {item.arrow}
-            </>
+            </div>
           ))
         : breaDcrumbData.map((item, index) => (
-            <Link className="text-2xl font-bold capitalize" href={item.href} key={index}>
+            <Link className="text-2xl font-bold capitalize" href={item.href} key={index + 1}>
               {item.title.toLowerCase()} {item.arrow}
             </Link>
           ))}

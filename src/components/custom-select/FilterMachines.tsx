@@ -71,7 +71,7 @@ export default function FilterMachines() {
         {editor ? (
           <>
             {types.map((item, index) => (
-              <div key={index} className="w-full flex">
+              <div key={index++} className="w-full flex">
                 <TextField
                   sx={{ width: '100%' }}
                   variant="standard"
@@ -99,27 +99,23 @@ export default function FilterMachines() {
             {' '}
             {types.map((item, index) =>
               types.length < 0 ? (
-                <>
-                  <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                </>
+                <Skeleton key={index} variant="text" sx={{ fontSize: '1rem' }} />
               ) : (
-                <>
-                  <div key={index}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={(e) => {
-                            const isChecked = e.target.checked;
-                            const value = e.target.value;
-                            setFilter((prev) => (isChecked ? [...prev, value] : prev.filter((item) => item !== value)));
-                          }}
-                          value={item.id}
-                        />
-                      }
-                      label={item.name}
-                    />
-                  </div>
-                </>
+                <div key={index}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          const value = e.target.value;
+                          setFilter((prev) => (isChecked ? [...prev, value] : prev.filter((item) => item !== value)));
+                        }}
+                        value={item.id}
+                      />
+                    }
+                    label={item.name}
+                  />
+                </div>
               )
             )}
           </>

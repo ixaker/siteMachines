@@ -134,7 +134,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
                 control={
                   <Checkbox
                     id={currentPhoto}
-                    checked={mainImage === currentPhoto} // Проверяем, выбрана ли эта фотография
+                    checked={mainImage.replace(/\?v=.*$/, '') === currentPhoto.replace(/\?v=.*$/, '')} // Проверяем, выбрана ли эта фотография
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       onChangeMainPhoto(e.target.id);
                     }}
@@ -143,7 +143,11 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
                     }}
                   />
                 }
-                label={mainImage === currentPhoto ? 'Це фото є головним' : 'Зробити головним фото'}
+                label={
+                  mainImage.replace(/\?v=.*$/, '') === currentPhoto.replace(/\?v=.*$/, '')
+                    ? 'Це фото є головним'
+                    : 'Зробити головним фото'
+                }
               />
             ) : (
               ''

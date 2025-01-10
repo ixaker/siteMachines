@@ -72,7 +72,7 @@ const MachinePage = () => {
     };
 
     fetchMachine();
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     const urlToFile = async (url: string, filename: string, mimeType: string): Promise<File> => {
@@ -256,7 +256,7 @@ const MachinePage = () => {
               onChange={handlePhotoChange}
               gallery={machine?.data.gallery || []}
               onChangeMainPhoto={handleMainPhoto}
-              mainImage={machine?.data.mainImage}
+              mainImage={machine.data.mainImage}
             />
           </div>
 
