@@ -7,6 +7,7 @@ import { selectFilteredData } from '@/store/slice/dataSlice';
 import FilterMachines from '../custom-select/FilterMachines';
 import { AppDispatch } from '@/store/store';
 import { setData } from '@/store/slice/filterSlice';
+import Link from 'next/link';
 
 // import { Skeleton } from '@mui/material';
 
@@ -33,7 +34,9 @@ const ListCard = () => {
                   transition={{ duration: 0.3 }}
                   className="flex flex-col w-full items-center"
                 >
-                  <Card item={item} />
+                  <Link href={`/machine?id=${item.id}`}>
+                    <Card item={item} />
+                  </Link>
                 </motion.div>
               ))
             ) : (

@@ -28,7 +28,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) 
   ];
 
   return (
-    <section className="w-full max-w-[1500px] my-10 mx-auto px-4">
+    <section className="my-10 flex">
       {editor
         ? breaDcrumbData.slice(1, 3).map((item, index) => (
             <div key={index}>
@@ -45,7 +45,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) 
             </div>
           ))
         : breaDcrumbData.map((item, index) => (
-            <Link className="text-2xl font-bold capitalize" href={item.href} key={index + 1}>
+            <Link className="text-xl md:text-2xl font-bold capitalize" href={item.href} key={index + 1}>
               {item.title.toLowerCase()} {item.arrow}
             </Link>
           ))}

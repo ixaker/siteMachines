@@ -1,6 +1,5 @@
 import React from 'react';
 import { DataItem } from '@/types/types';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Skeleton } from '@mui/material';
@@ -16,14 +15,8 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ item }) => {
-  const router = useRouter();
   const editor = useSelector(selectEditor);
   const dispatch: AppDispatch = useDispatch();
-
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    const id = event.currentTarget.id;
-    router.push(`/machine?id=${id}`);
-  };
 
   const deleteItem = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
     event.stopPropagation();
@@ -39,7 +32,6 @@ const Card: React.FC<CardProps> = ({ item }) => {
         <>
           <div
             id={item.id}
-            onClick={handleClick}
             className="max-w-[350px] w-full relative bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out"
           >
             {editor && (

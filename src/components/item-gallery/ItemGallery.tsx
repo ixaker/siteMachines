@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { selectEditor } from '@/store/slice/adminSlice';
 import { Button, Checkbox, FormControlLabel, IconButton, styled } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
@@ -103,24 +104,26 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
 
   return (
     <section>
-      <div className="w-auto flex flex-col gap-5 ">
+      <div className="w-auto max-w-[550px] flex flex-col gap-5 ">
         {!currentPhoto ? (
           <Skeleton variant="rectangular" width={550} height={400} />
         ) : (
           <>
             {currentType === 'image' ? (
-              <Image
-                width={550}
-                height={400}
-                alt={`Machine`}
-                src={currentPhoto}
-                className="relative max-h-[400px] min-h-[400px] object-contain"
-                onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
-                onMouseLeave={handleMouseLeave}
-              />
+              <div className="h-[350px] max-w-[550px]">
+                <Image
+                  width={550}
+                  height={400}
+                  alt={`Machine`}
+                  src={currentPhoto}
+                  className="relative  object-contain"
+                  onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
+                  onMouseLeave={handleMouseLeave}
+                />
+              </div>
             ) : (
               <video
-                className="max-h-[400px] min-h-[400px] w-full p-1 max-w-[550px] cursor-pointer  bg-[#f6f6f6]"
+                className="sm:max-h-[350px] sm:min-h-[350px] w-full p-1 max-w-[550px] cursor-pointer  bg-[#f6f6f6]"
                 autoPlay
                 loop
                 muted
@@ -165,9 +168,9 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
               className="relative w-[100px] h-[70px]"
             >
               {image.type.split('/')[0] === 'image' ? (
-                <div>
+                <div className="h-[70px] w-[100px]">
                   <Image
-                    className="cursor-pointer p-1 min-h-[70px] min-w-[100px] bg-[#f6f6f6] object-contain"
+                    className="cursor-pointer p-1 w-full h-full bg-[#f6f6f6] object-cover"
                     alt="Image"
                     about="Image"
                     src={image.src}
@@ -177,9 +180,26 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
                   />
                 </div>
               ) : (
-                <video about="Video" className="min-h-[70px] min-w-[100px] p-1 h-full cursor-pointer bg-[#f6f6f6]" loop>
-                  <source src={image.src} type={image.type} />
-                </video>
+                <div>
+                  <video
+                    about="Video"
+                    className="max-h-[70px] max-w-[100px] p-1 h-full cursor-pointer relative object-cover"
+                    autoPlay
+                    loop
+                  >
+                    <source src={image.src} />
+                  </video>
+                  <div className="absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-full h-full bg-nonne rounded-lg shadow-lg ">
+                    <div className="bg-black rounded-full p-[3px] bg-opacity-50 opacity-95">
+                      <PlayArrowIcon
+                        sx={{
+                          fontSize: '30px',
+                          color: 'white',
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
               )}
               {editor ? (
                 <div className="relative">
@@ -214,7 +234,7 @@ const ItemGallery: React.FC<ItemGalleryProps> = ({
         </div>
 
         {zoomPhoto && (
-          <div className="absolute z-10 pointer-events-none top-[25%] right-[5.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] flex items-center justify-center">
+          <div className="absolute z-10 pointer-events-none top-[25%] right-[5.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] hidden md:flex items-center justify-center">
             <Image
               src={zoomPhoto}
               alt="Zoomed Photo"
