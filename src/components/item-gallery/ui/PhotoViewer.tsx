@@ -1,22 +1,23 @@
 import { GalleryItem } from '@/types/types';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 interface PhotoViewerProps {
   gallery: GalleryItem[];
   isOpen: boolean;
-  currentPhoto: string;
-  setCurrentPhoto: React.Dispatch<React.SetStateAction<string>>;
+  currentPhoto: GalleryItem;
+  setCurrentPhoto: React.Dispatch<React.SetStateAction<GalleryItem>>;
   onClose: () => void;
 }
 
 const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose, gallery, setCurrentPhoto }) => {
-  const photoGallery = gallery.filter((item) => item.type.startsWith('image/'));
-  const [differenceLenght, setDifferenceLenght] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState(gallery.findIndex((photo) => photo.src === currentPhoto.src));
 
-  const [currentIndex, setCurrentIndex] = useState(
-    photoGallery.findIndex((photo) => photo.src === currentPhoto) + differenceLenght || 0
-  );
+  useEffect(() => {
+    setCurrentIndex(gallery.findIndex((photo) => photo.src === currentPhoto.src));
+  }, [currentPhoto]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -34,14 +35,15 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
     };
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    setDifferenceLenght(gallery.length - photoGallery.length);
-  }, [gallery]);
-
   const nextImage = () => {
-    const newIndex = currentIndex < photoGallery.length - 1 ? currentIndex + 1 : 0;
+    const newIndex = currentIndex < gallery.length - 1 ? currentIndex + 1 : 0;
     setCurrentIndex(newIndex);
-    setCurrentPhoto(photoGallery[newIndex]?.src || '');
+    setCurrentPhoto(gallery[newIndex]);
+  };
+  const prevImage = () => {
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : gallery.length - 1;
+    setCurrentIndex(newIndex);
+    setCurrentPhoto(gallery[newIndex]);
   };
 
   if (!isOpen) {
@@ -49,17 +51,22 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
   }
 
   return (
-    <div>
+    <div className="relative">
       <div className="fixed inset-0 bg-black bg-opacity-80 z-50" onClick={onClose}>
         <div className="absolute top-1/2 left-1/2 transform- -translate-x-1/2 -translate-y-1/2 h-full w-full p-2">
-          <Image
-            src={currentPhoto}
-            alt="Photo"
-            className="object-cover absolute top-1/2 left-1/2 transform- -translate-x-1/2 -translate-y-1/2"
-            onClick={(e) => e.stopPropagation()}
-            width={1000}
-            height={800}
-          />
+          {currentPhoto.type.startsWith('image') ? (
+            <Image
+              src={currentPhoto.src}
+              alt="Photo"
+              className="object-contain"
+              onClick={(e) => e.stopPropagation()}
+              fill
+            />
+          ) : (
+            <video loop muted controls className="object-cintent h-full absolute left-1/2 transform- -translate-x-1/2">
+              <source src={currentPhoto.src} />
+            </video>
+          )}
           <button
             onClick={onClose}
             className="absolute top-[1%] right-[1%] text-white text-2xl bg-black bg-opacity-50 rounded-full px-1.5"
@@ -72,9 +79,19 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
               e.stopPropagation();
               nextImage();
             }}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 hover:bg-gray-700"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full px-1 py-1  hover:bg-gray-700"
           >
-            ▶
+            <ArrowForwardIosIcon />
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              prevImage();
+            }}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full px-1 py-1  hover:bg-gray-700"
+          >
+            <ArrowBackIosNewIcon />
           </button>
         </div>
       </div>

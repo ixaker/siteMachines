@@ -4,6 +4,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
+import { Skeleton } from '@mui/material';
 
 interface Photo {
   src: string;
@@ -29,7 +30,11 @@ const Carusel: React.FC<CaruselProps> = ({ photos }) => {
         .filter((item) => item.type.includes('image'))
         .map((photo, index) => (
           <SwiperSlide key={index}>
-            <Image width={350} height={200} src={photo.src} alt={photo.name} className="w-full h-auto object-cover" />
+            {photo.src.length > 0 ? (
+              <Image width={350} height={200} src={photo.src} alt={photo.name} className="w-full h-auto object-cover" />
+            ) : (
+              <Skeleton variant="rectangular" animation="wave" sx={{ width: '350px', height: '200px' }} />
+            )}
           </SwiperSlide>
         ))}
     </Swiper>

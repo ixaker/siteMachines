@@ -44,11 +44,12 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
 }) => {
   const [photo, setPhoto] = useState(gallery);
   const editor = useSelector(selectEditor);
-  const [currentPhoto, setCurrentPhoto] = useState<string>('');
-  const [currentType, setCurrentType] = useState<string>('');
+  const [currentPhoto, setCurrentPhoto] = useState<GalleryItem>({ name: '', src: '', type: '' });
   const [zoomPhoto, setZoomPhoto] = useState(''); // Храним информацию об увеличенной версии
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+
+  console.log('currentPhoto', currentPhoto);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, src: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -63,21 +64,18 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
   }, [gallery]);
 
   const handleMouseLeave = () => {
-    setZoomPhoto(''); // Убираем увеличенное изображение
+    setZoomPhoto('');
   };
 
   useEffect(() => {
     if (photo.length > 0) {
-      setCurrentPhoto(photo[0].src);
-      setCurrentType(photo[0].type.split('/')[0]);
+      setCurrentPhoto(photo[0]);
     }
   }, [photo]);
 
   const handleClickShowPhoto = (e: React.MouseEvent<HTMLElement>) => {
-    const src = e.currentTarget.getAttribute('id') || '';
-    const about = e.currentTarget.getAttribute('about') || '';
-    setCurrentPhoto(src);
-    setCurrentType(about);
+    const id = Number(e.currentTarget.getAttribute('id')) || 0;
+    setCurrentPhoto(gallery[id]);
   };
 
   const openPhotoViewer = () => {
@@ -126,15 +124,15 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
           <Skeleton variant="rectangular" width={550} height={400} />
         ) : (
           <>
-            {currentType === 'image' ? (
+            {currentPhoto.type.startsWith('image') ? (
               <div className="h-[350px] max-w-[550px] ">
                 <Image
                   width={550}
                   height={350}
                   alt={`Machine`}
-                  src={currentPhoto}
+                  src={currentPhoto.src}
                   className="relative object-cover h-full w-full cursor-pointer"
-                  onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
+                  onMouseMove={(e) => handleMouseMove(e, currentPhoto.src)}
                   onMouseLeave={handleMouseLeave}
                   onClick={openPhotoViewer}
                 />
@@ -142,20 +140,19 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
             ) : (
               <video
                 className="h-[350px] sm:max-h-[350px] sm:min-h-[350px] w-full p-1 max-w-[550px] cursor-pointer object-cover  bg-[#f6f6f6]"
-                autoPlay
                 loop
                 muted
                 controls
               >
-                <source src={currentPhoto} />
+                <source src={currentPhoto.src} />
               </video>
             )}
             {editor ? (
               <FormControlLabel
                 control={
                   <Checkbox
-                    id={currentPhoto}
-                    checked={mainImage.replace(/\?v=.*$/, '') === currentPhoto.replace(/\?v=.*$/, '')} // Проверяем, выбрана ли эта фотография
+                    id={currentPhoto.src}
+                    checked={mainImage.replace(/\?v=.*$/, '') === currentPhoto.src.replace(/\?v=.*$/, '')} // Проверяем, выбрана ли эта фотография
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       onChangeMainPhoto(e.target.id);
                     }}
@@ -165,7 +162,7 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
                   />
                 }
                 label={
-                  mainImage.replace(/\?v=.*$/, '') === currentPhoto.replace(/\?v=.*$/, '')
+                  mainImage.replace(/\?v=.*$/, '') === currentPhoto.src.replace(/\?v=.*$/, '')
                     ? 'Це фото є головним'
                     : 'Зробити головним фото'
                 }
@@ -192,7 +189,7 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
             <li
               className="max-w-[100px] flex-shrink-0 relative "
               key={index}
-              id={image.src}
+              id={index.toString()}
               onClick={(e) => handleClickShowPhoto(e)}
               about={image.type.split('/')[0]}
             >
@@ -221,7 +218,7 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
                   </IconButton>
                 </div>
               )}
-              {currentPhoto !== image.src && (
+              {currentPhoto.src !== image.src && (
                 <div className="absolute w-full h-full bg-white top-0 left-0 opacity-60 cursor-pointer"></div>
               )}
             </li>
