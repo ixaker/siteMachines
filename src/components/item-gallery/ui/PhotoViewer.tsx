@@ -14,7 +14,7 @@ interface PhotoViewerProps {
 
 const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose, gallery, setCurrentPhoto }) => {
   const [currentIndex, setCurrentIndex] = useState(gallery.findIndex((photo) => photo.src === currentPhoto.src));
-
+  console.log('gallery', gallery);
   useEffect(() => {
     setCurrentIndex(gallery.findIndex((photo) => photo.src === currentPhoto.src));
   }, [currentPhoto]);
@@ -46,6 +46,12 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
     setCurrentPhoto(gallery[newIndex]);
   };
 
+  // const handleClickDotEnv = (e: HRML) => {
+  //   e.stopPropagation();
+  //   setCurrentIndex(index);
+  //   setCurrentPhoto(gallery[index]);
+  // }
+
   if (!isOpen) {
     return null;
   }
@@ -54,13 +60,14 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
     <div className="relative">
       <div className="fixed inset-0 bg-black bg-opacity-80 z-50" onClick={onClose}>
         <div className="absolute top-1/2 left-1/2 transform- -translate-x-1/2 -translate-y-1/2 h-full w-full p-2">
-          {currentPhoto.type.startsWith('image') ? (
+          {currentPhoto.type.startsWith('image') || currentPhoto.type.length < 0 ? (
             <Image
               src={currentPhoto.src}
               alt="Photo"
               className="object-contain"
               onClick={(e) => e.stopPropagation()}
               fill
+              loading="lazy"
             />
           ) : (
             <video loop muted controls className="object-cintent h-full absolute left-1/2 transform- -translate-x-1/2">
@@ -93,6 +100,22 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
           >
             <ArrowBackIosNewIcon />
           </button>
+
+          <div className="flex gap-2 absolute left-1/2 bottom-4 transform -translate-x-1/2">
+            {gallery.map((_, index) => (
+              <div
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentIndex(index);
+                  setCurrentPhoto(gallery[index]);
+                }}
+                className={`w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${
+                  currentIndex === index ? 'bg-blue-500' : 'bg-gray-800 hover:bg-gray-700'
+                }`}
+              ></div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

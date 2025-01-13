@@ -21,7 +21,7 @@ import DescriptionMachine from './ui/description-machine/DescriptionMachine';
 import Loader from './ui/loader/Loader';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import ApiClient, { Type } from '@/store/slice/db';
-import { EMPTY_DATA_ITEM } from '@/constants/dataConstants';
+import { EMPTY_DATA_ITEM } from '@/app/constants/dataConstants';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CachedIcon from '@mui/icons-material/Cached';
 

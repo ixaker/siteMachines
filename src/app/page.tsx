@@ -11,7 +11,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchMachines());
-  });
+  }, []);
 
   return <div className="mt-10">{<ListCard />}</div>;
 };

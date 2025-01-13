@@ -27,6 +27,7 @@ const Header: React.FC = () => {
               width={44}
               height={44}
               className="w-[38px] lg:w-[44px] h-[40px] lg:h-[44px]"
+              loading="lazy"
             />
           </Link>
           <Link className="md:text-xl lg:text-4xl font-bold" href="/">

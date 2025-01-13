@@ -49,8 +49,6 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
-  console.log('currentPhoto', currentPhoto);
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, src: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -120,7 +118,7 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
         onClose={closePhotoViewer}
       />
       <div className="w-full flex flex-col gap-5 max-w-[550px] overflow-x-scroll overflow-hidden">
-        {!currentPhoto ? (
+        {!currentPhoto.src ? (
           <Skeleton variant="rectangular" width={550} height={400} />
         ) : (
           <>
@@ -135,6 +133,7 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
                   onMouseMove={(e) => handleMouseMove(e, currentPhoto.src)}
                   onMouseLeave={handleMouseLeave}
                   onClick={openPhotoViewer}
+                  loading="lazy"
                 />
               </div>
             ) : (
@@ -194,7 +193,14 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
               about={image.type.split('/')[0]}
             >
               {image.type.split('/')[0] === 'image' ? (
-                <Image alt={image.name} src={image.src} width={100} height={70} className="w-[100px] h-[70px] p-1" />
+                <Image
+                  alt={image.name}
+                  src={image.src}
+                  width={100}
+                  height={70}
+                  className="w-[100px] h-[70px] p-1"
+                  loading="lazy"
+                />
               ) : (
                 <div className="relative">
                   <video about="Video" className="w-[100px] h-[70px] p-1  cursor-pointer object-cover" loop>
@@ -228,6 +234,7 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
         {zoomPhoto && (
           <div className="absolute z-10 pointer-events-none top-[25%] right-[5.5%] max-w-[50%] h-full max-h-[505px] w-full overflow-hidden bg-[#f6f6f6] hidden md:flex items-center justify-center">
             <Image
+              loading="lazy"
               src={zoomPhoto}
               alt="Zoomed Photo"
               width={500}

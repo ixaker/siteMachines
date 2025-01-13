@@ -31,7 +31,14 @@ const Carusel: React.FC<CaruselProps> = ({ photos }) => {
         .map((photo, index) => (
           <SwiperSlide key={index}>
             {photo.src.length > 0 ? (
-              <Image width={350} height={200} src={photo.src} alt={photo.name} className="w-full h-auto object-cover" />
+              <Image
+                width={350}
+                height={200}
+                src={photo.src}
+                alt={photo.name}
+                className="w-full h-auto object-cover"
+                loading="lazy"
+              />
             ) : (
               <Skeleton variant="rectangular" animation="wave" sx={{ width: '350px', height: '200px' }} />
             )}

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const Navigation: React.FC = () => {
@@ -8,7 +9,7 @@ const Navigation: React.FC = () => {
           <a href="#">Про компанію</a>
         </li>
         <li className="md:text-xl lg:text-2xl text-[#373435] font-bold">
-          <a href="#">Контакти</a>
+          <Link href="/contacts">Контакти</Link>
         </li>
       </ul>
     </nav>

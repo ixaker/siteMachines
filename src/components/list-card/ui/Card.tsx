@@ -92,6 +92,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
                         className="h-full w-full object-cover rounded-t-lg "
                         height={200}
                         width={350}
+                        loading="lazy"
                       />
                     ) : (
                       <Skeleton
