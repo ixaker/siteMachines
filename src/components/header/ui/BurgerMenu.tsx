@@ -42,7 +42,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ openMenu, setOpenMenu }) => {
               <a href="#">Про компанію</a>
             </li>
             <li className="md:text-xl lg:text-2xl text-[#373435] font-bold mb-4">
-              <a href="#">Контакти</a>
+              <a href="/contacts">Контакти</a>
             </li>
           </ul>
         </nav>

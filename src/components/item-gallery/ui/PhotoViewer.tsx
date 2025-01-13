@@ -46,11 +46,27 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
     setCurrentPhoto(gallery[newIndex]);
   };
 
-  // const handleClickDotEnv = (e: HRML) => {
-  //   e.stopPropagation();
-  //   setCurrentIndex(index);
-  //   setCurrentPhoto(gallery[index]);
-  // }
+  const handleClickDotEnv = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+    e.stopPropagation();
+    setCurrentIndex(index);
+    setCurrentPhoto(gallery[index]);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight') {
+      nextImage();
+    } else if (e.key === 'ArrowLeft') {
+      prevImage();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentIndex]);
 
   if (!isOpen) {
     return null;
@@ -106,9 +122,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({ isOpen, currentPhoto, onClose
               <div
                 key={index}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentIndex(index);
-                  setCurrentPhoto(gallery[index]);
+                  handleClickDotEnv(e, index);
                 }}
                 className={`w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${
                   currentIndex === index ? 'bg-blue-500' : 'bg-gray-800 hover:bg-gray-700'
