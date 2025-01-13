@@ -10,6 +10,7 @@ import { selectEditor } from '@/store/slice/adminSlice';
 import { Button, Checkbox, FormControlLabel, IconButton, styled } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PhotoViewer from './ui/PhotoViewer';
 
 interface ItemGalleryProps {
   gallery: GalleryItem[];
@@ -47,6 +48,7 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
   const [currentType, setCurrentType] = useState<string>('');
   const [zoomPhoto, setZoomPhoto] = useState(''); // Храним информацию об увеличенной версии
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 }); // Позиция мыши
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, src: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -78,6 +80,14 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
     setCurrentType(about);
   };
 
+  const openPhotoViewer = () => {
+    setIsViewerOpen(true);
+  };
+
+  const closePhotoViewer = () => {
+    setIsViewerOpen(false);
+  };
+
   const addPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
@@ -104,26 +114,34 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
 
   return (
     <section>
+      <PhotoViewer
+        gallery={gallery || []}
+        currentPhoto={currentPhoto}
+        setCurrentPhoto={setCurrentPhoto}
+        isOpen={isViewerOpen}
+        onClose={closePhotoViewer}
+      />
       <div className="w-full flex flex-col gap-5 max-w-[550px] overflow-x-scroll overflow-hidden">
         {!currentPhoto ? (
           <Skeleton variant="rectangular" width={550} height={400} />
         ) : (
           <>
             {currentType === 'image' ? (
-              <div className="max-h-[350px] max-w-[550px]">
+              <div className="h-[350px] max-w-[550px] ">
                 <Image
                   width={550}
-                  height={400}
+                  height={350}
                   alt={`Machine`}
                   src={currentPhoto}
-                  className="relative  object-contain"
+                  className="relative object-cover h-full w-full cursor-pointer"
                   onMouseMove={(e) => handleMouseMove(e, currentPhoto)}
                   onMouseLeave={handleMouseLeave}
+                  onClick={openPhotoViewer}
                 />
               </div>
             ) : (
               <video
-                className="sm:max-h-[350px] sm:min-h-[350px] w-full p-1 max-w-[550px] cursor-pointer  bg-[#f6f6f6]"
+                className="h-[350px] sm:max-h-[350px] sm:min-h-[350px] w-full p-1 max-w-[550px] cursor-pointer object-cover  bg-[#f6f6f6]"
                 autoPlay
                 loop
                 muted
@@ -201,8 +219,6 @@ const CustomGallery: React.FC<ItemGalleryProps> = ({
                   <IconButton onClick={() => removePhoto(index)}>
                     <DeleteIcon sx={{ color: 'white' }} />
                   </IconButton>
-
-                  {/* <div id={image.src} className="absolute z-[90] flex  bottom-5"></div> */}
                 </div>
               )}
               {currentPhoto !== image.src && (

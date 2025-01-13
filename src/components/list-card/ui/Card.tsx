@@ -27,8 +27,6 @@ const Card: React.FC<CardProps> = ({ item }) => {
     }
   };
 
-  console.log(item);
-
   return (
     <>
       {item ? (

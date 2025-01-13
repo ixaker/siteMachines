@@ -18,3 +18,22 @@
   background: #555; /* Цвет ползунка при наведении */
   cursor: pointer;
 }
+
+.swiper-pagination-bullet {
+  background-color: white !important;
+  width: 10px !important;
+  height: 10px !important;
+  opacity: 100 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: black !important;
+  width: 10px !important;
+  height: 10px !important;
+  opacity: 100 !important;
+}
+
+.swiper-pagination {
+  z-index: 1000 !important;
+  bottom: 50px !important;
+}

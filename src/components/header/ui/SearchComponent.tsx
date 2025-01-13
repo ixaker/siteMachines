@@ -32,7 +32,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ variant }) => {
           value={filter}
           onChange={handleFilterChange}
           type="text"
-          placeholder="Фрезерний верстат з ЧПК Vector 0906F Z150"
+          placeholder="Пошук по моделі"
           className="border-none focus:outline-none focus:ring-inherit rounded-lg w-full"
         />
         <SearchIcon />

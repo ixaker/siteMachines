@@ -38,7 +38,7 @@ const ListCard = () => {
                 {Array.from({ length: 6 }).map((_, index) => (
                   <Skeleton
                     key={index}
-                    sx={{ width: '350px', height: '350px', display: 'block' }}
+                    sx={{ width: '350px', height: { xs: '452px', sm: '350px' }, display: 'block' }}
                     variant="rectangular"
                     animation="wave"
                   />
@@ -54,7 +54,7 @@ const ListCard = () => {
                   transition={{ duration: 0.3 }}
                   className="flex flex-col w-full items-center"
                 >
-                  <Link href={`/machine?id=${item.id}`}>
+                  <Link href={`/machine?id=${item.id}`} scroll={false}>
                     <Card item={item} />
                   </Link>
                 </motion.div>

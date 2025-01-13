@@ -74,6 +74,7 @@ if ($method === 'POST') {
         http_response_code(403);
         exit('Access denied');
     }
+    
     // Для POST запросов данные могут быть в $_POST
     $id = isset($_POST['id']) ? intval($_POST['id']) : null;
     $name = isset($_POST['name']) ? trim($_POST['name']) : null;

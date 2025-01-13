@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -19,14 +19,10 @@ const Carusel: React.FC<CaruselProps> = ({ photos }) => {
   return (
     <Swiper
       className="block sm:hidden"
-      modules={[Pagination, Autoplay, Navigation]}
+      modules={[Pagination, Navigation]}
       spaceBetween={1}
       slidesPerView={1}
-      autoplay={{
-        delay: 3000,
-        disableOnInteraction: true,
-      }}
-      pagination
+      pagination={{ clickable: true }}
       loop
     >
       {photos

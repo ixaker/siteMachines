@@ -41,16 +41,18 @@ const MachinePage = () => {
   const [currenTypeName, setCurrentTypeName] = useState<string>('');
   const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(true);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (!id) {
     router.push('/');
   }
 
   useEffect(() => {
-    console.log('Update giles:', files);
     if (machine.id !== '') {
       if (machine.data.gallery.length === files.length) {
         setIsLoadingFiles(false);
-        console.log('PROVERKA ID', machine);
       }
     }
   }, [files]);
@@ -90,9 +92,6 @@ const MachinePage = () => {
     const urlToFile = async (url: string, filename: string, mimeType: string): Promise<File> => {
       const response = await fetch(url);
       const buffer = await response.arrayBuffer();
-      console.log('url', url);
-      console.log('filename', filename);
-      console.log('buffer', buffer);
 
       return new File([buffer], filename, { type: mimeType });
     };
@@ -104,14 +103,11 @@ const MachinePage = () => {
       const fetchedFiles = await Promise.all(
         machine?.data.gallery.map((item) => {
           const urlFile = urlToFile(item.src, item.name, item.type);
-          console.log('urlFile', urlFile);
 
           return urlFile;
         })
       );
-      console.log('fetchedFiles', typeof fetchedFiles);
       setFiles(fetchedFiles);
-      console.log('files', typeof files);
     };
 
     if (pathName.search('machine') !== -1) {
