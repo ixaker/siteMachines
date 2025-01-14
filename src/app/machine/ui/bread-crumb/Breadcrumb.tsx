@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectEditor } from '@/store/slice/adminSlice';
 import ApiClient, { Type } from '@/store/slice/db';
 
-const api = new ApiClient('https://machines.qpart.com.ua/');
+const api = new ApiClient();
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ model, type, changeFunction }) => {
   const editor = useSelector(selectEditor);

@@ -27,7 +27,7 @@ const TableHaracteristics: React.FC<TableHaracteristicsProps> = ({
   machine,
 }) => {
   const token = useSelector(selectToken);
-  const api = new ApiClient('https://machines.qpart.com.ua/', token);
+  const api = new ApiClient(token);
 
   const [localCharacteristics, setLocalCharacteristics] = useState(characteristics);
   useEffect(() => {

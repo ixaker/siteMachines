@@ -37,7 +37,8 @@ const Carusel: React.FC<CaruselProps> = ({ photos }) => {
                 src={photo.src}
                 alt={photo.name}
                 className="w-full h-auto object-cover"
-                loading="lazy"
+                loading={`${index === 0 ? 'eager' : 'lazy'}`}
+                decoding={`${index === 0 ? 'sync' : 'async'}`}
               />
             ) : (
               <Skeleton variant="rectangular" animation="wave" sx={{ width: '350px', height: '200px' }} />

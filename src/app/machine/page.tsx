@@ -25,7 +25,7 @@ import { EMPTY_DATA_ITEM } from '@/app/constants/dataConstants';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CachedIcon from '@mui/icons-material/Cached';
 
-const api = new ApiClient('https://machines.qpart.com.ua/');
+const api = new ApiClient();
 
 const MachinePage = () => {
   const [machine, setMachine] = useState<DataItem>(EMPTY_DATA_ITEM);

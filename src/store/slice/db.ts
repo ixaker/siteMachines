@@ -8,8 +8,8 @@ class ApiClient {
   private baseUrl: string;
   private token: string;
 
-  constructor(baseUrl: string, token: string = '') {
-    this.baseUrl = baseUrl;
+  constructor(token: string = '') {
+    this.baseUrl = process.env.ENV_BASE_URL || 'https://site.qpart.com.ua/';
     this.token = token;
   }
 

@@ -32,7 +32,7 @@ const initialState: AdminState = {
 // Асинхронная операция для логина
 export const login = createAsyncThunk<boolean, string>('admin/login', async (password: string, { dispatch }) => {
   try {
-    const response = await axios.get(`https://machines.qpart.com.ua/auth.php?password=${password}`);
+    const response = await axios.get(`/auth.php?password=${password}`);
 
     if (response.status === 200) {
       const token = response.headers['x-auth-token']; // Получение токена

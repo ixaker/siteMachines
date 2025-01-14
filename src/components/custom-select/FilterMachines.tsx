@@ -16,7 +16,7 @@ export default function FilterMachines() {
   const editor = useSelector(selectEditor);
 
   const token = useSelector(selectToken);
-  const api = new ApiClient('https://machines.qpart.com.ua/', token);
+  const api = new ApiClient(token);
 
   useEffect(() => {
     api

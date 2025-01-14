@@ -1,11 +1,17 @@
+import dotenv from 'dotenv';
+
 import { DataItem, GalleryItem } from '@/types/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
 import { EMPTY_DATA_ITEM } from '@/app/constants/dataConstants';
 import { resizeImage } from '@/utils/resizeImage';
+dotenv.config();
 
-const API_URL = 'https://machines.qpart.com.ua/storage.php';
+// const API_URL = 'https://machines.qpart.com.ua/storage.php';
+
+const API_URL = 'https://site.qpart.com.ua/storage.php';
+console.log(process.env.ENV_BASE_URL);
 
 interface DataState {
   emptyDataItem: DataItem;

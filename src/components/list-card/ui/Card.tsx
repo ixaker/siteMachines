@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
 import { DataItem } from '@/types/types';
-// import Image from 'next/image';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Skeleton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,8 +15,6 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ item }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
   const editor = useSelector(selectEditor);
   const dispatch: AppDispatch = useDispatch();
 
@@ -30,38 +26,14 @@ const Card: React.FC<CardProps> = ({ item }) => {
     }
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1,
-      }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, []);
-
   return (
-    <Link href={`/machine?id=${item.id}`} scroll={false}>
+    <>
       {item ? (
-        <div
-          ref={ref}
+        <Link
+          href={`/machine?id=${item.id}`}
+          scroll={false}
           id={item.id}
-          className={`max-w-[350px] w-full relative bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out ${isVisible ? 'opacity-100 ' : 'opacity-0 '} `}
+          className={`max-w-[350px] w-full relative bg-white shadow-md rounded-lg group cursor-pointer transition-all duration-500 ease-in-out `}
         >
           {editor && (
             <IconButton
@@ -86,14 +58,6 @@ const Card: React.FC<CardProps> = ({ item }) => {
               <>
                 <div className="hidden sm:block h-[200px]">
                   {item.data.galleryMin.length > 0 ? (
-                    // <Image
-                    //   src={item.data?.mainImage || ''}
-                    //   alt={item.data?.name || ''}
-                    //   className="h-full w-full object-cover rounded-t-lg "
-                    //   height={200}
-                    //   width={350}
-                    //   loading="lazy"
-                    // />
                     <Carusel photos={item.data.galleryMin || []} />
                   ) : (
                     <Skeleton
@@ -129,13 +93,13 @@ const Card: React.FC<CardProps> = ({ item }) => {
             </div>
           </div>
           <ListCharacteristicsInCard characteristics={item.data?.characteristics} />
-        </div>
+        </Link>
       ) : (
         <>
           <Skeleton sx={{ width: '350px', height: '350px' }} variant="rectangular" />
         </>
       )}
-    </Link>
+    </>
   );
 };
 
