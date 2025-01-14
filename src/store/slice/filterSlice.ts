@@ -19,8 +19,7 @@ const initialState: FilterData = {
   filterParams: {
     name: '',
     type: '',
-    characteristicsName: '',
-    characteristicsValue: '',
+    price: '',
   },
 };
 

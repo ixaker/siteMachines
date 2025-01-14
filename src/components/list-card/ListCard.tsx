@@ -25,10 +25,6 @@ const ListCard = () => {
   dispatch(setData(list));
 
   useEffect(() => {
-    console.log('visibleCards', visibleCards);
-  }, [visibleCards]);
-
-  useEffect(() => {
     if (list[0]?.id.length > 0) {
       setLoading(false);
       setVisibleCards(list.slice(0, countFirstViewElement));
@@ -44,7 +40,6 @@ const ListCard = () => {
   useEffect(() => {
     const widthDesctop = window.innerWidth;
 
-    console.log('widthDesctop', widthDesctop);
     if (widthDesctop > 1024) {
       setCountFirstViewElement(9);
     } else if (widthDesctop > 640) {
@@ -52,7 +47,6 @@ const ListCard = () => {
     } else if (widthDesctop < 640) {
       setCountFirstViewElement(3);
     }
-    console.log('window', window);
   }, []);
 
   useEffect(() => {
@@ -60,8 +54,6 @@ const ListCard = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-
-      console.log('scrol', scrollTop, windowHeight, documentHeight, currentIndex, list.length);
 
       if (scrollTop + windowHeight >= documentHeight - 260 && currentIndex < list.length) {
         loadMoreCards();

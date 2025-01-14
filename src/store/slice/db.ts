@@ -9,7 +9,7 @@ class ApiClient {
   private token: string;
 
   constructor(token: string = '') {
-    this.baseUrl = process.env.ENV_BASE_URL || 'https://site.qpart.com.ua/';
+    this.baseUrl = process.env.ENV_BASE_URL || 'https://machines.qpart.com.ua/';
     this.token = token;
   }
 

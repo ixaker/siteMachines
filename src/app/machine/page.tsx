@@ -64,7 +64,6 @@ const MachinePage = () => {
         setCurrentTypeName(currentType.name);
       }
     }
-    console.log('machine', machine);
   }, [types, machine]);
 
   useEffect(() => {
