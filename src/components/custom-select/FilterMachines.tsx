@@ -65,7 +65,7 @@ export default function FilterMachines() {
   };
 
   return (
-    <div className="pr-4 w-auto hidden md:block">
+    <div className="pr-4 w-auto hidden md:block flex-shrink-0">
       <span className="font-bold text-[20px]">Тип верстата:</span>
       <FormGroup>
         {editor ? (

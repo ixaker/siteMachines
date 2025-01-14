@@ -2,6 +2,8 @@ import { DataItem, GalleryItem } from '@/types/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
+import { EMPTY_DATA_ITEM } from '@/app/constants/dataConstants';
+import { resizeImage } from '@/utils/resizeImage';
 
 const API_URL = 'https://machines.qpart.com.ua/storage.php';
 
@@ -14,23 +16,7 @@ interface DataState {
 }
 
 const initialState: DataState = {
-  emptyDataItem: {
-    data: {
-      name: '',
-      article: '',
-      availability: '',
-      characteristics: [],
-      chengedDate: Date.now().toString(),
-      description: '',
-      fullDescription: '',
-      gallery: [],
-      mainImage: '',
-      model: '',
-      price: '',
-      type: '',
-    },
-    id: '',
-  },
+  emptyDataItem: EMPTY_DATA_ITEM,
   data: [],
   loading: false,
   error: null,
@@ -112,24 +98,44 @@ export const updateMachine = createAsyncThunk<
     if (!token) {
       throw new Error('Unauthorized: Token is missing');
     }
+
     const version = Date.now().toString();
     const formData = new FormData();
     formData.append('id', id);
 
     updatedData.gallery = [];
+    updatedData.galleryMin = [];
 
-    files.forEach((file, index) => {
-      formData.append(`file${index}`, file);
-      const fileItem: GalleryItem = {
-        type: file.type,
-        src: `https://a7b85a942d4082eb.cdn.express/machines/${id}/${file.name}?v=${version}`,
-        name: file.name,
-      };
-      updatedData.gallery.push(fileItem);
-    });
+    // Асинхронная обработка файлов с использованием Promise.all
+    await Promise.all(
+      files.map(async (file, index) => {
+        // Добавляем оригинальный файл
+        formData.append(`file${index}`, file);
 
+        const fileItem: GalleryItem = {
+          type: file.type,
+          src: `https://a7b85a942d4082eb.cdn.express/machines/${id}/${file.name}?v=${version}`,
+          name: file.name,
+        };
+        updatedData.gallery.push(fileItem);
+
+        // Ресайз изображения
+        const resizedFile = await resizeImage(file, 350, 200);
+        formData.append(`fileMin${index}`, resizedFile);
+
+        const fileMinItem: GalleryItem = {
+          type: resizedFile.type,
+          src: `https://a7b85a942d4082eb.cdn.express/machines/${id}/${resizedFile.name}?v=${version}`,
+          name: resizedFile.name,
+        };
+        updatedData.galleryMin.push(fileMinItem);
+      })
+    );
+
+    // Добавляем обновленные данные
     formData.append('data', JSON.stringify(updatedData));
 
+    // Отправляем запрос на сервер
     const response = await axios.post<DataItem>(API_URL, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',

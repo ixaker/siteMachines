@@ -27,6 +27,7 @@ export interface DataItem {
     description: string;
     mainImage: string;
     gallery: GalleryItem[];
+    galleryMin: GalleryItem[];
     characteristics: Characteristic[];
     fullDescription: string;
     article: string;

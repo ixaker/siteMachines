@@ -10,6 +10,7 @@ export const EMPTY_DATA_ITEM: DataItem = {
     description: '',
     fullDescription: '',
     gallery: [],
+    galleryMin: [],
     mainImage: '',
     model: '',
     price: '',
