@@ -9,7 +9,11 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { AppDispatch } from '@/store/store';
 import { resetFilter, setFilter } from '@/store/slice/filterSlice';
 
-export default function FilterMachines() {
+interface FilterMachinesProps {
+  variant: 'mobile' | 'desktop';
+}
+
+const FilterMachines: React.FC<FilterMachinesProps> = ({ variant }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [types, setTypes] = useState<Type[]>([]);
   const [disabledButtonSave, setDisabledButtonSave] = useState<boolean>(true);
@@ -17,6 +21,11 @@ export default function FilterMachines() {
   const editor = useSelector(selectEditor);
   const token = useSelector(selectToken);
   const api = new ApiClient(token);
+
+  const filterhVariant = {
+    mobile: 'block md:hidden',
+    desktop: 'hidden md:block',
+  }[variant];
 
   useEffect(() => {
     if (filterValue.length === 0) {
@@ -73,7 +82,7 @@ export default function FilterMachines() {
   };
 
   return (
-    <div className="pr-4 w-auto hidden md:block flex-shrink-0 sticky top-[50px] max-h-min">
+    <div className={`pr-4 w-auto flex-shrink-0 sticky top-[50px] max-h-min ${filterhVariant}`}>
       <span className="font-bold text-[20px] ">Тип верстата:</span>
       <FormGroup>
         {editor ? (
@@ -132,4 +141,6 @@ export default function FilterMachines() {
       </FormGroup>
     </div>
   );
-}
+};
+
+export default FilterMachines;

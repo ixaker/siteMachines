@@ -14,7 +14,6 @@ const ListCard = () => {
   const list = filterData;
   const editor = useSelector(selectEditor);
   const [loading, setLoading] = useState(true);
-
   const [visibleCards, setVisibleCards] = useState<DataItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(9);
   const [countFirstViewElement, setCountFirstViewElement] = useState<number>(3);
@@ -28,7 +27,6 @@ const ListCard = () => {
     } else {
       setVisibleCards(list.slice(0, countFirstViewElement));
       setCurrentIndex(9);
-      // setCountFirstViewElement(3);
     }
   }, [list]);
 
@@ -68,10 +66,11 @@ const ListCard = () => {
 
   return (
     <section className="w-full max-w-[1500px]  my-0 mx-auto px-2 flex justify-center md:justify-between mb-40">
-      <FilterMachines />
+      <FilterMachines variant="desktop" />
 
       <div className="flex justify-center items-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {editor ? <NewCard /> : ''}
           {loading ? (
             <>
               {Array.from({ length: 6 }).map((_, index) => (
@@ -88,7 +87,6 @@ const ListCard = () => {
           ) : (
             <p>На жаль немає станків за вашим запитом</p>
           )}
-          {editor ? <NewCard /> : ''}
         </div>
       </div>
     </section>

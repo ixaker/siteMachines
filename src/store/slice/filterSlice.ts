@@ -1,5 +1,6 @@
 import { DataItem } from '@/types/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector } from 'reselect';
 
 interface FilterParams {
   name?: string;
@@ -40,46 +41,33 @@ const filterSlice = createSlice({
 });
 
 // Селектор для получения отфильтрованных данных
-export const getFilterData = (state: { filter: FilterData }) => {
-  const { data, filterParams } = state.filter;
-  return data.filter((item) => {
-    // Фильтр по типу
-    let result = false;
-    if (filterParams.type !== undefined) {
-      if (filterParams.type?.length > 0) {
-        filterParams.type?.forEach((filterItem) => {
-          if (filterItem === item.data.type) {
-            result = true;
-            return;
-          }
-        });
+export const getFilterData = createSelector(
+  (state: { filter: FilterData }) => state.filter,
+  (filterData) => {
+    const { data, filterParams } = filterData;
+
+    return data.filter((item) => {
+      let result = false;
+
+      if (filterParams.type !== undefined) {
+        if (filterParams.type.length > 0) {
+          filterParams.type.forEach((filterItem) => {
+            if (filterItem === item.data.type) {
+              result = true;
+              return;
+            }
+          });
+        } else {
+          result = true;
+        }
       } else {
         result = true;
       }
-    } else {
-      result = true;
-    }
-    // if (filterParams.type && item.data.type !== filterParams.type) {
-    //   return false;
-    // }
 
-    // Фильтр по характеристикам
-    // if (filterParams.characteristics && filterParams.characteristics.length > 0) {
-    //   const match = filterParams.characteristics.every((filterChar) => {
-    //     return item.data.characteristics.some((itemChar: Characteristic) => {
-    //       return (
-    //         itemChar.name.toLowerCase().includes(filterChar.name.toLowerCase()) &&
-    //         itemChar.value.toLowerCase().includes(filterChar.value.toLowerCase())
-    //       );
-    //     });
-    //   });
-    //   if (!match) {
-    //     return false;
-    //   }
-    // }
+      return result;
+    });
+  }
+);
 
-    return result; // Все условия выполнены
-  });
-};
 export const { setData, setFilter, resetFilter } = filterSlice.actions;
 export default filterSlice.reducer;

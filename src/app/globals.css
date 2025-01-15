@@ -37,3 +37,33 @@
   z-index: 1000 !important;
   /* bottom: 50px !important; */
 }
+.swiper-button-prev,
+.swiper-button-next {
+  padding: 0px 10px;
+  opacity: 0 !important;
+  color: white !important;
+  font-size: xx-large !important;
+  width: 50px !important;
+  height: 100% !important;
+  top: 50% !important;
+  transition: all 0.5s ease 0s;
+  transform: translateY(-39%);
+}
+
+.swiper-button-prev {
+  left: 0 !important;
+  justify-content: flex-start !important;
+}
+
+.swiper-button-next {
+  justify-content: flex-end !important;
+  right: 0 !important;
+}
+
+.swiper:hover {
+  .swiper-button-prev,
+  .swiper-button-next {
+    opacity: 1 !important;
+    transition: all 0.5s ease 0s;
+  }
+}

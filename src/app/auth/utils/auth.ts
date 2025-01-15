@@ -12,7 +12,7 @@ export const checkAutorization = async () => {
     formData.append('token', token);
 
     try {
-      const response = await axios.post('/auth.php', formData, {
+      const response = await axios.post('https://machines.qpart.com.ua/auth.php', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

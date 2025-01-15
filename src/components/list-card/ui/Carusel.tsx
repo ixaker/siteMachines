@@ -24,6 +24,7 @@ const Carusel: React.FC<CaruselProps> = ({ photos }) => {
       spaceBetween={1}
       slidesPerView={1}
       pagination={{ clickable: true }}
+      navigation
       loop
     >
       {photos

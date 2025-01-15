@@ -21,14 +21,7 @@ const Header: React.FC = () => {
       <div className="flex items-center justify-between gap-5">
         <div className="flex items-center gap-5">
           <Link href="/">
-            <Image
-              alt="Logo"
-              src="/logo.webp"
-              width={44}
-              height={44}
-              className="w-[38px] lg:w-[44px] h-[40px] lg:h-[44px]"
-              loading="lazy"
-            />
+            <Image alt="Logo" src="/logo.webp" width={44} height={44} className="w-[38px] lg:w-[44px] h-[40px] lg:h-[44px]" loading="lazy" />
           </Link>
           <Link className="md:text-xl lg:text-4xl font-bold" href="/">
             QPART
@@ -38,16 +31,8 @@ const Header: React.FC = () => {
         <SearchComponent variant="desktop" />
 
         <Navigation />
-        <IconButton
-          color="primary"
-          sx={{ display: { md: 'none' }, position: 'relative', zIndex: 10, padding: '0px' }}
-          onClick={handleOpenMenu}
-        >
-          {openMenu ? (
-            <CloseIcon sx={{ fontSize: '35px', color: 'black' }} />
-          ) : (
-            <MenuIcon sx={{ fontSize: '35px', color: 'black' }} />
-          )}
+        <IconButton color="primary" sx={{ display: { md: 'none' }, position: 'relative', zIndex: 10, padding: '0px' }} onClick={handleOpenMenu}>
+          {openMenu ? <CloseIcon sx={{ fontSize: '35px', color: 'black' }} /> : <MenuIcon sx={{ fontSize: '35px', color: 'black' }} />}
         </IconButton>
         <BurgerMenu setOpenMenu={setOpenMenu} openMenu={openMenu} />
       </div>
