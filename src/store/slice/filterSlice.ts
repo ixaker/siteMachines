@@ -4,10 +4,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface FilterParams {
   name?: string;
   article?: string;
-  type?: string;
-  characteristicsName?: string;
-  characteristicsValue?: string;
-  [key: string]: string | undefined;
+  type?: string[];
+  characteristics?: { name: string; value: string }[];
 }
 
 interface FilterData {
@@ -20,7 +18,8 @@ const initialState: FilterData = {
   filterParams: {
     name: '',
     article: '',
-    type: '',
+    type: [],
+    characteristics: [],
   },
 };
 
@@ -32,7 +31,7 @@ const filterSlice = createSlice({
       state.data = action.payload; // Устанавливаем данные для фильтрации
     },
     setFilter(state, action: PayloadAction<FilterParams>) {
-      state.filterParams = { ...state.filterParams, ...action.payload }; // Обновляем параметры фильтрации
+      state.filterParams = { ...state.filterParams, ...action.payload };
     },
     resetFilter(state) {
       state.filterParams = {}; // Сбрасываем фильтры
@@ -40,44 +39,47 @@ const filterSlice = createSlice({
   },
 });
 
-export const { setData, setFilter, resetFilter } = filterSlice.actions;
-
 // Селектор для получения отфильтрованных данных
 export const getFilterData = (state: { filter: FilterData }) => {
   const { data, filterParams } = state.filter;
-
   return data.filter((item) => {
-    // Проверяем имя
-    if (filterParams.name && !item.data.name.toLowerCase().includes(filterParams.name.toLowerCase())) {
-      return false;
+    // Фильтр по типу
+    let result = false;
+    if (filterParams.type !== undefined) {
+      if (filterParams.type?.length > 0) {
+        filterParams.type?.forEach((filterItem) => {
+          if (filterItem === item.data.type) {
+            result = true;
+            return;
+          }
+        });
+      } else {
+        result = true;
+      }
+    } else {
+      result = true;
     }
+    // if (filterParams.type && item.data.type !== filterParams.type) {
+    //   return false;
+    // }
 
-    // Проверяем артикул
-    if (filterParams.article && !item.data.article.toLowerCase().includes(filterParams.article.toLowerCase())) {
-      return false;
-    }
+    // Фильтр по характеристикам
+    // if (filterParams.characteristics && filterParams.characteristics.length > 0) {
+    //   const match = filterParams.characteristics.every((filterChar) => {
+    //     return item.data.characteristics.some((itemChar: Characteristic) => {
+    //       return (
+    //         itemChar.name.toLowerCase().includes(filterChar.name.toLowerCase()) &&
+    //         itemChar.value.toLowerCase().includes(filterChar.value.toLowerCase())
+    //       );
+    //     });
+    //   });
+    //   if (!match) {
+    //     return false;
+    //   }
+    // }
 
-    // Проверяем тип
-    if (filterParams.type && item.data.type !== filterParams.type) {
-      return false;
-    }
-
-    // Проверяем характеристики
-    if (
-      filterParams.characteristicsName &&
-      filterParams.characteristicsValue &&
-      item.data.characteristics.some((char) => {
-        return (
-          char.name.toLowerCase().includes(filterParams.characteristicsName!.toLowerCase()) &&
-          char.value.toLowerCase().includes(filterParams.characteristicsValue!.toLowerCase())
-        );
-      }) === false
-    ) {
-      return false;
-    }
-
-    return true; // Если все условия выполнены
+    return result; // Все условия выполнены
   });
 };
-
+export const { setData, setFilter, resetFilter } = filterSlice.actions;
 export default filterSlice.reducer;

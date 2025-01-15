@@ -4,16 +4,27 @@ import { useEffect, useState } from 'react';
 import { Checkbox, FormControlLabel, FormGroup, IconButton, Skeleton, TextField } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { selectEditor, selectToken } from '@/store/slice/adminSlice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { AppDispatch } from '@/store/store';
+import { resetFilter, setFilter } from '@/store/slice/filterSlice';
 
 export default function FilterMachines() {
+  const dispatch = useDispatch<AppDispatch>();
   const [types, setTypes] = useState<Type[]>([]);
   const [disabledButtonSave, setDisabledButtonSave] = useState<boolean>(true);
-  const [filter, setFilter] = useState<string[]>([]);
+  const [filterValue, setFilterValue] = useState<string[]>([]);
   const editor = useSelector(selectEditor);
   const token = useSelector(selectToken);
   const api = new ApiClient(token);
+
+  useEffect(() => {
+    if (filterValue.length === 0) {
+      dispatch(resetFilter());
+    } else {
+      dispatch(setFilter({ type: filterValue }));
+    }
+  }, [filterValue]);
 
   useEffect(() => {
     api
@@ -62,8 +73,8 @@ export default function FilterMachines() {
   };
 
   return (
-    <div className="pr-4 w-auto hidden md:block flex-shrink-0">
-      <span className="font-bold text-[20px]">Тип верстата:</span>
+    <div className="pr-4 w-auto hidden md:block flex-shrink-0 sticky top-[50px] max-h-min">
+      <span className="font-bold text-[20px] ">Тип верстата:</span>
       <FormGroup>
         {editor ? (
           <>
@@ -105,7 +116,8 @@ export default function FilterMachines() {
                         onChange={(e) => {
                           const isChecked = e.target.checked;
                           const value = e.target.value;
-                          setFilter((prev) => (isChecked ? [...prev, value] : prev.filter((item) => item !== value)));
+
+                          setFilterValue((prev) => (isChecked ? [...prev, value] : prev.filter((item) => item !== value)));
                         }}
                         value={item.id}
                       />
