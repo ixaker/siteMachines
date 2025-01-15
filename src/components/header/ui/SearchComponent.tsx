@@ -1,10 +1,11 @@
-import { setFilter } from '@/store/slice/dataSlice';
 import { AppDispatch } from '@/store/store';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton } from '@mui/material';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { setData } from '@/store/slice/filterSlice';
+import { selectData } from '@/store/slice/dataSlice';
 
 interface SearchComponentProps {
   variant: 'mobile' | 'desktop';
@@ -13,12 +14,25 @@ interface SearchComponentProps {
 const SearchComponent: React.FC<SearchComponentProps> = ({ variant }) => {
   const [filter, setFilterValue] = useState('');
   const dispatch: AppDispatch = useDispatch();
+  const data = useSelector(selectData);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setFilterValue(value); // Обновляем локальное состояние
-    dispatch(setFilter(value)); // Обновляем фильтр в Redux
+    setFilterValue(value);
   };
+
+  const filterData = data?.filter((item) => {
+    const normalizedFilter = filter.toLowerCase().replace(/\s+/g, ''); // Убираем все пробелы в фильтре
+    const article = item.data.article.toLowerCase().replace(/\s+/g, ''); // Убираем пробелы из артикля
+    const name = item.data.name.toLowerCase().replace(/\s+/g, ''); // Убираем пробелы из имени
+
+    // Проверяем, содержит ли артикул или название фильтр
+    return article.includes(normalizedFilter) || name.includes(normalizedFilter);
+  });
+
+  useEffect(() => {
+    dispatch(setData(filterData));
+  }, [filter]);
 
   const searchVariant = {
     mobile: 'flex md:hidden w-full',

@@ -4,30 +4,16 @@ import { useEffect, useState } from 'react';
 import { Checkbox, FormControlLabel, FormGroup, IconButton, Skeleton, TextField } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { selectEditor, selectToken } from '@/store/slice/adminSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { AppDispatch, RootState } from '@/store/store';
-import { resetFilter, setData, setFilter } from '@/store/slice/filterSlice';
-import { DataItem } from '@/types/types';
+
 export default function FilterMachines() {
   const [types, setTypes] = useState<Type[]>([]);
   const [disabledButtonSave, setDisabledButtonSave] = useState<boolean>(true);
-  // const [filter, setFilter] = useState<string[]>([]);
+  const [filter, setFilter] = useState<string[]>([]);
   const editor = useSelector(selectEditor);
   const token = useSelector(selectToken);
   const api = new ApiClient(token);
-
-  const dispatch: AppDispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setFilter({ name: 'test', characteristicsName: 'sss' }));
-  }, [dispatch]);
-
-  const filter = useSelector(setFilter);
-
-  const filterData: DataItem[] = useSelector((state: RootState) => state.filter.data);
-
-  console.log('filterDatast', filter);
 
   useEffect(() => {
     api

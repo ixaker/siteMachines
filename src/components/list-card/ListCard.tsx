@@ -1,11 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Card from './ui/Card';
 import { selectEditor } from '@/store/slice/adminSlice';
 import NewCard from './ui/NewCard';
 import { selectFilteredData } from '@/store/slice/dataSlice';
 import FilterMachines from '../custom-select/FilterMachines';
-import { AppDispatch } from '@/store/store';
-import { setData } from '@/store/slice/filterSlice';
+import { RootState } from '@/store/store';
+// import { setData } from '@/store/slice/filterSlice';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/material';
 import { DataItem } from '@/types/types';
@@ -13,7 +13,7 @@ import { DataItem } from '@/types/types';
 // import { Skeleton } from '@mui/material';
 
 const ListCard = () => {
-  const dispatch: AppDispatch = useDispatch();
+  // const dispatch: AppDispatch = useDispatch();
   const list = useSelector(selectFilteredData);
   const editor = useSelector(selectEditor);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,8 @@ const ListCard = () => {
   const [currentIndex, setCurrentIndex] = useState(9);
   const [countFirstViewElement, setCountFirstViewElement] = useState<number>(3);
 
-  dispatch(setData(list));
+  const filterData = useSelector((state: RootState) => state.filter.data);
+  console.log('filterData LIST', filterData);
 
   useEffect(() => {
     if (list[0]?.id.length > 0) {
